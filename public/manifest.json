@@ -1,0 +1,43 @@
+{
+  "name": "Why Designers - Fashion Education Platform",
+  "short_name": "Why Designers",
+  "description": "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f5f4",
+  "theme_color": "#d97706",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["education", "lifestyle", "productivity"],
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Study Abroad",
+      "short_name": "Study Abroad",
+      "description": "Explore international fashion schools",
+      "url": "/#study-abroad",
+      "icons": [{ "src": "/logo.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Fashion Courses",
+      "short_name": "Courses",
+      "description": "Browse our fashion education programs",
+      "url": "/#courses",
+      "icons": [{ "src": "/logo.png", "sizes": "96x96" }]
+    }
+  ]
+}
