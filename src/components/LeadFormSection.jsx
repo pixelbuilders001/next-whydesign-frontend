@@ -45,8 +45,8 @@ const LeadFormSection = () => {
           </div>
 
           {/* Form Side */}
-          <div className="space-y-10 order-1 lg:order-2">
-            <div>
+          <div className="space-y-10 order-1 lg:order-2 ">
+            <div className='text-center'>
               <h2 className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
                 Ready to Begin Your
                 <span className="text-amber-600 block font-normal">Fashion Journey?</span>
@@ -101,7 +101,7 @@ const LeadFormSection = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full px-5 py-4 border border-stone-200 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500"
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="+(+91)) 123-4567"
                     required
                   />
                 </div>

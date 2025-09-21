@@ -13,6 +13,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import ModernLoader from "@/components/ModernLoader";
+import PWAInstall from "@/components/PWAInstall";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -39,21 +40,24 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen  from-stone-50">
+    <div className="min-h-screen from-stone-50">
       <Header />
       <main>
         <HeroSection />
         <StudyAbroadSection />
-        <ProgramBriefSection />
-        <LeadFormSection />
+       <ProgramBriefSection />
+         <LeadFormSection />
         <BookingSection />
         <PDFDownloadSection />
         <VideoSection />
         <ReelsSection />
-        <TestimonialsSection />
+        {/* <TestimonialsSection />
         <ContactSection />
-        <Footer />
+        <Footer />  */}
       </main>
+      
+      {/* PWA Install Prompt */}
+      <PWAInstall />
     </div>
   );
 }

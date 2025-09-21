@@ -3,6 +3,58 @@ import React, { useState, useEffect } from 'react';
 import { MapPin, Star } from 'lucide-react';
 import { universities } from '../../data/universities.js';
 
+// Image Loader Component
+const ImageLoader = ({ src, alt, className, onLoad }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  const handleLoad = () => {
+    setIsLoading(false);
+    if (onLoad) onLoad();
+  };
+
+  const handleError = () => {
+    setIsLoading(false);
+    setHasError(true);
+  };
+
+  return (
+    <div className={`relative ${className}`}>
+      {/* Shimmer Loader - only show when loading */}
+      {isLoading && !hasError && (
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-shimmer z-10">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer-wave"></div>
+        </div>
+      )}
+      
+      {/* Actual Image */}
+      {!hasError && (
+        <img
+          src={src}
+          alt={alt}
+          className={`w-full h-full object-cover transition-opacity duration-500 ${
+            isLoading ? 'opacity-0' : 'opacity-100'
+          }`}
+          onLoad={handleLoad}
+          onError={handleError}
+        />
+      )}
+      
+      {/* Error Fallback */}
+      {hasError && (
+        <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+          <div className="text-center text-gray-500">
+            <div className="w-12 h-12 mx-auto mb-2 bg-gray-300 rounded-full flex items-center justify-center">
+              <Star className="w-6 h-6" />
+            </div>
+            <p className="text-sm">Image unavailable</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const niftPhotos = [
   { src: 'https://images.pexels.com/photos/794064/pexels-photo-794064.jpeg', title: 'Mentorship Sessions' },
   { src: 'https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg', title: 'Hands-on Workshops' },
@@ -86,7 +138,11 @@ const StudyAbroadSection = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center">
                 {niftPhotos.map((photo, idx) => (
                   <div key={idx} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
-                    <img src={photo.src} alt={photo.title} className="w-full h-48 object-cover" />
+                    <ImageLoader
+                      src={photo.src}
+                      alt={photo.title}
+                      className="w-full h-48"
+                    />
                     <div className="p-4">
                       <h4 className="text-lg font-semibold text-gray-800">{photo.title}</h4>
                     </div>
@@ -134,11 +190,13 @@ const StudyAbroadSection = () => {
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="relative overflow-hidden">
-                      <img
-                        src={university.image}
-                        alt={university.name}
-                        className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
+                      <div className="w-full h-56 overflow-hidden">
+                        <ImageLoader
+                          src={university.image}
+                          alt={university.name}
+                          className="w-full h-full group-hover:scale-110 transition-transform duration-700"
+                        />
+                      </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                       <div className="absolute top-6 right-6 bg-amber-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
                         {university.ranking}
@@ -187,7 +245,11 @@ const StudyAbroadSection = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center">
                 {certificationPhotos.map((photo, idx) => (
                   <div key={idx} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
-                    <img src={photo.src} alt={photo.title} className="w-full h-48 object-cover" />
+                    <ImageLoader
+                      src={photo.src}
+                      alt={photo.title}
+                      className="w-full h-48"
+                    />
                     <div className="p-4">
                       <h4 className="text-lg font-semibold text-gray-800">{photo.title}</h4>
                     </div>
@@ -198,6 +260,37 @@ const StudyAbroadSection = () => {
           )}
         </div>
       </div>
+      
+      {/* Custom Styles for Shimmer Animation */}
+      <style jsx>{`
+        @keyframes shimmer {
+          0% {
+            background-position: -200px 0;
+          }
+          100% {
+            background-position: calc(200px + 100%) 0;
+          }
+        }
+        
+        @keyframes shimmer-wave {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+        
+        .animate-shimmer {
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200px 100%;
+          animation: shimmer 1.5s infinite;
+        }
+        
+        .animate-shimmer-wave {
+          animation: shimmer-wave 2s infinite;
+        }
+      `}</style>
     </section>
   );
 };

@@ -20,21 +20,39 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Why Designers - Fashion Education & Study Abroad",
   description: "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance at Why Designers.",
-  keywords: "fashion design, study abroad, fashion education, NIFT, fashion courses, design school",
+  keywords: "fashion design, study abroad, fashion education, NIFT, fashion courses, design school, PWA, progressive web app",
   authors: [{ name: "Why Designers" }],
-  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
-  themeColor: "#d97706",
   manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Why Designers",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   openGraph: {
     title: "Why Designers - Fashion Education & Study Abroad",
     description: "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
     type: "website",
     siteName: "Why Designers",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Why Designers - Fashion Education & Study Abroad",
     description: "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -44,9 +62,18 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/logo.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+        <link rel="mask-icon" href="/logo.png" color="#d97706" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Why Designers" />
+        <meta name="application-name" content="Why Designers" />
+        <meta name="msapplication-TileColor" content="#d97706" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="format-detection" content="telephone=no" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-white text-gray-900`}
@@ -64,21 +91,21 @@ export default function RootLayout({ children }) {
           </ToastProvider>
         {/* </ErrorBoundary> */}
 
-        {/* PWA Service Worker Registration */}
+        {/* PWA Install Prompt */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
-                    });
-                });
-              }
+              let deferredPrompt;
+              window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                // Show install button or banner
+                console.log('PWA install prompt available');
+              });
+              
+              window.addEventListener('appinstalled', (evt) => {
+                console.log('PWA was installed');
+              });
             `,
           }}
         />

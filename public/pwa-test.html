@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Test - Why Designers</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#d97706">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f4;
+        }
+        .test-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #d97706;
+        }
+        .success { border-left-color: #10b981; }
+        .error { border-left-color: #ef4444; }
+        button {
+            background: linear-gradient(135deg, #d97706, #e11d48);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 PWA Installation Test</h1>
+    <p>This page helps test if your PWA is properly configured for installation.</p>
+    
+    <div class="test-item">
+        <h3>📱 Quick Actions</h3>
+        <button onclick="testPWA()">Run PWA Tests</button>
+        <button onclick="forceInstallPrompt()">Force Install Prompt</button>
+        <button onclick="checkServiceWorker()">Check Service Worker</button>
+        <button onclick="window.location.href='/'">Back to Main Site</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        let deferredPrompt;
+        
+        // Listen for install prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('beforeinstallprompt fired!');
+            e.preventDefault();
+            deferredPrompt = e;
+            addResult('✅ Install prompt available!', 'success');
+            
+            // Show install button
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '📱 Install Now';
+            installBtn.onclick = async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    addResult(`Install prompt result: ${outcome}`, outcome === 'accepted' ? 'success' : 'error');
+                    deferredPrompt = null;
+                }
+            };
+            document.getElementById('results').appendChild(installBtn);
+        });
+
+        window.addEventListener('appinstalled', (evt) => {
+            addResult('✅ App was installed successfully!', 'success');
+        });
+
+        function addResult(message, type = '') {
+            const div = document.createElement('div');
+            div.className = `test-item ${type}`;
+            div.innerHTML = `<p>${message}</p>`;
+            document.getElementById('results').appendChild(div);
+        }
+
+        function testPWA() {
+            document.getElementById('results').innerHTML = '<h3>🧪 PWA Test Results:</h3>';
+            
+            // Test 1: HTTPS
+            if (location.protocol === 'https:' || location.hostname === 'localhost') {
+                addResult('✅ HTTPS/Localhost: OK', 'success');
+            } else {
+                addResult('❌ HTTPS required for PWA', 'error');
+            }
+
+            // Test 2: Service Worker
+            if ('serviceWorker' in navigator) {
+                addResult('✅ Service Worker supported', 'success');
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    if (registrations.length > 0) {
+                        addResult(`✅ Service Worker registered (${registrations.length} found)`, 'success');
+                    } else {
+                        addResult('⚠️ No Service Worker registrations found', 'error');
+                    }
+                });
+            } else {
+                addResult('❌ Service Worker not supported', 'error');
+            }
+
+            // Test 3: Manifest
+            fetch('/manifest.json')
+                .then(response => response.json())
+                .then(manifest => {
+                    addResult('✅ Manifest file accessible', 'success');
+                    addResult(`App name: ${manifest.name}`, '');
+                    addResult(`Icons: ${manifest.icons.length} defined`, '');
+                    addResult(`Start URL: ${manifest.start_url}`, '');
+                    addResult(`Display: ${manifest.display}`, '');
+                })
+                .catch(err => {
+                    addResult('❌ Manifest file not accessible', 'error');
+                });
+
+            // Test 4: Install criteria
+            setTimeout(() => {
+                if (deferredPrompt) {
+                    addResult('✅ Install prompt available', 'success');
+                } else {
+                    addResult('⚠️ Install prompt not available yet', '');
+                    addResult('This could be because:', '');
+                    addResult('• App is already installed', '');
+                    addResult('• Browser criteria not met', '');
+                    addResult('• Need to wait for user engagement', '');
+                }
+            }, 2000);
+        }
+
+        function forceInstallPrompt() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+            } else {
+                addResult('⚠️ No install prompt available. Try:', '');
+                addResult('• Chrome: Look for install icon in address bar', '');
+                addResult('• Edge: Menu → Apps → Install this site as an app', '');
+                addResult('• Mobile: Use browser menu options', '');
+            }
+        }
+
+        function checkServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    addResult(`Service Worker registrations: ${registrations.length}`, '');
+                    registrations.forEach((registration, index) => {
+                        addResult(`SW ${index + 1}: ${registration.scope}`, '');
+                        addResult(`State: ${registration.active ? 'Active' : 'Inactive'}`, '');
+                    });
+                });
+            }
+        }
+
+        // Auto-run tests on load
+        setTimeout(testPWA, 1000);
+    </script>
+</body>
+</html>
