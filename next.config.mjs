@@ -3,7 +3,7 @@ import withPWA from 'next-pwa';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['images.pexels.com'],
+    domains: ['images.pexels.com', 'lh3.googleusercontent.com'],
     formats: ['image/webp', 'image/avif'],
   },
   experimental: {

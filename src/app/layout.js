@@ -6,6 +6,8 @@ import { ToastProvider } from "@/components/Toast";
 import NoInternetBanner from "@/components/NoInternetBanner";
 import ModernLoader from "@/components/ModernLoader";
 import { Suspense } from "react";
+import Providers from "@/components/Providers";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -83,7 +85,9 @@ export default function RootLayout({ children }) {
             {/* <Suspense fallback={<ModernLoader onFinish={() => {}} />}> */}
               <NoInternetBanner />
               <div className="relative">
-                {children}
+              <Providers 
+              
+              >{children}</Providers>
                 {/* Dark Mode Toggle - Fixed Position */}
               
               </div>

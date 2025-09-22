@@ -1,6 +1,8 @@
+"use client";
+
 import React from 'react';
 import { X } from 'lucide-react';
-
+import { signIn } from "next-auth/react";
 
 
 const AuthModal = ({ open, type, onClose, setAuthType }) => {
@@ -78,6 +80,21 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                 </button>
               </div>
             )}
+
+             <div className="text-center mt-6">
+              <button
+                type="button"
+                onClick={() => signIn("google", { callbackUrl: "/" })}
+                className="w-full py-3 rounded-xl border border-stone-300 shadow-sm flex items-center justify-center gap-2 hover:bg-stone-100 transition"
+              >
+                <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="Google logo"
+                  className="w-6 h-6"
+                />
+                Continue with Google
+              </button>
+            </div>
           </form>
         </div>
       </div>
