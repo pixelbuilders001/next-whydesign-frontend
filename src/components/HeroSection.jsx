@@ -15,7 +15,7 @@ const HeroSection = () => {
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated Black Glass Background */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform"
         style={{
           backgroundImage: `linear-gradient(120deg, rgba(20,20,20,0.5) 60%, rgba(255, 193, 7, 0.06)), url('https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&fit=crop')`,
           transform: `translateY(${scrollY * 0.5}px)`,

@@ -1,43 +1,84 @@
 "use client";
-import React, { useState } from 'react';
-import { Play, ArrowLeft, ArrowRight } from 'lucide-react';
-import { videos } from '../../data/videos';
+import React, { useState, useRef } from "react";
+import { Play, ArrowLeft, ArrowRight, X } from "lucide-react";
+import { videos } from "../../data/videos";
 
 const VideoSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeVideo, setActiveVideo] = useState(null);
+  const [loading, setLoading] = useState(false); // Add loading state
+  const videoRef = useRef(null);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % Math.ceil(videos.length / 3));
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + Math.ceil(videos.length / 3)) % Math.ceil(videos.length / 3));
+    setCurrentIndex(
+      (prev) =>
+        (prev - 1 + Math.ceil(videos.length / 3)) % Math.ceil(videos.length / 3)
+    );
   };
 
-  const visibleVideos = videos.slice(currentIndex * 3, (currentIndex + 1) * 3);
+  const visibleVideos = videos.slice(
+    currentIndex * 3,
+    (currentIndex + 1) * 3
+  );
+
+  const openModal = (video) => {
+    setActiveVideo(video);
+    setIsModalOpen(true);
+    setLoading(true); // Set loading to true when modal opens
+    setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.play().catch(() => setLoading(false)); // If play fails, hide loader
+      }
+    }, 100);
+  };
+
+  const closeModal = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+    setIsModalOpen(false);
+    setActiveVideo(null);
+    setLoading(false); // Reset loading state
+  };
+
+  const handleVideoLoad = () => {
+    setLoading(false); // Hide loader when video is loaded
+  };
 
   return (
-    <section id="videos" className="py-24 bg-gradient-to-b from-stone-50/30 to-white">
+    <section
+      id="videos"
+      className="py-24 bg-gradient-to-b from-stone-50/30 to-white"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Heading */}
         <div className="text-center mb-20">
           <h2 className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
             Master Fashion
-            <span className="text-amber-600 block font-normal">Through Video</span>
+            <span className="text-amber-600 block font-normal">
+              Through Video
+            </span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light">
-            Learn from industry experts through our curated collection of fashion design tutorials, 
+            Learn from industry experts through our curated collection of fashion design tutorials,
             masterclasses, and behind-the-scenes content.
           </p>
         </div>
 
+        {/* Video Cards */}
         <div className="relative">
-          {/* Videos Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {visibleVideos.map((video, index) => (
               <div
                 key={video.id}
-                className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-stone-100"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-stone-100 cursor-pointer"
+                onClick={() => openModal(video)}
               >
                 <div className="relative overflow-hidden">
                   <img
@@ -46,20 +87,20 @@ const VideoSection = () => {
                     className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300" />
-                  
+
                   {/* Play Button */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <button className="bg-white/95 hover:bg-white text-gray-900 rounded-full p-5 transform group-hover:scale-110 transition-all duration-300 shadow-xl backdrop-blur-sm">
                       <Play className="ml-1" size={28} fill="currentColor" />
                     </button>
                   </div>
-                  
+
                   {/* Duration Badge */}
                   <div className="absolute bottom-4 right-4 bg-black/80 text-white px-3 py-1.5 rounded-full text-sm font-medium">
                     {video.duration}
                   </div>
                 </div>
-                
+
                 <div className="p-8">
                   <span className="inline-block bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-xs font-medium mb-4">
                     {video.category}
@@ -71,7 +112,9 @@ const VideoSection = () => {
                     {video.description}
                   </p>
                   <div className="flex items-center justify-between mt-6">
-                    <span className="text-stone-500 text-sm font-light">{video.views} views</span>
+                    <span className="text-stone-500 text-sm font-light">
+                      {video.views} views
+                    </span>
                     <span className="text-amber-600 text-sm font-medium group-hover:translate-x-1 transform transition-transform duration-200">
                       Watch Now →
                     </span>
@@ -89,19 +132,23 @@ const VideoSection = () => {
             >
               <ArrowLeft size={20} className="text-gray-600" />
             </button>
-            
+
             <div className="flex space-x-3">
-              {Array.from({ length: Math.ceil(videos.length / 3) }).map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                    index === currentIndex ? 'bg-amber-600 scale-125' : 'bg-stone-300 hover:bg-amber-300'
-                  }`}
-                />
-              ))}
+              {Array.from({ length: Math.ceil(videos.length / 3) }).map(
+                (_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                      index === currentIndex
+                        ? "bg-amber-600 scale-125"
+                        : "bg-stone-300 hover:bg-amber-300"
+                    }`}
+                  />
+                )
+              )}
             </div>
-            
+
             <button
               onClick={nextSlide}
               className="p-4 bg-white border border-stone-200 rounded-full hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg transition-all duration-200 transform hover:scale-110"
@@ -111,6 +158,53 @@ const VideoSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && activeVideo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={closeModal}
+          />
+
+          {/* Loader */}
+          {loading && (
+            <div className="absolute inset-0 z-30 flex items-center justify-center bg-white/30 backdrop-blur-sm">
+              <div className="flex flex-col items-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-amber-500 border-solid"></div>
+                <p className="mt-4 text-white text-lg font-semibold drop-shadow-lg">Loading Video...</p>
+              </div>
+            </div>
+          )}
+
+          {/* Close button */}
+          <button
+            onClick={closeModal}
+            className="absolute top-6 right-6 bg-white/80 hover:bg-white text-gray-900 rounded-full p-2 shadow-lg z-10"
+          >
+            <X size={22} />
+          </button>
+
+          {/* Video player */}
+          <div className="relative z-20 w-[90% md:w-[60%] lg:w-[50%] rounded-2xl overflow-hidden shadow-2xl">
+            <video
+              ref={videoRef}
+              src={activeVideo.src}
+              controls
+              autoPlay
+              className="w-full h-auto rounded-2xl"
+              onLoadedData={handleVideoLoad} // Hide loader when video loads
+            />
+            <div className="absolute bottom-4 left-4 text-white drop-shadow-lg">
+              <h3 className="text-lg md:text-xl font-semibold">
+                {activeVideo.title}
+              </h3>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

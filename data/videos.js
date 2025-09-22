@@ -1,85 +1,64 @@
 
 
-export const videos= [
+export const videos = [
   {
     id: 1,
-    title: 'Fashion Sketching Fundamentals',
-    description: 'Learn the basics of fashion illustration and sketching techniques used by professional designers.',
-    thumbnail: 'https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    duration: '12:34',
-    category: 'Tutorial',
-    views: '24.5K'
+    title: "Fashion Basics Tutorial",
+    thumbnail: "https://images.pexels.com/photos/1707828/pexels-photo-1707828.jpeg",
+    src: "https://www.pexels.com/download/video/8516411/",
+    duration: "5:30",
+    category: "Tutorial",
+    description: "Learn the fundamentals of fashion design from experts.",
+    views: "12K",
   },
   {
     id: 2,
-    title: 'Pattern Making Masterclass',
-    description: 'Advanced pattern making techniques for creating professional-grade garments.',
-    thumbnail: 'https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    duration: '18:42',
-    category: 'Masterclass',
-    views: '31.2K'
+    title: "Student Life at NIFT",
+    thumbnail: "https://images.pexels.com/photos/1139743/pexels-photo-1139743.jpeg",
+    src: "https://www.pexels.com/download/video/8516411/",
+    duration: "3:15",
+    category: "Campus",
+    description: "Experience a day in the life of fashion students at NIFT.",
+    views: "8.7K",
   },
   {
     id: 3,
-    title: 'Fashion Photography Basics',
-    description: 'Essential photography skills for fashion designers to showcase their work professionally.',
-    thumbnail: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    duration: '15:28',
-    category: 'Photography',
-    views: '18.7K'
+    title: "Global Fashion Trends",
+    thumbnail: "https://images.pexels.com/photos/1488463/pexels-photo-1488463.jpeg",
+    src: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: "4:20",
+    category: "Trends",
+    description: "Explore the latest global fashion movements and influences.",
+    views: "15K",
   },
   {
     id: 4,
-    title: 'Sustainable Fashion Design',
-    description: 'Exploring eco-friendly materials and sustainable practices in modern fashion design.',
-    thumbnail: 'https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    duration: '22:15',
-    category: 'Sustainability',
-    views: '29.8K'
+    title: "Design Workshop Moments",
+    thumbnail: "https://images.pexels.com/photos/936120/pexels-photo-936120.jpeg",
+    src: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: "6:05",
+    category: "Workshop",
+    description: "Highlights from our design thinking workshop with students.",
+    views: "5.4K",
   },
   {
     id: 5,
-    title: 'Color Theory in Fashion',
-    description: 'Understanding color relationships and how to create stunning color palettes for your designs.',
-    thumbnail: 'https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    duration: '14:52',
-    category: 'Theory',
-    views: '22.1K'
+    title: "Certification Success Stories",
+    thumbnail: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg",
+    src: "https://www.w3schools.com/html/mov_bbb.mp4",
+    duration: "2:45",
+    category: "Success",
+    description: "Hear inspiring stories from our certified fashion students.",
+    views: "9.2K",
   },
   {
     id: 6,
-    title: 'Building Your Fashion Portfolio',
-    description: 'Step-by-step guide to creating a compelling portfolio that stands out to employers.',
-    thumbnail: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    duration: '19:36',
-    category: 'Portfolio',
-    views: '35.4K'
+    title: "Behind the Scenes Fashion Shoot",
+    thumbnail: "https://images.pexels.com/photos/5475310/pexels-photo-5475310.jpeg", 
+    src: "https://player.pexels.com/video-files/5475310/5475310-uhd_2560_1440_25fps.mp4",
+    duration: "1:10",
+    category: "BTS",
+    description: "Go behind the scenes of a professional fashion photoshoot.",
+    views: "21K",
   },
-  {
-    id: 7,
-    title: 'Fashion Business Essentials',
-    description: 'Key business concepts every fashion designer needs to know to succeed in the industry.',
-    thumbnail: 'https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    duration: '16:23',
-    category: 'Business',
-    views: '27.9K'
-  },
-  {
-    id: 8,
-    title: 'Draping Techniques',
-    description: 'Master the art of draping fabric on dress forms to create stunning silhouettes.',
-    thumbnail: 'https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    duration: '21:07',
-    category: 'Technique',
-    views: '19.6K'
-  },
-  {
-    id: 9,
-    title: 'Fashion Trend Forecasting',
-    description: 'Learn how to analyze and predict fashion trends to stay ahead in the industry.',
-    thumbnail: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    duration: '17:45',
-    category: 'Trends',
-    views: '26.3K'
-  }
 ];

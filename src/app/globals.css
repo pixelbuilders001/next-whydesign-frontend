@@ -40,6 +40,10 @@ body {
   outline-offset: 2px;
 }
 
+.will-change-transform {
+  will-change: transform;
+}
+
 button:focus,
 a:focus,
 input:focus,

@@ -51,9 +51,9 @@ export default function Home() {
         <PDFDownloadSection />
         <VideoSection />
         <ReelsSection />
-        {/* <TestimonialsSection />
+        <TestimonialsSection />
         <ContactSection />
-        <Footer />  */}
+        <Footer /> 
       </main>
       
       {/* PWA Install Prompt */}

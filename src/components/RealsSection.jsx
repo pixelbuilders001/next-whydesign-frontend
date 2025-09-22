@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { PlayCircle, Volume2, VolumeX } from "lucide-react";
 
 const reels = [
-  { id: 1, title: "Fashion Show Highlights", thumb: "https://images.pexels.com/photos/1707828/pexels-photo-1707828.jpeg", video: "https://www.w3schools.com/html/mov_bbb.mp4" },
+  { id: 1, title: "Fashion Show Highlights", thumb: "https://images.pexels.com/photos/1707828/pexels-photo-1707828.jpeg", video: "https://www.pexels.com/download/video/8516411/" },
   { id: 2, title: "Student Life at NIFT", thumb: "https://images.pexels.com/photos/1139743/pexels-photo-1139743.jpeg", video: "https://www.w3schools.com/html/mov_bbb.mp4" },
   { id: 3, title: "Global Fashion Trends", thumb: "https://images.pexels.com/photos/1488463/pexels-photo-1488463.jpeg", video: "https://www.w3schools.com/html/mov_bbb.mp4" },
   { id: 4, title: "Design Workshop Moments", thumb: "https://images.pexels.com/photos/936120/pexels-photo-936120.jpeg", video: "https://www.w3schools.com/html/mov_bbb.mp4" },
