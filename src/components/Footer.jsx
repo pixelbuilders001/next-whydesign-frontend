@@ -1,24 +1,24 @@
 import React from 'react';
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import logo from '../../public/logo.png';
 
 const Footer = () => {
   const quickLinks = [
     { name: 'About Us', href: '#about' },
     { name: 'Courses', href: '#courses' },
     { name: 'Study Abroad', href: '#study-abroad' },
-    { name: 'Success Stories', href: '#testimonials' },
-    { name: 'Blog', href: '#blog' },
-    { name: 'FAQ', href: '#faq' },
+    { name: 'Testimonials', href: '#testimonials' },
+    { name: 'Blog', href: '/blogs' },
+    // { name: 'FAQ', href: '#faq' },
   ];
 
   const services = [
-    { name: 'Fashion Design Courses', href: '#courses' },
-    { name: 'Portfolio Development', href: '#portfolio' },
-    { name: 'Career Counseling', href: '#career' },
-    { name: 'University Admissions', href: '#admissions' },
-    { name: 'Scholarship Guidance', href: '#scholarships' },
-    { name: 'Industry Internships', href: '#internships' },
-  ];
+     { name: 'Privacy Policy', href: '/privacy-policy' },
+     { name: 'Terms of Service', href: '/terms-of-service' },
+     { name: 'FAQ', href: '/faq' },
+
+   ];
 
   const socialLinks = [
     { icon: Facebook, href: '#', label: 'Facebook' },
@@ -34,12 +34,17 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="space-y-8">
             <div>
-              <h3 className="text-4xl font-bold mb-6">
-                <span className="font-serif font-light">why</span>
-                <span className="text-amber-400 ml-1">designers</span>
-              </h3>
+              <div className="mb-0">
+                <Image
+                  src={logo}
+                  alt="why designers"
+                  width={80}
+                  height={80}
+                  className="border rounded-lg"
+                />
+              </div>
               <p className="text-stone-300 leading-relaxed font-light text-lg">
-                Empowering the next generation of fashion designers through 
+                Empowering the next generation of fashion designers through
                 world-class education and personalized career guidance.
               </p>
             </div>
@@ -120,21 +125,11 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className="border-t border-stone-700 mt-16 pt-10">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+          <div className="flex items-center justify-center">  
             <p className="text-stone-400 text-sm font-light">
               © 2025 why designers. All rights reserved.
             </p>
-            <div className="flex space-x-8 text-sm">
-              <a href="#" className="text-stone-400 hover:text-amber-400 transition-colors duration-200 font-light">
-                Privacy Policy
-              </a>
-              <a href="#" className="text-stone-400 hover:text-amber-400 transition-colors duration-200 font-light">
-                Terms of Service
-              </a>
-              <a href="#" className="text-stone-400 hover:text-amber-400 transition-colors duration-200 font-light">
-                Cookie Policy
-              </a>
-            </div>
+          
           </div>
         </div>
       </div>

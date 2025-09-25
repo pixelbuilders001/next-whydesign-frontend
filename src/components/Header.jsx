@@ -9,8 +9,9 @@ import {
   ChevronDown,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import logo from "../../public/logo.png";
 import AuthModal from "./AuthModal";
@@ -24,13 +25,18 @@ const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
 
-  // Handle scroll effect
+  // Handle scroll effect - only on home page
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    if (pathname === "/") {
+      const handleScroll = () => setIsScrolled(window.scrollY > 50);
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    } else {
+      setIsScrolled(true); // Always show solid background on other pages
+    }
+  }, [pathname]);
 
   // Menu open animation
   const openMenu = () => {
@@ -88,13 +94,15 @@ const Header = () => {
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Image
-                src={logo}
-                alt="Logo"
-                width={50}
-                height={50}
-                className="ml-4 border rounded-lg lg:ml-0"
-              />
+              <Link href="/">
+                <Image
+                  src={logo}
+                  alt="Logo"
+                  width={50}
+                  height={50}
+                  className="ml-4 border rounded-lg lg:ml-0 cursor-pointer hover:opacity-80 transition-opacity"
+                />
+              </Link>
             </div>
 
             {/* Desktop Navigation */}
@@ -232,13 +240,15 @@ const Header = () => {
       </div>
     </div>
   ) : (
-    <Image
-      src={logo}
-      alt="Logo"
-      width={50}
-      height={50}
-      className="border rounded-lg"
-    />
+    <Link href="/">
+      <Image
+        src={logo}
+        alt="Logo"
+        width={50}
+        height={50}
+        className="border rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+      />
+    </Link>
   )}
 
   <button
