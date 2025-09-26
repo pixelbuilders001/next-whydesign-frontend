@@ -1,27 +1,41 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import Image from "next/image";
-import { ArrowRight, Sparkles } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 const HeroSection = () => {
-  const imgRef = useRef(null);
+  const videoRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   useEffect(() => {
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const y = window.scrollY * 0.4; // parallax speed
-          if (imgRef.current) {
-            imgRef.current.style.transform = `translateY(${y}px) scale(1.1)`; // move + slight zoom
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    setIsVisible(true);
+
+    const video = videoRef.current;
+    if (video) {
+      const handleLoadedData = () => setIsVideoLoaded(true);
+      video.addEventListener('loadeddata', handleLoadedData);
+
+      // Intersection Observer for performance
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              video.play();
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      observer.observe(video);
+
+      return () => {
+        video.removeEventListener('loadeddata', handleLoadedData);
+        observer.disconnect();
+      };
+    }
   }, []);
 
   return (
@@ -29,59 +43,52 @@ const HeroSection = () => {
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Parallax Image */}
-      <div className="absolute inset-0 overflow-hidden will-change-transform">
-        <div
-          ref={imgRef}
-          className="w-full h-full will-change-transform transition-transform duration-75 ease-out"
+      {/* Video Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          loop
+          muted
+          playsInline
+          autoPlay
+          preload="metadata"
+          poster="https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&fit=crop"
         >
-          <Image
-            src="https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&fit=crop"
-            alt="Fashion background"
-            fill
-            priority
-        className="object-cover blur-sm"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-black/50" />
-        </div>
+          <source src="/video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
       </div>
 
-      {/* Sparkles */}
-      <div className="absolute inset-0 pointer-events-none z-10">
-        <div className="absolute top-20 left-1/4 animate-pulse">
-          <Sparkles size={32} className="text-amber-400 opacity-80" />
+      {/* Loading Overlay */}
+      {!isVideoLoaded && (
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
+          <div className="text-white text-xl">Loading...</div>
         </div>
-        <div className="absolute bottom-32 right-1/4 animate-pulse">
-          <Sparkles size={28} className="text-rose-300 opacity-70" />
-        </div>
-        <div className="absolute top-1/2 left-3/4 animate-pulse">
-          <Sparkles size={24} className="text-amber-300 opacity-60" />
-        </div>
-      </div>
+      )}
 
       {/* Content */}
-      <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-6xl sm:text-7xl lg:text-7xl font-serif font-light text-white mb-8 leading-tight drop-shadow-lg">
-          <span className="block">Design Your</span>
-          <span className="block text-amber-400 font-bold tracking-tight animate-gradient bg-gradient-to-r from-amber-400 via-rose-400 to-amber-600 bg-clip-text text-transparent">
+      <div className={`relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-light text-white mb-8 leading-tight drop-shadow-2xl">
+          Design Your
+          <span className="block bg-gradient-to-r from-amber-400 via-rose-400 to-purple-400 bg-clip-text text-transparent font-bold">
             Fashion Future
           </span>
         </h1>
-        <p className="text-xl sm:text-2xl text-white/80 mb-12 max-w-3xl mx-auto leading-relaxed font-light drop-shadow">
-          Transform your passion into a profession with world-class fashion
-          education, study abroad opportunities, and personalized career
-          guidance.
+
+        <p className="text-lg sm:text-xl text-white/90 mb-12 max-w-2xl mx-auto leading-relaxed font-light drop-shadow-lg">
+          Transform your passion into a profession with world-class fashion education and personalized career guidance.
         </p>
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <button className="group bg-gradient-to-r from-amber-600 to-rose-500 hover:from-amber-700 hover:to-rose-600 text-white px-10 py-5 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-3 shadow-lg">
-            <span>Start Your Journey</span>
-            <ArrowRight
-              className="group-hover:translate-x-1 transition-transform duration-200"
-              size={22}
-            />
-          </button>
-        </div>
+
+        <button className="group bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white px-10 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-3 shadow-lg mx-auto">
+          <span>Start Your Journey</span>
+          <ArrowRight
+            className="group-hover:translate-x-1 transition-transform duration-200"
+            size={22}
+          />
+        </button>
       </div>
     </section>
   );
