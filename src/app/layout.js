@@ -80,6 +80,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-white text-gray-900`}
       >
+      
         {/* <ErrorBoundary> */}
           <ToastProvider>
             {/* <Suspense fallback={<ModernLoader onFinish={() => {}} />}> */}
