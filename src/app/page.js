@@ -10,6 +10,7 @@ import PDFDownloadSection from "@/components/PDFDownloadSection";
 import VideoSection from "@/components/VideoSection";
 import ReelsSection from "@/components/RealsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import MessageFromFounders from "@/components/MessageFromFounders";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import ModernLoader from "@/components/ModernLoader";
@@ -52,6 +53,7 @@ export default function Home() {
         <VideoSection />
         <ReelsSection />
         <TestimonialsSection />
+        <MessageFromFounders />
         <ContactSection />
         <Footer /> 
       </main>

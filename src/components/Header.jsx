@@ -113,8 +113,8 @@ const Header = () => {
                   href={item.href}
                   className={`font-medium transition-colors duration-200 ${
                     isScrolled
-                      ? "text-gray-700 hover:text-amber-600"
-                      : "text-white/90 hover:text-amber-300"
+                      ? "text-gray-700 hover:text-primary-600"
+                      : "text-white/90 hover:text-primary-300"
                   }`}
                 >
                   {item.name}
@@ -124,11 +124,11 @@ const Header = () => {
 
             {/* Desktop CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-3">
-              <button className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-amber-600 to-rose-500 hover:from-amber-700 hover:to-rose-600 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <button className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-secondary-500 hover:from-primary-700 hover:to-secondary-600 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
                 <Phone size={16} />
                 <span>Call Us</span>
               </button>
-              <button className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-green-500 to-amber-400 hover:from-green-600 hover:to-amber-500 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <button className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-accent-500 to-primary-400 hover:from-accent-600 hover:to-primary-500 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
                 <MessageCircle size={16} />
                 <span>WhatsApp</span>
               </button>
@@ -182,8 +182,8 @@ const Header = () => {
                   }}
                   className={`p-2.5 rounded-full transition-all duration-200 ${
                     isScrolled
-                      ? "text-gray-700 hover:text-amber-600 hover:bg-amber-50"
-                      : "text-white/90 hover:text-amber-300 hover:bg-white/10"
+                      ? "text-gray-700 hover:text-primary-600 hover:bg-primary-50"
+                      : "text-white/90 hover:text-primary-300 hover:bg-white/10"
                   }`}
                 >
                   Login
@@ -266,7 +266,7 @@ const Header = () => {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-lg font-medium text-gray-700 hover:text-amber-600 hover:bg-amber-50 transition-all duration-200 px-4 py-3 rounded-xl border border-transparent hover:border-amber-200"
+                  className="text-lg font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200 px-4 py-3 rounded-xl border border-transparent hover:border-primary-200"
                   onClick={closeMenu}
                 >
                   {item.name}
@@ -276,12 +276,12 @@ const Header = () => {
 
             {/* Mobile CTA Buttons */}
             <div className="mt-4 flex flex-col gap-3">
-              <button className="flex items-center justify-center space-x-2 px-4 py-3 border border-amber-500 text-amber-500 rounded-md font-medium text-base hover:bg-amber-50 hover:scale-105 transition-all duration-200">
+              <button className="flex items-center justify-center space-x-2 px-4 py-3 border border-primary-500 text-primary-500 rounded-md font-medium text-base hover:bg-primary-50 hover:scale-105 transition-all duration-200">
                 <Phone size={16} />
                 <span>Call Us</span>
               </button>
 
-              <button className="flex items-center justify-center space-x-2 px-4 py-3 border border-green-500 text-green-500 rounded-md font-medium text-base hover:bg-green-50 hover:scale-105 transition-all duration-200">
+              <button className="flex items-center justify-center space-x-2 px-4 py-3 border border-accent-500 text-accent-500 rounded-md font-medium text-base hover:bg-accent-50 hover:scale-105 transition-all duration-200">
                 <MessageCircle size={16} />
                 <span>WhatsApp</span>
               </button>
@@ -292,7 +292,7 @@ const Header = () => {
                     signOut({ callbackUrl: "/" });
                     closeMenu();
                   }}
-                  className="w-full py-3 border border-red-500 text-red-500 rounded-md font-medium text-base hover:bg-red-50 transition-all duration-200"
+                  className="w-full py-3 border border-secondary-500 text-secondary-500 rounded-md font-medium text-base hover:bg-secondary-50 transition-all duration-200"
                 >
                   Logout
                 </button>
