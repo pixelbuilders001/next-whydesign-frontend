@@ -7,11 +7,13 @@ import {
   MessageCircle,
   LogOut,
   ChevronDown,
+  User,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
+import { useAuth } from "@/lib/useAuth";
 
 import logo from "../../public/logo.png";
 import AuthModal from "./AuthModal";
@@ -24,6 +26,7 @@ const Header = () => {
   const [authType, setAuthType] = useState("login");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { data: session, status } = useSession();
+  const { isAuthenticated: customAuthenticated, user: customUser, logout: customLogout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -134,61 +137,93 @@ const Header = () => {
               </button>
 
               {/* Auth / Profile */}
-              {status === "authenticated" && session ? (
-                <div className="relative dropdown-container">
-                  <button
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="flex items-center space-x-2 p-1 rounded-full transition-all duration-200 hover:bg-white/10"
-                  >
-                    <Image
-                      src={session.user.image || "/logo.png"}
-                      alt="Profile"
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
-                    <ChevronDown
-                      size={16}
-                      className={`transition-transform ${
-                        isDropdownOpen ? "rotate-180" : ""
-                      } ${isScrolled ? "text-gray-700" : "text-white"}`}
-                    />
-                  </button>
-                  {isDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                      <div className="px-4 py-2 border-b border-gray-200">
-                        <p className="text-sm font-medium text-gray-900">
-                          {session.user.name}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {session.user.email}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => signOut({ callbackUrl: "/" })}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
-                      >
-                        <LogOut size={16} />
-                        <span>Logout</span>
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <button
-                  onClick={() => {
-                    setAuthType("login");
-                    setAuthOpen(true);
-                  }}
-                  className={`p-2.5 rounded-full transition-all duration-200 ${
-                    isScrolled
-                      ? "text-gray-700 hover:text-primary-600 hover:bg-primary-50"
-                      : "text-white/90 hover:text-primary-300 hover:bg-white/10"
-                  }`}
-                >
-                  Login
-                </button>
-              )}
+               {(status === "authenticated" && session) || customAuthenticated ? (
+                 <div className="relative dropdown-container">
+                   <button
+                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                     className="flex items-center space-x-2 p-1 rounded-full transition-all duration-200 hover:bg-white/10"
+                   >
+                     {status === "authenticated" && session ? (
+                       // Google OAuth profile picture (keep existing code)
+                       <Image
+                         src={session.user.image || "/logo.png"}
+                         alt="Profile"
+                         width={32}
+                         height={32}
+                         className="rounded-full"
+                       />
+                     ) : (
+                       // Custom auth person icon
+                       <div className={`p-1.5 rounded-full ${isScrolled ? "bg-primary-100 text-primary-600" : "bg-white/20 text-white"}`}>
+                         <User size={18} />
+                       </div>
+                     )}
+                     <ChevronDown
+                       size={16}
+                       className={`transition-transform ${
+                         isDropdownOpen ? "rotate-180" : ""
+                       } ${isScrolled ? "text-gray-700" : "text-white"}`}
+                     />
+                   </button>
+                   {isDropdownOpen && (
+                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                       {status === "authenticated" && session ? (
+                         // Google OAuth dropdown (keep existing code)
+                         <>
+                           <div className="px-4 py-2 border-b border-gray-200">
+                             <p className="text-sm font-medium text-gray-900">
+                               {session.user.name}
+                             </p>
+                             <p className="text-xs text-gray-500">
+                               {session.user.email}
+                             </p>
+                           </div>
+                           <button
+                             onClick={() => signOut({ callbackUrl: "/" })}
+                             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                           >
+                             <LogOut size={16} />
+                             <span>Logout</span>
+                           </button>
+                         </>
+                       ) : (
+                         // Custom auth dropdown
+                         <>
+                           <div className="px-4 py-2 border-b border-gray-200">
+                             <p className="text-sm font-medium text-gray-900">
+                               {customUser?.name || customUser?.email || "User"}
+                             </p>
+                             <p className="text-xs text-gray-500">
+                               {customUser?.email || "Authenticated"}
+                             </p>
+                           </div>
+                           <button
+                             onClick={customLogout}
+                             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                           >
+                             <LogOut size={16} />
+                             <span>Logout</span>
+                           </button>
+                         </>
+                       )}
+                     </div>
+                   )}
+                 </div>
+               ) : (
+                 <button
+                   onClick={() => {
+                     setAuthType("login");
+                     setAuthOpen(true);
+                   }}
+                   className={`p-2.5 rounded-full transition-all duration-200 ${
+                     isScrolled
+                       ? "text-gray-700 hover:text-primary-600 hover:bg-primary-50"
+                       : "text-white/90 hover:text-primary-300 hover:bg-white/10"
+                   }`}
+                 >
+                   Login
+                 </button>
+               )}
             </div>
 
             {/* Mobile menu button */}
@@ -225,18 +260,30 @@ const Header = () => {
             {/* Logo + Close Button */}
          {/* Logo / User Info + Close Button */}
 <div className="flex items-center justify-between mb-4">
-  {status === 'authenticated' && session ? (
+  {((status === 'authenticated' && session) || customAuthenticated) ? (
     <div className="flex items-center space-x-3">
-      <Image
-        src={session.user.image || '/logo.png'}
-        alt="Profile"
-        width={50}
-        height={50}
-        className="rounded-full border-2 border-amber-400"
-      />
+      {status === 'authenticated' && session ? (
+        // Google OAuth profile (keep existing code)
+        <Image
+          src={session.user.image || '/logo.png'}
+          alt="Profile"
+          width={50}
+          height={50}
+          className="rounded-full border-2 border-amber-400"
+        />
+      ) : (
+        // Custom auth person icon
+        <div className="p-2 bg-primary-100 rounded-full border-2 border-primary-300">
+          <User size={24} className="text-primary-600" />
+        </div>
+      )}
       <div className="flex flex-col">
-        <p className="text-sm font-semibold text-gray-800">{session.user.name}</p>
-        <p className="text-xs text-gray-500">{session.user.email}</p>
+        <p className="text-sm font-semibold text-gray-800">
+          {status === 'authenticated' && session ? session.user.name : (customUser?.name || customUser?.email || "User")}
+        </p>
+        <p className="text-xs text-gray-500">
+          {status === 'authenticated' && session ? session.user.email : (customUser?.email || "Authenticated")}
+        </p>
       </div>
     </div>
   ) : (
@@ -286,10 +333,14 @@ const Header = () => {
                 <span>WhatsApp</span>
               </button>
 
-              {status === "authenticated" && session ? (
+              {((status === "authenticated" && session) || customAuthenticated) ? (
                 <button
                   onClick={() => {
-                    signOut({ callbackUrl: "/" });
+                    if (status === "authenticated" && session) {
+                      signOut({ callbackUrl: "/" });
+                    } else {
+                      customLogout();
+                    }
                     closeMenu();
                   }}
                   className="w-full py-3 border border-secondary-500 text-secondary-500 rounded-md font-medium text-base hover:bg-secondary-50 transition-all duration-200"

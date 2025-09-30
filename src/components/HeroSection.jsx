@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
+// import video from "../../public/hero-video.mp4"; // Ensure the video file is in the public directory
 
 const HeroSection = () => {
   const videoRef = useRef(null);
@@ -55,7 +56,7 @@ const HeroSection = () => {
           preload="metadata"
           poster="https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&fit=crop"
         >
-          <source src="/video.mp4" type="video/mp4" />
+          <source src="/hero-video.webm" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className="absolute inset-0 bg-black/40" />
