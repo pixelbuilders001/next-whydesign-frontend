@@ -106,7 +106,7 @@ const Footer = () => {
             <div className="space-y-6">
               <div className="flex items-center space-x-4">
                 <Phone className="text-primary-400 flex-shrink-0" size={20} />
-                <span className="text-stone-300 font-light">+1 (555) 123-4567</span>
+                <span className="text-stone-300 font-light">+91 (756) 123-4567</span>
               </div>
               <div className="flex items-center space-x-4">
                 <Mail className="text-primary-400 flex-shrink-0" size={20} />
@@ -115,8 +115,8 @@ const Footer = () => {
               <div className="flex items-start space-x-4">
                 <MapPin className="text-primary-400 flex-shrink-0 mt-1" size={20} />
                 <span className="text-stone-300 font-light">
-                  123 Fashion District<br />
-                  New York, NY 10001
+                  CP,Fashion District<br />
+                  New Delhi, India - 110001
                 </span>
               </div>
             </div>
