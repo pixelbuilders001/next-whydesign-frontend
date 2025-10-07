@@ -107,5 +107,70 @@ export async function resendOTP(email) {
   }
 }
 
+export async function userProfileUpdate(profilePicture, firstName, gender) {
+  try {
+    // Get the current user token for authentication
+    const token = tokenStorage.getAccessToken();
+
+    // Create JSON data instead of FormData
+    const profileData = {
+      firstName: firstName || undefined,
+      gender: gender || undefined,
+      // Note: profilePicture would need a separate endpoint for file upload
+      // as JSON APIs typically don't handle file uploads directly
+    };
+
+    // Remove undefined fields
+    Object.keys(profileData).forEach(key => {
+      if (profileData[key] === undefined) {
+        delete profileData[key];
+      }
+    });
+
+    const response = await axios.post(API_ENDPOINTS.USER.REGISTER, profileData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log("Profile update error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
 
 
+export async function resetPassword(email,password, otp) {
+ try {
+ const response = await axios.post(API_ENDPOINTS.USER.RESET_PASSWORD, {
+  email,  // valid email format
+  password, //, min 6 chars
+  otp
+    });
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data,
+    };
+ }  catch (error) {
+    console.log("testtest--", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null, // <-- here’s the code (e.g., 409)
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}

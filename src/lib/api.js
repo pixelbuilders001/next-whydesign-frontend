@@ -40,7 +40,7 @@ class APIEndpoints {
       LOGOUT: this.buildUrl('/auth/logout'),
       REFRESH_TOKEN: this.buildUrl('/user/refresh-token'),
       FORGOT_PASSWORD: this.buildUrl('/auth/forgot-password'),
-      RESET_PASSWORD: this.buildUrl('/auth/reset-password'),
+      RESET_PASSWORD: this.buildUrl('/user/reset-password'),
 
       // User profile endpoints
       PROFILE: this.buildUrl('/user/profile'),

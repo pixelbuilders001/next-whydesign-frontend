@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { X } from "lucide-react";
+import { userProfileUpdate } from "../lib/authService";
 
 const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip }) => {
   const [name, setName] = useState("");
@@ -9,6 +10,7 @@ const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip }) => {
   const [gender, setGender] = useState("");
   const [profilePic, setProfilePic] = useState(null);
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleProfilePicChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -16,23 +18,49 @@ const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const profileData = {
-      name,
-      age,
-      gender,
-      profilePic,
-    };
+    if (!name.trim()) {
+      setMessage("Please enter your name");
+      return;
+    }
 
-    onProfileComplete(profileData);
-    // Reset fields
+    if (!gender) {
+      setMessage("Please select your gender");
+      return;
+    }
+
+    setIsLoading(true);
     setMessage("");
-    setName("");
-    setAge("");
-    setGender("");
-    setProfilePic(null);
+
+    try {
+      const result = await userProfileUpdate(profilePic, name.trim(), gender);
+
+      if (result.success) {
+        const profileData = {
+          name,
+          age,
+          gender,
+          profilePic,
+        };
+
+        onProfileComplete(profileData);
+        // Reset fields
+        setMessage("");
+        setName("");
+        setAge("");
+        setGender("");
+        setProfilePic(null);
+      } else {
+        setMessage(result.message || "Failed to update profile. Please try again.");
+      }
+    } catch (error) {
+      setMessage("An error occurred while updating your profile. Please try again.");
+      console.error("Profile update error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSkip = () => {
@@ -135,9 +163,10 @@ const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip }) => {
             {/* Save Profile Button */}
             <button
               type="submit"
-              className="cursor-pointer w-full py-2 rounded-lg font-semibold shadow transition-all text-sm bg-gradient-to-r from-amber-500 to-rose-400 text-white"
+              disabled={isLoading}
+              className="cursor-pointer w-full py-2 rounded-lg font-semibold shadow transition-all text-sm bg-gradient-to-r from-amber-500 to-rose-400 text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Save Profile
+              {isLoading ? "Saving..." : "Save Profile"}
             </button>
 
             {/* Skip Button */}

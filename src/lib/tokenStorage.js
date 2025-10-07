@@ -4,6 +4,7 @@ const TOKEN_KEYS = {
   REFRESH_TOKEN: 'auth_refresh_token',
   USER_DATA: 'auth_user_data',
   TOKEN_EXPIRY: 'auth_token_expiry',
+  PROFILE_COMPLETED: 'auth_profile_completed',
 };
 
 // Storage type enum
@@ -120,6 +121,28 @@ class TokenStorage {
     return token && !this.isTokenExpired();
   }
 
+  // Set profile completion status
+  setProfileCompleted(completed = true) {
+    try {
+      this.storage.setItem(TOKEN_KEYS.PROFILE_COMPLETED, completed.toString());
+      return true;
+    } catch (error) {
+      console.error('Error setting profile completion status:', error);
+      return false;
+    }
+  }
+
+  // Get profile completion status
+  getProfileCompleted() {
+    try {
+      const completed = this.storage.getItem(TOKEN_KEYS.PROFILE_COMPLETED);
+      return completed === 'true';
+    } catch (error) {
+      console.error('Error getting profile completion status:', error);
+      return false;
+    }
+  }
+
   // Decode JWT token
   decodeToken(token) {
     try {
@@ -206,6 +229,7 @@ export const debugStoredTokens = () => {
   console.log("Refresh Token:", localStorage.getItem(TOKEN_KEYS.REFRESH_TOKEN) ? "Present" : "Not found");
   console.log("User Data:", localStorage.getItem(TOKEN_KEYS.USER_DATA) ? "Present" : "Not found");
   console.log("Token Expiry:", localStorage.getItem(TOKEN_KEYS.TOKEN_EXPIRY) || "Not set");
+  console.log("Profile Completed:", localStorage.getItem(TOKEN_KEYS.PROFILE_COMPLETED) || "Not set");
 
   try {
     const userData = localStorage.getItem(TOKEN_KEYS.USER_DATA);

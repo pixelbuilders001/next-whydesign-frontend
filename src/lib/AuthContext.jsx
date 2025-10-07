@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { tokenStorage } from './tokenStorage';
+import CompleteProfileModal from '../components/CompleteProfileModal';
 
 // Create the authentication context
 const AuthContext = createContext();
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [accessToken, setAccessToken] = useState(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   // Initialize auth state on mount
   useEffect(() => {
@@ -33,6 +35,12 @@ export const AuthProvider = ({ children }) => {
           setAccessToken(token);
           setUser(userData);
           setIsAuthenticated(true);
+
+          // Check if profile needs to be completed (only for first-time users)
+          const profileCompleted = tokenStorage.getProfileCompleted();
+          if (!profileCompleted) {
+            setShowProfileModal(true);
+          }
         } else {
           // Clear any invalid tokens
           tokenStorage.clearTokens();
@@ -93,10 +101,17 @@ export const AuthProvider = ({ children }) => {
           setUser(userData);
           setIsAuthenticated(true);
 
+          // Check if profile is completed, show modal if not
+          const profileCompleted = tokenStorage.getProfileCompleted();
+          if (!profileCompleted) {
+            setShowProfileModal(true);
+          }
+
           return {
             success: true,
             user: userData,
-            message: result.message || 'Login successful'
+            message: result.message || 'Login successful',
+            showProfileModal: !profileCompleted
           };
         } else {
           console.error("No token data found in response");
@@ -180,6 +195,35 @@ export const AuthProvider = ({ children }) => {
     tokenStorage.setTokens(accessToken, tokenStorage.getRefreshToken(), userData);
   }, [accessToken]);
 
+  // Handle profile completion
+  const handleProfileComplete = useCallback((profileData) => {
+    console.log('Profile completed with data:', profileData);
+
+    // Mark profile as completed to prevent showing again
+    tokenStorage.setProfileCompleted(true);
+    setShowProfileModal(false);
+
+    // Update user data with profile information if user is available
+    if (user) {
+      const updatedUser = { ...user, ...profileData };
+      setUser(updatedUser);
+      tokenStorage.setTokens(accessToken, tokenStorage.getRefreshToken(), updatedUser);
+    }
+
+    console.log('Profile completion saved successfully');
+  }, [user, accessToken]);
+
+  // Handle profile skip
+  const handleProfileSkip = useCallback(() => {
+    console.log('Profile completion skipped');
+
+    // Mark profile as completed (skipped) to prevent showing again
+    tokenStorage.setProfileCompleted(true);
+    setShowProfileModal(false);
+
+    console.log('Profile completion skipped - will not show again');
+  }, []);
+
   // Check if token needs refresh
   const shouldRefreshToken = useCallback(() => {
     if (!accessToken) return false;
@@ -229,6 +273,10 @@ export const AuthProvider = ({ children }) => {
     refreshAuth,
     updateUser,
 
+    // Profile modal functions
+    handleProfileComplete,
+    handleProfileSkip,
+
     // Utilities
     shouldRefreshToken,
   };
@@ -236,6 +284,14 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={value}>
       {children}
+
+      {/* Profile Completion Modal */}
+      <CompleteProfileModal
+        open={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        onProfileComplete={handleProfileComplete}
+        onSkip={handleProfileSkip}
+      />
     </AuthContext.Provider>
   );
 };

@@ -6,7 +6,9 @@ import { signIn } from "next-auth/react";
 import { registerUser, loginUser, resendOTP } from "@/lib/authService";
 import { useAuth } from "@/lib/useAuth";
 import OTPModal from "./OTPModal";
-import CompleteProfileModal from "./CompleteProfileModal"
+import CompleteProfileModal from "./CompleteProfileModal";
+import ForgetPasswordModal from "./ForgetPasswordModal";
+import PasswordResetModal from "./PasswordResetModal";
 
 const AuthModal = ({ open, type, onClose, setAuthType }) => {
   const [name, setName] = useState("");
@@ -17,6 +19,14 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(true);
+
+  // Forget Password States
+  const [showForgetPasswordModal, setShowForgetPasswordModal] = useState(false);
+  const [showPasswordResetModal, setShowPasswordResetModal] = useState(false);
+  const [forgetPasswordEmail, setForgetPasswordEmail] = useState("");
+  const [resetPassword, setResetPassword] = useState("");
+  const [confirmResetPassword, setConfirmResetPassword] = useState("");
+  const [forgetPasswordMessage, setForgetPasswordMessage] = useState("");
 
   // Use the authentication context
   const { login: contextLogin, isLoading: authLoading } = useAuth();
@@ -113,12 +123,19 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
     setConfirmPassword("");
     setSignupEmail("");
     setIsAuthModalVisible(false);
+
+    // Note: Profile modal will be handled by AuthContext after login
   };
 
   const handleOTPModalClose = () => {
     setShowOTPModal(false);
     setIsAuthModalVisible(true);
   };
+
+  // Forget Password Handler - now handled by ForgetPasswordModal component
+
+  // Password reset now handled internally by PasswordResetModal component
+
 
   if (!open) return null;
 
@@ -228,11 +245,30 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                   </div>
                 )}
 
+                {/* Forget Password Link */}
+                {type === "login" && (
+                  <div className="text-center mt-2">
+                    <button
+                      type="button"
+                      className="cursor-pointer text-amber-700 font-semibold hover:underline text-xs"
+                      onClick={() => {
+                        setShowForgetPasswordModal(true);
+                        setIsAuthModalVisible(false);
+                      }}
+                    >
+                      Forget password ?
+                    </button>
+                  </div>
+                )}
+
                 {/* Google Signin */}
                 <div className="text-center mt-3">
                   <button
                     type="button"
-                    onClick={() => signIn("google", { callbackUrl: "/" })}
+                    onClick={() => {
+                      // Note: Profile modal will be handled by AuthContext after social login
+                      signIn("google", { callbackUrl: "/" });
+                    }}
                     className="cursor-pointer w-full py-2 rounded-lg border border-stone-300 shadow-sm flex items-center justify-center gap-2 hover:bg-stone-100 transition text-sm"
                   >
                     <img
@@ -257,13 +293,40 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
         onSkip={handleOTPVerificationSuccess}
       
       /> */}
-      <OTPModal
-        open={showOTPModal}
-        onClose={handleOTPModalClose}
-        email={signupEmail}
-        onVerificationSuccess={handleOTPVerificationSuccess}
+
+      <ForgetPasswordModal
+        open={showForgetPasswordModal}
+        onClose={() => {
+          setShowForgetPasswordModal(false);
+          setIsAuthModalVisible(true);
+          setForgetPasswordMessage("");
+        }}
+        email={forgetPasswordEmail}
+        setEmail={setForgetPasswordEmail}
+        message={forgetPasswordMessage}
+        onPasswordResetModalOpen={(email) => {
+          setShowForgetPasswordModal(false);
+          setShowPasswordResetModal(true);
+          setIsAuthModalVisible(false);
+          setForgetPasswordMessage("");
+        }}
       />
-    
+
+      <PasswordResetModal
+        open={showPasswordResetModal}
+        onClose={() => {
+          setShowPasswordResetModal(false);
+          setIsAuthModalVisible(true);
+          setForgetPasswordMessage("");
+        }}
+        password={resetPassword}
+        setPassword={setResetPassword}
+        confirmPassword={confirmResetPassword}
+        setConfirmPassword={setConfirmResetPassword}
+        message={forgetPasswordMessage}
+        email={forgetPasswordEmail}
+      />
+
     </>
   );
 };
