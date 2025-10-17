@@ -3,9 +3,14 @@ import withPWA from 'next-pwa';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['images.pexels.com', 'lh3.googleusercontent.com'],
+    domains: [
+      'images.pexels.com',
+      'lh3.googleusercontent.com',
+      'why-designers.s3.ap-south-1.amazonaws.com', // ✅ fixed
+    ],
     formats: ['image/webp', 'image/avif'],
   },
+
   experimental: {
     turbo: {
       rules: {
@@ -16,6 +21,7 @@ const nextConfig = {
       },
     },
   },
+
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
@@ -33,7 +39,7 @@ const pwaConfig = withPWA({
         cacheName: 'pexels-images',
         expiration: {
           maxEntries: 64,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          maxAgeSeconds: 30 * 24 * 60 * 60,
         },
       },
     },
@@ -44,7 +50,7 @@ const pwaConfig = withPWA({
         cacheName: 'static-images',
         expiration: {
           maxEntries: 64,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          maxAgeSeconds: 30 * 24 * 60 * 60,
         },
       },
     },
@@ -55,7 +61,7 @@ const pwaConfig = withPWA({
         cacheName: 'static-resources',
         expiration: {
           maxEntries: 32,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          maxAgeSeconds: 30 * 24 * 60 * 60,
         },
       },
     },

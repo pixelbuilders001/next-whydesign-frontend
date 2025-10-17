@@ -42,7 +42,7 @@ export async function verifyOTP(email, otp) {
 export async function loginUser(email, password) {
   try {
     const response = await axios.post(API_ENDPOINTS.USER.LOGIN, {
-      emailOrPhone: email,
+      email: email,
       password,
     });
 
@@ -107,31 +107,70 @@ export async function resendOTP(email) {
   }
 }
 
-export async function userProfileUpdate(profilePicture, firstName, gender) {
+export async function userProfileUpdate(profilePicture, firstName, lastName, phoneNumber, dateOfBirth, gender, address) {
   try {
     // Get the current user token for authentication
     const token = tokenStorage.getAccessToken();
 
-    // Create JSON data instead of FormData
-    const profileData = {
-      firstName: firstName || undefined,
-      gender: gender || undefined,
-      // Note: profilePicture would need a separate endpoint for file upload
-      // as JSON APIs typically don't handle file uploads directly
-    };
+    if (!token) {
+      throw new Error('No authentication token available');
+    }
 
-    // Remove undefined fields
-    Object.keys(profileData).forEach(key => {
-      if (profileData[key] === undefined) {
-        delete profileData[key];
-      }
-    });
+    // Create FormData for file upload
+    const formData = new FormData();
 
-    const response = await axios.post(API_ENDPOINTS.USER.REGISTER, profileData, {
+    // Add profile picture if provided
+    if (profilePicture) {
+      formData.append('profilePicture', profilePicture);
+    }
+
+    // Add other profile data as strings
+    if (firstName) {
+      formData.append('firstName', firstName);
+    }
+
+    if (lastName) {
+      formData.append('lastName', lastName);
+    }
+
+    if (phoneNumber) {
+      formData.append('phoneNumber', phoneNumber);
+    }
+
+    if (dateOfBirth) {
+      formData.append('dateOfBirth', dateOfBirth);
+    }
+
+    if (gender) {
+      formData.append('gender', gender);
+    }
+
+    if (address) {
+      formData.append('address', address);
+    }
+
+    console.log("Full API request:", {
+      method: 'PUT',
+      url: API_ENDPOINTS.USER.UPDATE_PROFILE,
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        // Don't set Content-Type for FormData - browser will set it with boundary
       },
+      body: 'FormData with profile fields'
+    });
+
+    const response = await axios.put(API_ENDPOINTS.USER.UPDATE_PROFILE, formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        // Don't set Content-Type - axios will set it automatically for FormData
+      },
+      timeout: 30000, // 30 seconds for file upload
+    });
+
+    console.log("Full API response:", {
+      status: response.status,
+      data: response.data,
+      headers: response.headers
     });
 
     return {
@@ -151,11 +190,12 @@ export async function userProfileUpdate(profilePicture, firstName, gender) {
 }
 
 
-export async function resetPassword(email,password, otp) {
+export async function resetPassword(email, otp,password,confirmPassword) {
  try {
  const response = await axios.post(API_ENDPOINTS.USER.RESET_PASSWORD, {
   email,  // valid email format
-  password, //, min 6 chars
+  newPassword:password, //, min 6 chars
+  confirmPassword:confirmPassword,
   otp
     });
 
@@ -170,6 +210,172 @@ export async function resetPassword(email,password, otp) {
     return {
       success: false,
       statusCode: error.response?.status || null, // <-- here’s the code (e.g., 409)
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+export async function forgotPassword(email) {
+  try {
+  const response = await axios.post(API_ENDPOINTS.USER.FORGOT_PASSWORD, {
+   email // valid email format
+     });
+ 
+     return {
+       success: true,
+       statusCode: response.status,
+       data: response.data,
+     };
+  }  catch (error) {
+     console.log("testtest--", error);
+ 
+     return {
+       success: false,
+       statusCode: error.response?.status || null, // <-- here’s the code (e.g., 409)
+       message: error.response?.data?.message || error.message,
+     };
+   }
+ }
+
+export async function getUserProfile() {
+  try {
+    console.log("🔄 authService: getUserProfile called");
+    
+    const token = tokenStorage.getAccessToken();
+    if (!token) {
+      throw new Error('No authentication token available');
+    }
+
+    const response = await axios.get(API_ENDPOINTS.USER.GET_USER_PROFILE, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+export async function getBlogsList(page = 1, limit = 6, sortBy = "createdAt", order = "desc") {
+  try {
+    const url = `${API_ENDPOINTS.BLOG.GET_BLOGS}?page=${page}&limit=${limit}&sortBy=${sortBy}&order=${order}`;
+
+    const response = await axios.get(url);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data, // includes blogs + pagination info
+    };
+  } catch (error) {
+    console.log("Get blogs list error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+export async function getBlogById(blogId) {
+  try {
+    const response = await axios.get(API_ENDPOINTS.BLOG.GET_BLOG_BY_ID(blogId));
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data.data,
+    };
+  } catch (error) {
+    console.log("Get blog by ID error:", error);
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+export async function getCounselorList(page = 1, limit = 3, sortBy = "createdAt", order = "desc") {
+  try {
+    const url = `${API_ENDPOINTS.COUNSELOR.GET_COUNSELOR}?page=${page}&limit=${limit}&sortBy=${sortBy}&order=${order}`;
+
+    const response = await axios.get(url);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data, // includes blogs + pagination info
+    };
+  } catch (error) {
+    console.log("Get counselor list error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+
+export async function bookCounselingSession({
+  counselorId,
+  guestName,
+  guestEmail,
+  guestPhone,
+  bookingDate,
+  bookingTime,
+  duration,
+  discussionTopic
+}) {
+  try {
+    // Get token (if booking requires authentication)
+    const token = tokenStorage.getAccessToken();
+
+    const payload = {
+      counselorId,
+      guestName,
+      guestEmail,
+      guestPhone,
+      bookingDate,
+      bookingTime,
+      duration,
+      discussionTopic,
+    };
+
+    console.log("📅 Booking payload:", payload);
+
+    const response = await axios.post(API_ENDPOINTS.BOOKING.CREATE_BOOKING, payload, {
+      headers: token
+        ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
+        : { "Content-Type": "application/json" },
+    });
+
+    console.log("✅ Booking response:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log("❌ Booking error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
       message: error.response?.data?.message || error.message,
     };
   }

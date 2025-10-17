@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { X } from "lucide-react";
-import { resendOTP } from "@/lib/authService";
+import { forgotPassword, resendOTP } from "@/lib/authService";
 
 const ForgetPasswordModal = ({
   open,
@@ -29,12 +29,12 @@ const ForgetPasswordModal = ({
     setLocalMessage("");
 
     try {
-      const result = await resendOTP(email);
+      const result = await forgotPassword(email);
+      console.log("result", result);
       if (result.success) {
         setLocalMessage("✅ OTP sent to your email!");
-        setTimeout(() => {
-          onPasswordResetModalOpen(email);
-        }, 1500);
+        // Open PasswordResetModal immediately after successful API call
+        onPasswordResetModalOpen(email);
       } else {
         setLocalMessage("❌ " + result.message);
       }

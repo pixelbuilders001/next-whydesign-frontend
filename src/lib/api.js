@@ -32,20 +32,22 @@ class APIEndpoints {
   get USER() {
     return {
       // Authentication endpoints
-      LOGIN: this.buildUrl('/user/signin'),
-      REGISTER: this.buildUrl('/user/signup'),
-      VERIFY_EMAIL: this.buildUrl('/user/verify-email'),
-      RESEND_EMAIL_OTP: this.buildUrl('/user/resend-email-otp'),
+      LOGIN: this.buildUrl('/users/login'),
+      REGISTER: this.buildUrl('/users/register'),
+      VERIFY_EMAIL: this.buildUrl('/users/verify-email'),
+      RESEND_EMAIL_OTP: this.buildUrl('/users/resend-otp'),
       
       LOGOUT: this.buildUrl('/auth/logout'),
-      REFRESH_TOKEN: this.buildUrl('/user/refresh-token'),
-      FORGOT_PASSWORD: this.buildUrl('/auth/forgot-password'),
-      RESET_PASSWORD: this.buildUrl('/user/reset-password'),
+      REFRESH_TOKEN: this.buildUrl('/users/refresh-token'),
+      FORGOT_PASSWORD: this.buildUrl('/users/forgot-password'),
+      RESET_PASSWORD: this.buildUrl('/users/reset-password'),
 
       // User profile endpoints
-      PROFILE: this.buildUrl('/user/profile'),
-      UPDATE_PROFILE: this.buildUrl('/user/profile'),
+      GET_USER_PROFILE: this.buildUrl('/users/profile'),
+      UPDATE_PROFILE: this.buildUrl('/users/profile/upload'),
       UPLOAD_AVATAR: this.buildUrl('/user/avatar'),
+
+
 
       // User specific data
       USER_BOOKINGS: (userId) => this.buildUrl(`/user/${userId}/bookings`),
@@ -66,12 +68,25 @@ class APIEndpoints {
   // Example: Add booking endpoints
   get BOOKING() {
     return {
-      CREATE: this.buildUrl('/bookings'),
+      CREATE_BOOKING: this.buildUrl('/bookings'),
       GET_ALL: this.buildUrl('/bookings'),
       GET_BY_ID: (id) => this.buildUrl(`/bookings/${id}`),
       UPDATE: (id) => this.buildUrl(`/bookings/${id}`),
       DELETE: (id) => this.buildUrl(`/bookings/${id}`),
       CANCEL: (id) => this.buildUrl(`/bookings/${id}/cancel`),
+    };
+  }
+  get BLOG() {
+    return {
+         // Blogs endpoints
+         GET_BLOGS: this.buildUrl('/blogs'),
+         GET_BLOG_BY_ID: (id) => this.buildUrl(`/blogs/${id}`),
+    };
+  }
+
+  get COUNSELOR() {
+    return {
+      GET_COUNSELOR: this.buildUrl('/counselors'),
     };
   }
 

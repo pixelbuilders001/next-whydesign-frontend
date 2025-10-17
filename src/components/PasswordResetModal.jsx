@@ -15,7 +15,7 @@ const PasswordResetModal = ({
   message,
   email
 }) => {
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "","",""]);
   const [isLoading, setIsLoading] = useState(false);
   const [localMessage, setLocalMessage] = useState("");
 
@@ -28,7 +28,7 @@ const PasswordResetModal = ({
     setOtp(newOtp);
 
     // Move cursor to next box
-    if (value && index < 3) {
+    if (value && index < 5) {
       const nextInput = document.getElementById(`otp-${index + 1}`);
       if (nextInput) nextInput.focus();
     }
@@ -58,7 +58,7 @@ const PasswordResetModal = ({
 
     try {
       // Call resetPassword API which handles both OTP verification and password reset
-      const result = await resetPassword(email, password, otp.join(""));
+      const result = await resetPassword(email, otp.join(""),password,confirmPassword);
 
       if (result.success) {
         setLocalMessage("✅ Password reset successfully!");

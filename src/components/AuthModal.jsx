@@ -40,8 +40,8 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
       const result = await registerUser(email, password);
       if (result.success) {
         setSignupEmail(email);
-        setShowOTPModal(true);
-        setIsAuthModalVisible(false);
+        // setShowOTPModal(true);
+        // setIsAuthModalVisible(false);
         setMessage("");
       } else {
         if (result.statusCode === 409) {
@@ -293,7 +293,12 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
         onSkip={handleOTPVerificationSuccess}
       
       /> */}
-
+  <OTPModal
+        open={showOTPModal}
+        onClose={handleOTPModalClose}
+        email={signupEmail}
+        onVerificationSuccess={handleOTPVerificationSuccess}
+      />
       <ForgetPasswordModal
         open={showForgetPasswordModal}
         onClose={() => {

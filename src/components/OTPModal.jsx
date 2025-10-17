@@ -5,7 +5,7 @@ import { X, Mail } from "lucide-react";
 import { verifyOTP } from "@/lib/authService";
 
 const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "","",""]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
@@ -26,13 +26,13 @@ const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
     setOtp(newOtp);
 
     // Move cursor to next box
-    if (value && index < 3) inputsRef.current[index + 1].focus();
+    if (value && index < 5) inputsRef.current[index + 1].focus();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (otp.some((o) => o === "")) {
-      setMessage("❌ Please enter all 4 digits");
+      setMessage("❌ Please enter all 6 digits");
       return;
     }
 

@@ -74,61 +74,128 @@ export const AuthProvider = ({ children }) => {
       console.log("Login result:", result);
 
       if (result.success && result.data) {
-        console.log("Processing login success, data keys:", Object.keys(result.data));
-
-        // Handle different response structures
-        let tokenData = null;
-        if (result.data.data?.accessToken && result.data.data?.refreshToken) {
-          tokenData = result.data.data;
-        } else if (result.data.accessToken && result.data.refreshToken) {
-          tokenData = result.data;
+        console.log("Login successful, checking stored tokens...");
+        
+        // Debug: Log the actual response data structure
+        console.log("Response data keys:", Object.keys(result.data));
+        if (result.data.data) {
+          console.log("Response data.data keys:", Object.keys(result.data.data));
         }
 
-        if (tokenData) {
-          const { accessToken, refreshToken, user: userData } = tokenData;
-          console.log("Token data extracted:", {
-            hasAccessToken: !!accessToken,
-            hasRefreshToken: !!refreshToken,
-            hasUserData: !!userData
-          });
+        // Get stored authentication data (tokens are already stored by authService)
+        const storedToken = tokenStorage.getAccessToken();
+        const storedUser = tokenStorage.getUserData();
 
-          // Store tokens
-          const stored = tokenStorage.setTokens(accessToken, refreshToken, userData);
-          console.log("Tokens stored:", stored);
+        if (storedToken && storedUser) {
+          console.log("Tokens and user data found in storage");
 
-          // Update state
-          setAccessToken(accessToken);
-          setUser(userData);
+          // Update state with stored data
+          setAccessToken(storedToken);
+          setUser(storedUser);
           setIsAuthenticated(true);
 
           // Check if profile is completed, show modal if not
           const profileCompleted = tokenStorage.getProfileCompleted();
-          if (!profileCompleted) {
+          const shouldShowProfileModal = !profileCompleted;
+
+          if (shouldShowProfileModal) {
             setShowProfileModal(true);
           }
 
           return {
             success: true,
-            user: userData,
-            message: result.message || 'Login successful',
-            showProfileModal: !profileCompleted
+            user: storedUser,
+            message: result.data.message || result.message || 'Login successful',
+            showProfileModal: shouldShowProfileModal
           };
         } else {
-          console.error("No token data found in response");
+          console.error("Authentication data not found in storage after login");
+          console.log("Debug info:", {
+            storedToken: storedToken ? "present" : "not found",
+            storedUser: storedUser ? "present" : "not found",
+            tokenStorageType: typeof window !== 'undefined' ? 'localStorage' : 'memory'
+          });
+
+          // Debug: Check if we can write to storage at all
+          try {
+            const testKey = 'test_storage_' + Date.now();
+            tokenStorage.storage.setItem(testKey, 'test');
+            const testValue = tokenStorage.storage.getItem(testKey);
+            tokenStorage.storage.removeItem(testKey);
+            console.log("Storage test:", testValue === 'test' ? 'PASSED' : 'FAILED');
+          } catch (storageError) {
+            console.error("Storage test failed:", storageError);
+          }
+
+          // Fallback: Try to store tokens manually if authService failed
+          console.log("Attempting manual token storage fallback...");
+          if (result.data.token && result.data.refreshToken && result.data.user) {
+            const manualStorage = tokenStorage.setTokens(result.data.token, result.data.refreshToken, result.data.user);
+            if (manualStorage) {
+              console.log("Manual token storage successful");
+              setAccessToken(result.data.token);
+              setUser(result.data.user);
+              setIsAuthenticated(true);
+
+              const profileCompleted = tokenStorage.getProfileCompleted();
+              const shouldShowProfileModal = !profileCompleted;
+
+              if (shouldShowProfileModal) {
+                setShowProfileModal(true);
+              }
+
+              return {
+                success: true,
+                user: result.data.user,
+                message: result.data.message || result.message || 'Login successful',
+                showProfileModal: shouldShowProfileModal
+              };
+            }
+          }
+
+          // Fallback 2: Try nested structure (result.data.data.token)
+          console.log("Attempting nested structure fallback...");
+          if (result.data.data?.token && result.data.data?.refreshToken && result.data.data?.user) {
+            const manualStorage = tokenStorage.setTokens(result.data.data.token, result.data.data.refreshToken, result.data.data.user);
+            if (manualStorage) {
+              console.log("Nested structure manual token storage successful");
+              setAccessToken(result.data.data.token);
+              setUser(result.data.data.user);
+              setIsAuthenticated(true);
+
+              const profileCompleted = tokenStorage.getProfileCompleted();
+              const shouldShowProfileModal = !profileCompleted;
+
+              if (shouldShowProfileModal) {
+                setShowProfileModal(true);
+              }
+
+              return {
+                success: true,
+                user: result.data.data.user,
+                message: result.data.data.message || result.data.message || result.message || 'Login successful',
+                showProfileModal: shouldShowProfileModal
+              };
+            }
+          }
+
+          // Clear any partial data
+          tokenStorage.clearTokens();
+
           return {
             success: false,
-            message: 'No authentication tokens received'
+            message: 'Login failed - unable to store authentication data'
           };
         }
       } else {
         console.error("Login failed:", result);
         return {
           success: false,
-          message: result.message || 'Login failed'
+          message: result.data?.message || result.message || 'Login failed'
         };
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       return {
         success: false,
         message: error.message || 'Login failed'
@@ -259,10 +326,33 @@ export const AuthProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, [isAuthenticated, accessToken, shouldRefreshToken, refreshAuth]);
 
+// Get user profile data from API
+const getUserProfile = useCallback(async () => {
+  try {
+    const { getUserProfile } = await import('./authService');
+    const result = await getUserProfile();
+    console.log("getUserProfile result", result);
+    
+    if (result.success && result.data) {
+      // Update stored user data
+      setUser(result.data);
+      tokenStorage.setTokens(accessToken, tokenStorage.getRefreshToken(), result.data);
+      
+      return { success: true, user: result.data };
+    }
+    return { success: false, message: result.message };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+}, [accessToken]);
+
+
+
   // Context value
   const value = {
     // State
     isAuthenticated,
+    getUserProfile,
     user,
     isLoading,
     accessToken,
@@ -276,6 +366,7 @@ export const AuthProvider = ({ children }) => {
     // Profile modal functions
     handleProfileComplete,
     handleProfileSkip,
+    setShowProfileModal,
 
     // Utilities
     shouldRefreshToken,

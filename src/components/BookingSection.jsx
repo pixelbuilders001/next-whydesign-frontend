@@ -1,11 +1,18 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, Clock, Video, CheckCircle, User, ChevronLeft, ChevronRight } from 'lucide-react';
+import { bookCounselingSession, getCounselorList } from '@/lib/authService';
+import { formatTime } from '@/lib/helper';
 
 const BookingSection = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [counselors, setCounselors] = useState([]);
   const [selectedCounselor, setSelectedCounselor] = useState('');
+  console.log("selectedCounselor", selectedCounselor);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [formData, setFormData] = useState({
     name: '',
@@ -15,32 +22,32 @@ const BookingSection = () => {
   });
   const [isBooked, setIsBooked] = useState(false);
 
-  const counselors = [
-    {
-      id: 'sarah',
-      name: 'Sarah Chen',
-      title: 'Senior Fashion Consultant',
-      experience: '10+ years',
-      image: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-      specialties: ['Portfolio Review', 'Career Guidance', 'Study Abroad']
-    },
-    {
-      id: 'marco',
-      name: 'Marco Rodriguez',
-      title: 'Creative Director',
-      experience: '8+ years',
-      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-      specialties: ['Fashion Design', 'Brand Development', 'Industry Insights']
-    },
-    {
-      id: 'emma',
-      name: 'Emma Thompson',
-      title: 'Fashion Entrepreneur',
-      experience: '12+ years',
-      image: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-      specialties: ['Business Strategy', 'Entrepreneurship', 'Fashion Marketing']
-    }
-  ];
+  // const counselors = [
+  //   {
+  //     id: 'sarah',
+  //     name: 'Sarah Chen',
+  //     title: 'Senior Fashion Consultant',
+  //     experience: '10+ years',
+  //     image: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+  //     specialties: ['Portfolio Review', 'Career Guidance', 'Study Abroad']
+  //   },
+  //   {
+  //     id: 'marco',
+  //     name: 'Marco Rodriguez',
+  //     title: 'Creative Director',
+  //     experience: '8+ years',
+  //     image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+  //     specialties: ['Fashion Design', 'Brand Development', 'Industry Insights']
+  //   },
+  //   {
+  //     id: 'emma',
+  //     name: 'Emma Thompson',
+  //     title: 'Fashion Entrepreneur',
+  //     experience: '12+ years',
+  //     image: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+  //     specialties: ['Business Strategy', 'Entrepreneurship', 'Fashion Marketing']
+  //   }
+  // ];
 
   const timeSlots = [
     '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
@@ -60,6 +67,7 @@ const BookingSection = () => {
   const generateCalendar = () => {
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
+
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const startDate = new Date(firstDay);
@@ -99,11 +107,47 @@ const BookingSection = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsBooked(true);
-    setTimeout(() => setIsBooked(false), 5000);
+  
+    if (!selectedCounselor || !selectedDate || !selectedTime) {
+      alert("Please select a counselor, date, and time before booking.");
+      return;
+    }
+  
+    const payload = {
+      counselorId: selectedCounselor,
+      guestName: formData.name,
+      guestEmail: formData.email,
+      guestPhone: formData.phone,
+      bookingDate: selectedDate, // ISO format from your calendar
+      bookingTime: formatTime(selectedTime),
+      duration: 60, // or 45 if you want
+      discussionTopic: formData.topic,
+    };
+  
+    try {
+      setIsSubmitting(true);
+      const result = await bookCounselingSession(payload);
+      setIsSubmitting(false);
+      if (result.success) {
+        setIsSubmitting(false);
+        setIsBooked(true);
+        alert("🎉 Session booked successfully!Please check your email for meeting link");
+        setFormData({ name: '', email: '', phone: '', topic: '' });
+        setSelectedDate('');
+        setSelectedTime('');
+        setSelectedCounselor('');
+      } else {
+        alert(result.message || "Booking failed. Please try again.");
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      console.error("Booking failed:", error);
+      alert("Something went wrong while booking the session.");
+    }
   };
+  
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -111,6 +155,40 @@ const BookingSection = () => {
       [e.target.name]: e.target.value
     }));
   };
+
+
+  useEffect(() => {
+    const fetchCounselors = async () => {
+      setIsLoading(true);
+      try {
+        const result = await getCounselorList(1, 10);
+        console.log("result", result);
+        if (result.success && result.data?.data) {
+          // Transform API data to match component structure
+          const transformedCounselors = result.data.data.map((counselor) => ({
+            id: counselor._id,
+            name: counselor.fullName,
+            title: counselor.title,
+            experience: `${counselor.yearsOfExperience}+ years`,
+            image: counselor.avatarUrl || 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+            specialties: counselor.specialties || []
+          }));
+          setCounselors(transformedCounselors);
+        } else {
+          console.error('Failed to fetch counselors:', result.message);
+          setCounselors([]);
+        }
+      } catch (error) {
+        console.error('Error fetching counselors:', error);
+        setCounselors([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchCounselors();
+  }, []);
+
 
   const selectedCounselorData = counselors.find(c => c.id === selectedCounselor);
 
@@ -369,22 +447,13 @@ const BookingSection = () => {
               </div>
 
               <button
-                type="submit"
-                disabled={!selectedCounselor || !selectedDate || !selectedTime || isBooked}
-                className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-8 py-5 rounded-2xl font-medium text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                {isBooked ? (
-                  <>
-                    <CheckCircle size={22} />
-                    <span>Session Booked Successfully!</span>
-                  </>
-                ) : (
-                  <>
-                    <Video size={20} />
-                    <span>Book Video Counselling</span>
-                  </>
-                )}
-              </button>
+  type="submit"
+  disabled={!selectedCounselor || !selectedDate || !selectedTime || isSubmitting}
+  className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-8 py-5 rounded-2xl font-medium text-lg transition-all duration-300"
+>
+  {isSubmitting ? "Booking..." : "Book Video Counselling"}
+</button>
+
 
               {selectedDate && selectedTime && selectedCounselor && (
                 <div className="bg-stone-50 rounded-2xl p-6 border border-stone-200">

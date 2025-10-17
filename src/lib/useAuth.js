@@ -15,12 +15,19 @@ export const useAuth = () => {
     user: auth.user,
     isLoading: auth.isLoading,
     accessToken: auth.accessToken,
+    // showProfileModal: auth.showProfileModal,
 
     // Authentication actions
     login: auth.login,
     logout: auth.logout,
     refreshAuth: auth.refreshAuth,
     updateUser: auth.updateUser,
+    getUserProfile: auth.getUserProfile,
+
+    handleProfileComplete: auth.handleProfileComplete,
+    handleProfileSkip: auth.handleProfileSkip,
+    setShowProfileModal: auth.setShowProfileModal,  // ✅ Added
+
 
     // Utility functions
     shouldRefreshToken: auth.shouldRefreshToken,
