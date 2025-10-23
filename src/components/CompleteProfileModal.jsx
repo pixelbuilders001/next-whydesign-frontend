@@ -18,6 +18,7 @@ const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip, initia
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   console.log("open", name);
 
+
   // Fetch and pre-populate user profile data when modal opens
   useEffect(() => {
     const fetchAndPopulateProfile = async () => {
@@ -97,20 +98,20 @@ const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip, initia
       return;
     }
 
-    if (!phoneNumber.trim()) {
-      setMessage("Please enter your phone number");
-      return;
-    }
+    // if (!phoneNumber.trim()) {
+    //   setMessage("Please enter your phone number");
+    //   return;
+    // }
 
-    if (!dateOfBirth) {
-      setMessage("Please enter your date of birth");
-      return;
-    }
+    // if (!dateOfBirth) {
+    //   setMessage("Please enter your date of birth");
+    //   return;
+    // }
 
-    if (!gender) {
-      setMessage("Please select your gender");
-      return;
-    }
+    // if (!gender) {
+    //   setMessage("Please select your gender");
+    //   return;
+    // }
 
     // if (!address.trim()) {
     //   setMessage("Please enter your address");
@@ -130,7 +131,7 @@ const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip, initia
         gender,
         address.trim()
       );
-
+console.log("the result",result)
       if (result.success) {
         const profileData = {
           name: `${name.trim()} ${lastName.trim()}`,
@@ -143,7 +144,7 @@ const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip, initia
           profilePic: profilePicUrl,
         };
 
-        onProfileComplete(profileData);
+        // onProfileComplete(profileData);
         // Reset fields
         setMessage("");
         setName("");
@@ -167,7 +168,9 @@ const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip, initia
   };
 
   const handleSkip = () => {
+    localStorage.setItem("profileCompleted", "true");
     if (onSkip) onSkip();
+    // resetFields();
     // Reset fields
     setMessage("");
     setName("");

@@ -121,6 +121,12 @@ class APIEndpoints {
       TESTIMONIALS: this.buildUrl('/content/testimonials'),
     };
   }
+
+  get LEAD() {
+    return {
+      CREATE_LEAD: this.buildUrl('/leads'),
+    };
+  }
 }
 
 // Create and export a single instance

@@ -1,12 +1,14 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import FormModal from "./FormModal";
 // import video from "../../public/hero-video.mp4"; // Ensure the video file is in the public directory
 
 const HeroSection = () => {
   const videoRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -83,7 +85,7 @@ const HeroSection = () => {
           Transform your passion into a profession with world-class fashion education and personalized career guidance.
         </p>
 
-        <button className="group bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white px-10 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-3 shadow-lg mx-auto">
+        <button onClick={() => setOpenModal(true)} className="group bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white px-10 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-3 shadow-lg mx-auto">
           <span>Start Your Journey</span>
           <ArrowRight
             className="group-hover:translate-x-1 transition-transform duration-200"
@@ -91,6 +93,12 @@ const HeroSection = () => {
           />
         </button>
       </div>
+      <FormModal
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+        title="Start Your Fashion Journey"
+        description="Fill out this form and our experts will guide you."
+      />
     </section>
   );
 };

@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
           // Check if profile needs to be completed (only for first-time users)
           const profileCompleted = tokenStorage.getProfileCompleted();
           if (!profileCompleted) {
-            setShowProfileModal(true);
+            // setShowProfileModal(true);
           }
         } else {
           // Clear any invalid tokens
@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }) => {
           const shouldShowProfileModal = !profileCompleted;
 
           if (shouldShowProfileModal) {
-            setShowProfileModal(true);
+            // setShowProfileModal(true);
           }
 
           return {
@@ -141,7 +141,7 @@ export const AuthProvider = ({ children }) => {
               const shouldShowProfileModal = !profileCompleted;
 
               if (shouldShowProfileModal) {
-                setShowProfileModal(true);
+                // setShowProfileModal(true);
               }
 
               return {
@@ -167,7 +167,7 @@ export const AuthProvider = ({ children }) => {
               const shouldShowProfileModal = !profileCompleted;
 
               if (shouldShowProfileModal) {
-                setShowProfileModal(true);
+                // setShowProfileModal(true);
               }
 
               return {
@@ -264,20 +264,20 @@ export const AuthProvider = ({ children }) => {
 
   // Handle profile completion
   const handleProfileComplete = useCallback((profileData) => {
-    console.log('Profile completed with data:', profileData);
+    // console.log('Profile completed with data:', profileData);
 
-    // Mark profile as completed to prevent showing again
-    tokenStorage.setProfileCompleted(true);
-    setShowProfileModal(false);
+    // // Mark profile as completed to prevent showing again
+    // tokenStorage.setProfileCompleted(true);
+    // setShowProfileModal(false);
 
-    // Update user data with profile information if user is available
-    if (user) {
-      const updatedUser = { ...user, ...profileData };
-      setUser(updatedUser);
-      tokenStorage.setTokens(accessToken, tokenStorage.getRefreshToken(), updatedUser);
-    }
+    // // Update user data with profile information if user is available
+    // if (user) {
+    //   const updatedUser = { ...user, ...profileData };
+    //   setUser(updatedUser);
+    //   tokenStorage.setTokens(accessToken, tokenStorage.getRefreshToken(), updatedUser);
+    // }
 
-    console.log('Profile completion saved successfully');
+    // console.log('Profile completion saved successfully');
   }, [user, accessToken]);
 
   // Handle profile skip
@@ -364,7 +364,7 @@ const getUserProfile = useCallback(async () => {
     updateUser,
 
     // Profile modal functions
-    handleProfileComplete,
+    // handleProfileComplete,
     handleProfileSkip,
     setShowProfileModal,
 
@@ -380,7 +380,7 @@ const getUserProfile = useCallback(async () => {
       <CompleteProfileModal
         open={showProfileModal}
         onClose={() => setShowProfileModal(false)}
-        onProfileComplete={handleProfileComplete}
+        // onProfileComplete={handleProfileComplete}
         onSkip={handleProfileSkip}
       />
     </AuthContext.Provider>

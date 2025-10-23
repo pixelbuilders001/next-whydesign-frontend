@@ -19,6 +19,10 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(true);
+  const [loading,setLoading]=useState(false);
+
+  const [showCompleteProfileModal, setShowCompleteProfileModal] = useState(false);
+
 
   // Forget Password States
   const [showForgetPasswordModal, setShowForgetPasswordModal] = useState(false);
@@ -37,31 +41,39 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
       return;
     }
     try {
+      setLoading(true);
       const result = await registerUser(email, password);
       if (result.success) {
+        setLoading(false);
         setSignupEmail(email);
-        // setShowOTPModal(true);
-        // setIsAuthModalVisible(false);
+        setShowOTPModal(true);
+        setIsAuthModalVisible(false);
         setMessage("");
       } else {
+        setLoading(false);
         if (result.statusCode === 409) {
                setSignupEmail(email);
         setShowOTPModal(true);
           try {
+            setLoading(true);
             const verifyRes = await resendOTP(email);
             if (verifyRes.success) {
+              setLoading(false);
               setSignupEmail(email);
               setShowOTPModal(true);
               setIsAuthModalVisible(false);
               setMessage("⚠️ Please verify your email with the OTP sent.");
             } else {
+              setLoading(false);
               setMessage("❌ Verification failed. Try again.");
             }
           } catch {
+            setLoading(false);
             setMessage("❌ Error while verifying email.");
           }
-          // setMessage("❌ User already exists with this email. Please login.");
+          setMessage("❌ User already exists with this email. Please login.");
         } else {
+          setLoading(false);
           setMessage("❌ " + result.message);
         }
       }
@@ -76,14 +88,20 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
       if (result.success) {
         setMessage("✅ Logged in successfully!");
 
-        // Close modal after successful login
+        // Check if user has already completed profile
+      const profileCompleted = localStorage.getItem("profileCompleted");
+      if (!profileCompleted) {
+        // Show Complete Profile modal — do NOT close AuthModal yet
+        setShowCompleteProfileModal(true);
+      } else {
+        // Close only if profile already done
         setTimeout(() => {
           onClose();
-          // Reset form
           setEmail("");
           setPassword("");
           setMessage("");
         }, 1500);
+      }
       } else {
         if (result.message.includes("verify") || result.message.includes("401")) {
           try {
@@ -123,6 +141,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
     setConfirmPassword("");
     setSignupEmail("");
     setIsAuthModalVisible(false);
+    setAuthType("login")
 
     // Note: Profile modal will be handled by AuthContext after login
   };
@@ -213,10 +232,10 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
 
                 <button
                   type="submit"
-                  disabled={authLoading}
+                  disabled={loading}
                   className="cursor-pointer w-full py-2 rounded-lg font-semibold shadow transition-all text-sm bg-gradient-to-r from-amber-500 to-rose-400 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {authLoading ? "Please wait..." : (type === "login" ? "Login" : "Signup")}
+                  {loading ? "Please wait..." : (type === "login" ? "Login" : "Signup")}
                 </button>
 
                 {/* Switch login/signup */}
@@ -293,6 +312,21 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
         onSkip={handleOTPVerificationSuccess}
       
       /> */}
+      <CompleteProfileModal
+  open={showCompleteProfileModal}
+  onClose={() => {setShowCompleteProfileModal(false);onClose();}}
+  onProfileComplete={() => {
+    setShowCompleteProfileModal(false);
+    localStorage.setItem("profileCompleted", "true");
+    onClose(); 
+
+  }}
+  onSkip={() => {
+    setShowCompleteProfileModal(false);
+    localStorage.setItem("profileCompleted", "true");
+    onClose(); 
+  }}
+/>
   <OTPModal
         open={showOTPModal}
         onClose={handleOTPModalClose}

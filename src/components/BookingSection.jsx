@@ -171,7 +171,8 @@ const BookingSection = () => {
             title: counselor.title,
             experience: `${counselor.yearsOfExperience}+ years`,
             image: counselor.avatarUrl || 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-            specialties: counselor.specialties || []
+            specialties: counselor.specialties || [],
+            rating: counselor.rating || 0,
           }));
           setCounselors(transformedCounselors);
         } else {
@@ -232,11 +233,19 @@ const BookingSection = () => {
                         alt={counselor.name}
                         className="w-20 h-20 mb-4 lg:w-16 lg:h-16 lg:mb-0 rounded-full object-cover border-3 border-amber-200"
                       />
-                      <div className="flex-1 text-center lg:text-left lg:flex-1">
-                        <h4 className="font-bold text-gray-900 text-lg">{counselor.name}</h4>
-                        <p className="text-amber-600 font-medium">{counselor.title}</p>
-                        <p className="text-gray-600 text-sm">{counselor.experience} experience</p>
-                      </div>
+                  <div className="flex-1 text-center lg:text-left lg:flex-1">
+  <h4 className="font-bold text-gray-900 text-lg">{counselor.name}</h4>
+  <p className="text-amber-600 font-medium">{counselor.title}</p>
+  <p className="text-gray-600 text-sm mb-1">{counselor.experience} experience</p>
+
+  {/* ⭐ Rating Row */}
+  <div className="flex items-center justify-center lg:justify-start text-sm">
+    <span className="text-amber-500 mr-1">⭐</span>
+    <span className="text-gray-800 font-medium">{counselor.rating.toFixed(1)}</span>
+    <span className="text-gray-500 ml-1">/ 5</span>
+  </div>
+</div>
+
                       <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mt-4 lg:mt-0 ${
                         selectedCounselor === counselor.id
                           ? 'border-amber-500 bg-amber-500'

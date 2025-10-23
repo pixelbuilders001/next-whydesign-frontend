@@ -114,7 +114,7 @@ const Header = () => {
   const navItems = [
     { name: "Home", href: "/", icon: "🏠" },
     { name: "About Us", href: "/about-us", icon: "👥" },
-    { name: "Study Abroad", href: "#study-abroad", icon: "🌎" },
+    // { name: "Study Abroad", href: "#study-abroad", icon: "🌎" },
     { name: "Book Counselling", href: "#booking", icon: "📅" },
     { name: "Videos", href: "#videos", icon: "🎥" },
     { name: "Contact", href: "#contact", icon: "📞" },
@@ -128,11 +128,23 @@ const Header = () => {
   ];
 
   const supportItems = [
-    { name: "Help & Support", icon: HelpCircle },
-    { name: "Privacy Policy", icon: Shield },
-    { name: "Rate Us", icon: Star },
+    // { name: "Help & Support", icon: HelpCircle },
+    { name: "Privacy Policy", icon: Shield, href: "/privacy-policy" },
+
+    { name: "Terms & Conditions", icon: Shield, href: "/terms-conditions" },
+    // { name: "Rate Us", icon: Star },
   ];
 
+
+
+  const handleCall = () => {
+    window.open("tel:+917461824651", "_self");
+  };
+  
+  const handleWhatsApp = () => {
+    const message = encodeURIComponent("Hi! I’d like to know more about your services.");
+    window.open(`https://wa.me/7461824651?text=${message}`, "_blank");
+  };
   return (
     <>
       {/* Header */}
@@ -177,11 +189,11 @@ const Header = () => {
 
             {/* Desktop CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-3">
-              <button className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-secondary-500 hover:from-primary-700 hover:to-secondary-600 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <button   onClick={handleCall} className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-secondary-500 hover:from-primary-700 hover:to-secondary-600 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
                 <Phone size={16} />
                 <span>Call Us</span>
               </button>
-              <button className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-accent-500 to-primary-400 hover:from-accent-600 hover:to-primary-500 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <button   onClick={handleWhatsApp} className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-accent-500 to-primary-400 hover:from-accent-600 hover:to-primary-500 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
                 <MessageCircle size={16} />
                 <span>WhatsApp</span>
               </button>
@@ -370,7 +382,7 @@ const Header = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="lg:hidden">
+            <div className="lg:hidden mr-2">
               <button
                 onClick={isMenuOpen ? closeMenu : openMenu}
                 className={`p-2 rounded-lg transition-all duration-200 ${
@@ -379,7 +391,7 @@ const Header = () => {
                     : "text-white hover:text-primary-300 hover:bg-white/20"
                 }`}
               >
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                {isMenuOpen ? null : <Menu size={28} />}
               </button>
             </div>
           </div>
@@ -516,7 +528,7 @@ const Header = () => {
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto pb-20">
               {/* Quick Actions */}
-              {((status === "authenticated" && session) ||
+              {/* {((status === "authenticated" && session) ||
                 customAuthenticated) && (
                 <div className="p-4 border-b border-gray-100">
                   <div className="grid grid-cols-2 gap-3">
@@ -535,7 +547,7 @@ const Header = () => {
                     ))}
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* Navigation Menu */}
               <div className="p-4">
@@ -572,8 +584,9 @@ const Header = () => {
                 </h3>
                 <div className="space-y-1">
                   {supportItems.map((item, index) => (
-                    <button
+                    <a
                       key={index}
+                      href={item.href}
                       className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group w-full text-left"
                     >
                       <item.icon size={18} className="text-gray-500" />
@@ -584,18 +597,19 @@ const Header = () => {
                         size={16}
                         className="text-gray-400 group-hover:text-gray-600"
                       />
-                    </button>
+                    </a>
                   ))}
                 </div>
               </div>
 
               {/* CTA Buttons */}
-              <div className="mt-4 flex flex-col gap-3">
-                <button className="flex items-center justify-center space-x-2 px-4 py-3 border border-amber-500 text-amber-500 rounded-md font-medium text-base hover:bg-amber-50 hover:scale-105 transition-all duration-200">
+              <div className="mt-4 px-3.5 flex flex-col gap-3">
+                <button   onClick={handleCall} className="flex items-center justify-center space-x-2 px-4 py-3 border border-amber-500 text-amber-500 rounded-md font-medium text-base hover:bg-amber-50 hover:scale-105 transition-all duration-200">
                   {" "}
                   <Phone size={16} /> <span>Call Us</span>{" "}
                 </button>{" "}
                 <button 
+                onClick={handleWhatsApp}
                 className="w-full flex items-center justify-center space-x-2 py-3.5 border border-green-500 text-green-500 rounded-md font-medium text-base hover:bg-green-50 hover:scale-105 transition-all duration-200">
                   {" "}
                   <MessageCircle size={16} /> <span>WhatsApp</span>{" "}
@@ -626,14 +640,14 @@ const Header = () => {
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gray-50 border-t border-gray-200 p-4">
+            {/* <div className="absolute bottom-0 left-0 right-0 bg-gray-50 border-t border-gray-200 p-4">
               <div className="text-center">
                 <p className="text-xs text-gray-500">
                   © 2024 Your Company. All rights reserved.
                 </p>
                 <p className="text-xs text-gray-400 mt-1">Version 1.0.0</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

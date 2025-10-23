@@ -548,4 +548,29 @@ export async function trackReelsUnlikes(Id) {
   }
 }
 
+export async function createLead(leadData) {
+  try {
+    console.log(`🔄 authService: createLead called with data:`, leadData);
+
+    const response = await axios.post(API_ENDPOINTS.LEAD.CREATE_LEAD, leadData);
+
+    console.log("✅ Lead created successfully:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log("❌ Lead creation error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+
 

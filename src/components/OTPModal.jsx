@@ -1,11 +1,10 @@
 "use client";
-
 import React, { useState, useEffect, useRef } from "react";
 import { X, Mail } from "lucide-react";
 import { verifyOTP } from "@/lib/authService";
 
 const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
-  const [otp, setOtp] = useState(["", "", "", "","",""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
@@ -69,7 +68,8 @@ const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 min-h-screen overflow-y-auto">
-      <div className="relative w-full max-w-xs p-0">
+      {/* Increased width from max-w-xs → max-w-sm and added responsive padding */}
+      <div className="relative w-full max-w-sm p-0">
         <div className="absolute inset-0 rounded-2xl bg-white opacity-95"></div>
         <div className="relative bg-gradient-to-b from-stone-50 to-rose-50/40 rounded-2xl shadow-lg p-6">
           <button
@@ -86,13 +86,13 @@ const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
             <h2 className="text-2xl font-serif font-light text-gray-900 mb-1">
               Verify Your Email
             </h2>
-            <p className="text-gray-600 text-sm">We've sent a 4-digit code to</p>
+            <p className="text-gray-600 text-sm">We've sent a 6-digit code to</p>
             <p className="text-amber-700 font-medium text-sm">{email}</p>
           </div>
 
           <form className="space-y-3" onSubmit={handleSubmit}>
             {/* OTP Inputs */}
-            <div className="flex justify-center gap-2">
+            <div className="flex flex-wrap justify-center gap-2 px-3">
               {otp.map((digit, idx) => (
                 <input
                   key={idx}
@@ -101,7 +101,7 @@ const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
                   value={digit}
                   onChange={(e) => handleChange(e.target.value, idx)}
                   maxLength={1}
-                  className="w-12 h-12 text-center text-lg border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-10 h-12 text-center text-lg border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               ))}
             </div>
@@ -125,14 +125,18 @@ const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
             </button>
 
             <div className="text-center mt-2">
-              <p className="text-gray-600 text-xs mb-1">Didn't receive the code?</p>
+              <p className="text-gray-600 text-xs mb-1">
+                Didn't receive the code?
+              </p>
               <button
                 type="button"
                 onClick={handleResendOTP}
                 disabled={resendCooldown > 0}
                 className="text-amber-700 font-semibold hover:underline disabled:opacity-50 disabled:cursor-not-allowed text-xs"
               >
-                {resendCooldown > 0 ? `Resend OTP in ${resendCooldown}s` : "Resend OTP"}
+                {resendCooldown > 0
+                  ? `Resend OTP in ${resendCooldown}s`
+                  : "Resend OTP"}
               </button>
             </div>
           </form>
