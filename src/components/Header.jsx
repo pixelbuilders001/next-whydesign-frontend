@@ -112,7 +112,7 @@ const Header = () => {
   }, [customAuthenticated, session, getUserProfile]);
 
   const navItems = [
-    { name: "Home", href: "#home", icon: "🏠" },
+    { name: "Home", href: "/", icon: "🏠" },
     { name: "About Us", href: "/about-us", icon: "👥" },
     { name: "Study Abroad", href: "#study-abroad", icon: "🌎" },
     { name: "Book Counselling", href: "#booking", icon: "📅" },

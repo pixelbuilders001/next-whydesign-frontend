@@ -380,3 +380,172 @@ export async function bookCounselingSession({
     };
   }
 }
+
+export async function getMaterials(page = 1, limit = 10) {
+  try {
+    console.log(`🔄 authService: getMaterials called with page=${page}, limit=${limit}`);
+
+    const response = await axios.get(`${API_ENDPOINTS.MATERIALS.GET_MATERIALS}?page=${page}&limit=${limit}`);
+
+    console.log("✅ Materials response:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data.data, // materials array
+    };
+  } catch (error) {
+    console.log("❌ Get materials error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+export async function trackMaterialDownload(materialId) {
+  try {
+    console.log(`🔄 authService: trackMaterialDownload called for material ID: ${materialId}`);
+
+    const response = await axios.get(API_ENDPOINTS.MATERIALS.COUNT_DOWNLOAD_MATERIAL(materialId));
+
+    console.log("✅ Download tracked successfully:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log("❌ Track download error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+
+export async function getReels(page = 1, limit = 10) {
+  try {
+    console.log(`🔄 authService: getReels called with page=${page}, limit=${limit}`);
+
+    const response = await axios.get(`${API_ENDPOINTS.REELS.GET_REELS}?page=${page}&limit=${limit}`);
+
+    console.log("✅ Reels response:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data.data, // reels array
+    };
+  } catch (error) {
+    console.log("❌ Get reels error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+export async function getTestimonials(page = 1, limit = 10) {
+  try {
+    console.log(`🔄 authService: getTestimonials called with page=${page}, limit=${limit}`);
+
+    const response = await axios.get(`${API_ENDPOINTS.TESTIMONIALS.GET_TESTIMONIALS}?page=${page}&limit=${limit}`);
+
+    console.log("✅ Testimonials response:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data.data, // testimonials array
+    };
+  } catch (error) {
+    console.log("❌ Get testimonials error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+export async function trackReelsViews(Id) {
+  try {
+    console.log(`🔄 authService: trackMaterialDownload called for material ID: ${Id}`);
+
+    const response = await axios.post(API_ENDPOINTS.REELS.COUNT_REELS_VIEW(Id));
+
+    console.log("✅ Download tracked successfully:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log("❌ Track download error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+export async function trackReelsLikes(Id) {
+  try {
+    console.log(`🔄 authService: trackMaterialDownload called for material ID: ${Id}`);
+
+    const response = await axios.post(API_ENDPOINTS.REELS.COUNT_REELS_LIKE(Id));
+
+    console.log("✅ Download tracked successfully:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log("❌ Track download error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+export async function trackReelsUnlikes(Id) {
+  try {
+    console.log(`🔄 authService: trackMaterialDownload called for material ID: ${Id}`);
+
+    const response = await axios.post(API_ENDPOINTS.REELS.COUNT_REELS_UNLIKE(Id));
+
+    console.log("✅ Download tracked successfully:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log("❌ Track download error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+

@@ -89,6 +89,28 @@ class APIEndpoints {
       GET_COUNSELOR: this.buildUrl('/counselors'),
     };
   }
+  get MATERIALS() {
+    return {
+      GET_MATERIALS: this.buildUrl('/materials'),
+      COUNT_DOWNLOAD_MATERIAL: (id) => this.buildUrl(`/materials/${id}/download`),
+    };
+  }
+
+    get REELS() {
+    return {
+      GET_REELS: this.buildUrl('/reels'),
+            COUNT_REELS_VIEW: (id) => this.buildUrl(`/reels/${id}/view`),
+                 COUNT_REELS_LIKE: (id) => this.buildUrl(`/reels/${id}/like`),
+                      COUNT_REELS_UNLIKE: (id) => this.buildUrl(`/reels/${id}/unlike`),
+    
+    };
+  }
+     get TESTIMONIALS() {
+    return {
+      GET_TESTIMONIALS: this.buildUrl('/testimonials/approved'),
+    
+    };
+  }
 
   // Example: Add content endpoints
   get CONTENT() {

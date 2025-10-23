@@ -6,9 +6,9 @@ import logo from '../../public/logo.png';
 const Footer = () => {
   const quickLinks = [
     { name: 'About Us', href: '#about' },
-    { name: 'Courses', href: '#courses' },
-    { name: 'Study Abroad', href: '#study-abroad' },
-    { name: 'Testimonials', href: '#testimonials' },
+    // { name: 'Courses', href: '#courses' },
+    // { name: 'Study Abroad', href: '#study-abroad' },
+    // { name: 'Testimonials', href: '#testimonials' },
     { name: 'Blog', href: '/blogs' },
     // { name: 'FAQ', href: '#faq' },
   ];

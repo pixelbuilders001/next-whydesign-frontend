@@ -1,7 +1,91 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, FileText, Star, BookOpen } from 'lucide-react';
+import { getMaterials, trackMaterialDownload } from '@/lib/authService';
 
 const PDFDownloadSection = () => {
+  const [materials, setMaterials] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        setLoading(true);
+        const response = await getMaterials(1, 10);
+        
+        if (response.success) {
+          setMaterials(response.data);
+        } else {
+          setError(response.message || 'Failed to fetch materials');
+        }
+      } catch (err) {
+        setError('An error occurred while fetching materials');
+        console.error('Error fetching materials:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMaterials();
+  }, []);
+
+  // const handleDownload = () => {
+  //   if (materials.length > 0) {
+  //     const firstMaterial = materials[0];
+  //     if (firstMaterial.fileUrl) {
+  //       // Create a temporary anchor element to trigger download
+  //       const link = document.createElement('a');
+  //       link.href = firstMaterial.fileUrl;
+  //       link.download = firstMaterial.fileName || 'download.pdf';
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
+  //     }
+  //   }
+  // };
+  const handleDownload = async () => {
+    if (materials.length > 0) {
+      const firstMaterial = materials[0];
+      if (firstMaterial.fileUrl) {
+        try {
+          // First, open the PDF in a new tab for viewing
+          // window.open(firstMaterial.fileUrl, '_blank', 'noopener,noreferrer');
+          
+          // Then, create a downloadable version
+          const response = await fetch(firstMaterial.fileUrl);
+          if (!response.ok) {
+            throw new Error('Failed to fetch file');
+          }
+          
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download ='fashion-career-guide.pdf';
+          document.body.appendChild(link);
+          link.click();
+          
+          // Clean up
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(link);
+
+          try {
+            await trackMaterialDownload(firstMaterial.id);
+            console.log('✅ Download tracked successfully');
+          } catch (trackError) {
+            console.warn('⚠️ Download tracking failed:', trackError);
+            // Don't fail the whole process if tracking fails
+          }
+          
+          console.log('✅ PDF opened in new tab and downloaded successfully');
+        } catch (error) {
+          console.error('❌ Download/view failed:', error);
+          // Fallback: just open in new tab
+          window.open(firstMaterial.fileUrl, '_blank', 'noopener,noreferrer');
+        }
+      }
+    }
+  };
   return (
     <section className="py-24 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -71,6 +155,12 @@ const PDFDownloadSection = () => {
                 </p>
               </div>
 
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                  <p className="text-red-600 text-sm">{error}</p>
+                </div>
+              )}
+
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
                   <div className="w-2 h-2 bg-amber-600 rounded-full" />
@@ -90,9 +180,13 @@ const PDFDownloadSection = () => {
                 </div>
               </div>
 
-              <button className="group bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-10 py-5 rounded-2xl font-medium text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-3">
-                <Download className="group-hover:animate-bounce" size={20} />
-                <span>Download Free Guide</span>
+              <button 
+                className="group cursor-pointer bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-10 py-5 rounded-2xl font-medium text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleDownload}
+                disabled={loading || materials.length === 0}
+              >
+                <Download className={`group-hover:animate-bounce ${loading ? 'animate-spin' : ''}`} size={20} />
+                <span>{loading ? 'Loading...' : 'Download Free Guide'}</span>
               </button>
 
               <p className="text-sm text-gray-500 font-light">
