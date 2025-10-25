@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Play, ArrowLeft, ArrowRight, X } from "lucide-react";
 import { videos } from "../../data/videos";
+import { getVideos } from "@/lib/authService";
 
 const VideoSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -9,6 +10,23 @@ const VideoSection = () => {
   const [activeVideo, setActiveVideo] = useState(null);
   const [loading, setLoading] = useState(false); // Add loading state
   const videoRef = useRef(null);
+
+  const [activeReel, setActiveReel] = useState(null);
+  const [muted, setMuted] = useState(true);
+  const [videos, setVideos] = useState([]);
+  const [apiLoading, setApiLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0
+  });
+  
+  // const trackedReelsRef = useRef(new Set());
+  // const videoRefs = useRef([]);
+  // const scrollContainerRef = useRef(null);
+  // const observerRef = useRef(null);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % Math.ceil(videos.length / 3));
@@ -51,6 +69,42 @@ const VideoSection = () => {
     setLoading(false); // Hide loader when video is loaded
   };
 
+
+
+
+  // Fetch reels from API
+  const fetchVideos = async (page = 1, limit = 10) => {
+    try {
+      setApiLoading(true);
+      setError(null);
+      
+      const response = await getVideos(page, limit);
+      
+      if (response.success) {
+        setVideos(response.data.videos || []);
+        setPagination({
+          page: response.data?.meta?.page || page,
+          limit: response.data?.meta?.limit || limit,
+          total: response.data?.meta?.total || 0,
+          totalPages: response.data?.meta?.totalPages || 0
+        });
+      } else {
+        setError(response.message || 'Failed to fetch reels');
+      }
+    } catch (err) {
+      setError('An error occurred while fetching reels');
+      console.error('Error fetching reels:', err);
+    } finally {
+      setApiLoading(false);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchVideos();
+  }, []);
+
+
   return (
     <section
       id="videos"
@@ -74,7 +128,7 @@ const VideoSection = () => {
         {/* Video Cards */}
         <div className="relative">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {visibleVideos.map((video, index) => (
+            {videos.map((video, index) => (
               <div
                 key={video.id}
                 className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-stone-100 cursor-pointer"
@@ -82,7 +136,7 @@ const VideoSection = () => {
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={video.thumbnail}
+                    src={video.thumbnailUrl}
                     alt={video.title}
                     className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
@@ -102,9 +156,32 @@ const VideoSection = () => {
                 </div>
 
                 <div className="p-8">
+                  <div className="flex items-center gap-2 justify-between">
+
                   <span className="inline-block bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-xs font-medium mb-4">
                     {video.category}
                   </span>
+
+                  {video.tags && video.tags.length > 0 && (
+    <div className="flex items-center gap-1">
+      {video.tags.slice(0, 3).map((tag, tagIndex) => (
+        <span
+          key={tagIndex}
+          className="inline-block bg-stone-100 text-stone-700 px-2 py-1 rounded-full text-xs font-light border border-stone-200"
+        >
+          {tag}
+        </span>
+      ))}
+      {video.tags.length > 3 && (
+        <span className="text-xs text-stone-500 font-light">
+          +{video.tags.length - 3}
+        </span>
+      )}
+    </div>
+  )}
+                  </div>
+              
+        
                   <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-amber-700 transition-colors duration-300">
                     {video.title}
                   </h3>
@@ -113,7 +190,7 @@ const VideoSection = () => {
                   </p>
                   <div className="flex items-center justify-between mt-6">
                     <span className="text-stone-500 text-sm font-light">
-                      {video.views} views
+                      {video.viewCount} views
                     </span>
                     <span className="text-amber-600 text-sm font-medium group-hover:translate-x-1 transform transition-transform duration-200">
                       Watch Now →
@@ -191,7 +268,7 @@ const VideoSection = () => {
           <div className="relative z-20 w-[90% md:w-[60%] lg:w-[50%] rounded-2xl overflow-hidden shadow-2xl">
             <video
               ref={videoRef}
-              src={activeVideo.src}
+              src={activeVideo.videoUrl}
               controls
               autoPlay
               className="w-full h-auto rounded-2xl"

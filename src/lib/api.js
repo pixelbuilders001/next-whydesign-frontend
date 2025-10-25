@@ -105,6 +105,17 @@ class APIEndpoints {
     
     };
   }
+
+  get VIDEO() {
+    return {
+      GET_VIDEO: this.buildUrl('/videos'),
+            COUNT_VIDEO_VIEW: (id) => this.buildUrl(`/videos/${id}/view`),
+                 COUNT_VIDEO_LIKE: (id) => this.buildUrl(`/videos/${id}/like`),
+                      COUNT_VIDEO_UNLIKE: (id) => this.buildUrl(`/videos/${id}/unlike`),
+    
+    };
+  }
+
      get TESTIMONIALS() {
     return {
       GET_TESTIMONIALS: this.buildUrl('/testimonials/approved'),

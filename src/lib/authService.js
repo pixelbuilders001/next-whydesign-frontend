@@ -573,4 +573,28 @@ export async function createLead(leadData) {
 }
 
 
+export async function getVideos(page = 1, limit = 10) {
+  try {
+    console.log(`🔄 authService: getVideos called with page=${page}, limit=${limit}`);
+
+    const response = await axios.get(`${API_ENDPOINTS.VIDEO.GET_VIDEO}?page=${page}&limit=${limit}`);
+
+    console.log("✅ Videos response:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data.data, // reels array
+    };
+  } catch (error) {
+    console.log("❌ Get reels error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
 
