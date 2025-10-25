@@ -22,9 +22,9 @@ const Footer = () => {
 
   const socialLinks = [
     { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
+    { icon: Instagram, href: 'https://www.instagram.com/why.designers?igsh=MXYxOHRvcmRucHVicA==', label: 'Instagram' },
     { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Youtube, href: '#', label: 'YouTube' },
+    { icon: Youtube, href: 'https://youtube.com/@whydesigner?si=y9R3hy0daxRCtlpa', label: 'YouTube' },
   ];
 
   return (
@@ -55,6 +55,8 @@ const Footer = () => {
                 return (
                   <a
                     key={index}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     href={social.href}
                     aria-label={social.label}
                     className="bg-white/10 hover:bg-primary-600 p-4 rounded-2xl transition-all duration-300 transform hover:scale-110 backdrop-blur-sm"

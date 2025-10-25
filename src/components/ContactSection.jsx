@@ -87,8 +87,8 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900 mb-2 text-lg">Phone</h4>
-                    <p className="text-gray-600 font-light">+1 (555) 123-4567</p>
-                    <p className="text-gray-600 font-light">+1 (555) 765-4321</p>
+                    <p className="text-gray-600 font-light">+91-9421095929</p>
+                    <p className="text-gray-600 font-light">+91-7007894388</p>
                   </div>
                 </div>
                 
@@ -98,8 +98,8 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900 mb-2 text-lg">Email</h4>
-                    <p className="text-gray-600 font-light">info@whydesigners.com</p>
-                    <p className="text-gray-600 font-light">admissions@whydesigners.com</p>
+                    <p className="text-gray-600 font-light">whydesignerr@gmail.com</p>
+                    {/* <p className="text-gray-600 font-light">admissions@whydesigners.com</p> */}
                   </div>
                 </div>
                 
@@ -109,8 +109,9 @@ const ContactSection = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900 mb-2 text-lg">Location</h4>
-                    <p className="text-gray-600 font-light">123 Fashion District</p>
-                    <p className="text-gray-600 font-light">New York, NY 10001</p>
+                    <p className="text-gray-600 font-light">coming soon.</p>
+                    {/* <p className="text-gray-600 font-light">123 Fashion District</p>
+                    <p className="text-gray-600 font-light">New York, NY 10001</p> */}
                   </div>
                 </div>
                 
@@ -133,7 +134,7 @@ const ContactSection = () => {
                   <MapPin className="text-amber-600" size={28} />
                 </div>
                 <p className="text-gray-700 font-medium text-lg">Interactive Map</p>
-                <p className="text-gray-500 text-sm font-light">Location: Fashion District, NYC</p>
+                <p className="text-gray-500 text-sm font-light">Location: coming soon</p>
               </div>
             </div>
           </div>

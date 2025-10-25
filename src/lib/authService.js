@@ -434,7 +434,7 @@ export async function getReels(page = 1, limit = 10) {
   try {
     console.log(`🔄 authService: getReels called with page=${page}, limit=${limit}`);
 
-    const response = await axios.get(`${API_ENDPOINTS.REELS.GET_REELS}?page=${page}&limit=${limit}`);
+    const response = await axios.get(`${API_ENDPOINTS.REELS.GET_REELS}?page=${page}&limit=${limit}&isPublished=true&isActive=true`);
 
     console.log("✅ Reels response:", response.data);
 
@@ -458,7 +458,7 @@ export async function getTestimonials(page = 1, limit = 10) {
   try {
     console.log(`🔄 authService: getTestimonials called with page=${page}, limit=${limit}`);
 
-    const response = await axios.get(`${API_ENDPOINTS.TESTIMONIALS.GET_TESTIMONIALS}?page=${page}&limit=${limit}`);
+    const response = await axios.get(`${API_ENDPOINTS.TESTIMONIALS.GET_TESTIMONIALS}?page=${page}&limit=${limit}&isApproved=true&isActive=true`);
 
     console.log("✅ Testimonials response:", response.data);
 
@@ -577,7 +577,7 @@ export async function getVideos(page = 1, limit = 10) {
   try {
     console.log(`🔄 authService: getVideos called with page=${page}, limit=${limit}`);
 
-    const response = await axios.get(`${API_ENDPOINTS.VIDEO.GET_VIDEO}?page=${page}&limit=${limit}`);
+    const response = await axios.get(`${API_ENDPOINTS.VIDEO.GET_VIDEO}?page=${page}&limit=${limit}&isPublished=true&isActive=true`);
 
     console.log("✅ Videos response:", response.data);
 
@@ -598,3 +598,26 @@ export async function getVideos(page = 1, limit = 10) {
 }
 
 
+export async function trackVideosViews(Id) {
+  try {
+    console.log(`🔄 authService: trackMaterialDownload called for material ID: ${Id}`);
+
+    const response = await axios.post(API_ENDPOINTS.VIDEO.COUNT_VIDEO_VIEW(Id));
+
+    console.log("✅ Download tracked successfully:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    console.log("❌ Track download error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}

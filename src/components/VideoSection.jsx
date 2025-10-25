@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Play, ArrowLeft, ArrowRight, X } from "lucide-react";
 import { videos } from "../../data/videos";
-import { getVideos } from "@/lib/authService";
+import { getVideos,trackVideosViews } from "@/lib/authService";
 
 const VideoSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,10 +44,22 @@ const VideoSection = () => {
     (currentIndex + 1) * 3
   );
 
-  const openModal = (video) => {
+  const openModal = async (video) => {
     setActiveVideo(video);
     setIsModalOpen(true);
     setLoading(true); // Set loading to true when modal opens
+
+    try {
+      await trackVideosViews(video.id);
+      console.log(`✅ Video view tracked for video: ${video.title}`);
+      setVideos(prevVideos => 
+        prevVideos.map(v => 
+          v.id === video.id ? { ...v, viewCount: v.viewCount + 1 } : v
+        )
+      );
+    } catch (error) {
+      console.error('❌ Failed to track video view:', error);
+    }
     setTimeout(() => {
       if (videoRef.current) {
         videoRef.current.play().catch(() => setLoading(false)); // If play fails, hide loader
