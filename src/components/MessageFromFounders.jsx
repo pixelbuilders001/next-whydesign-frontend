@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import founder1 from '../../public/founder.png';
 import founder2 from '../../public/founder2.png';
+import { getTeams } from '@/lib/authService';
 
 const founders = [
   {
@@ -14,28 +15,32 @@ const founders = [
 
 ];
 
-const teamMembers = [
-  {
-    name: 'Sarah Johnson',
-    title: 'Head of Design',
-    message: 'Working at Why Designs has been an incredible journey. I love helping our students discover their creative potential and turn their fashion dreams into reality.',
-    image: founder2,
-  },
-  {
-    name: 'Michael Chen',
-    title: 'Lead Instructor',
-    message: 'Our innovative curriculum and hands-on approach ensure that every student graduates with real-world skills and industry connections.',
-    image: founder1,
-  },
-  {
-    name: 'Emily Rodriguez',
-    title: 'Student Success Manager',
-    message: 'I am passionate about supporting our students throughout their learning journey and celebrating their growth and achievements.',
-    image: founder2,
-  },
-];
+
 
 const MessageFromFounders = () => {
+  const [teamMembers, setTeamMembers] = useState([]);
+const [loading, setLoading] = useState(true);
+console.log("teamMembers", teamMembers);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      setLoading(true);
+      try {
+        const response = await getTeams(1,3);
+        if (response.success) {
+          setTeamMembers(response.data.data.teams);
+        }
+      } catch (error) {
+        setLoading(false);
+        console.error('Error fetching teams:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTeams();
+  }, []);
+
+
   return (
     <section className="py-16 bg-gradient-to-b from-white to-stone-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,8 +97,8 @@ const MessageFromFounders = () => {
                   />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                <p className="text-primary-600 font-medium mb-3 text-sm">{member.title}</p>
-                <p className="text-gray-700 leading-relaxed text-sm">{member.message}</p>
+                <p className="text-primary-600 font-medium mb-3 text-sm">{member.designation}</p>
+                <p className="text-gray-700 leading-relaxed text-sm">{member.description}</p>
               </div>
             ))}
           </div>

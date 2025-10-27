@@ -13,7 +13,7 @@ const HeroSection = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const [banners, setBanners] = useState({});
-console.log("banners",banners)
+  console.log("banners", banners);
   const getBannersData = async () => {
     const response = await getBanners();
     if (response.success) {
@@ -31,7 +31,7 @@ console.log("banners",banners)
     const video = videoRef.current;
     if (video) {
       const handleLoadedData = () => setIsVideoLoaded(true);
-      video.addEventListener('loadeddata', handleLoadedData);
+      video.addEventListener("loadeddata", handleLoadedData);
 
       // Intersection Observer for performance
       const observer = new IntersectionObserver(
@@ -50,7 +50,7 @@ console.log("banners",banners)
       observer.observe(video);
 
       return () => {
-        video.removeEventListener('loadeddata', handleLoadedData);
+        video.removeEventListener("loadeddata", handleLoadedData);
         observer.disconnect();
       };
     }
@@ -58,27 +58,30 @@ console.log("banners",banners)
 
   const getTitleLines = () => {
     if (banners.title) {
-      const words = banners.title.trim().split(' ');
+      const words = banners.title.trim().split(" ");
       if (words.length >= 2) {
         return {
-          firstLine: words.slice(0, 2).join(' '),
-          secondLine: words.slice(2).join(' ')
+          firstLine: words.slice(0, 2).join(" "),
+          secondLine: words.slice(2).join(" "),
         };
       } else {
         return {
           firstLine: banners.title,
-          secondLine: ''
+          secondLine: "",
         };
       }
     }
     return {
-      firstLine: 'Design Your',
-      secondLine: 'Fashion Future'
+      firstLine: "Design Your",
+      secondLine: "Fashion Future",
     };
   };
 
   const getDescription = () => {
-    return banners.description || 'Transform your passion into a profession with world-class fashion education and personalized career guidance.';
+    return (
+      banners.description ||
+      "Transform your passion into a profession with world-class fashion education and personalized career guidance."
+    );
   };
   return (
     <section
@@ -87,16 +90,18 @@ console.log("banners",banners)
     >
       {/* Video Background */}
       <div className="absolute inset-0 overflow-hidden">
-      
         {/* {banners.map((banner) => (
           banner.type === "image" && ( */}
-            <Image
-            fill
-              key={banners.id}
-              src={banners.imageUrl}
-              alt={banners.title}
-              className="w-full h-full object-cover"
-            />
+
+{banners.id && (
+         <Image
+         fill
+         src={banners.imageUrl}
+         alt={banners.title}
+         className="w-full h-full object-cover"
+       />
+        )}
+      
         {/* //   )
         // ))} */}
 
@@ -125,7 +130,11 @@ console.log("banners",banners)
       )} */}
 
       {/* Content */}
-      <div className={`relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      <div
+        className={`relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-1000 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}
+      >
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-light text-white mb-8 leading-tight drop-shadow-2xl">
           {getTitleLines().firstLine}
           <span className="block bg-gradient-to-r from-amber-400 via-rose-400 to-purple-400 bg-clip-text text-transparent font-bold">
@@ -137,7 +146,10 @@ console.log("banners",banners)
           {getDescription()}
         </p>
 
-        <button onClick={() => setOpenModal(true)} className="group bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white px-10 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-3 shadow-lg mx-auto">
+        <button
+          onClick={() => setOpenModal(true)}
+          className="group bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white px-10 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-3 shadow-lg mx-auto"
+        >
           <span>Start Your Journey</span>
           <ArrowRight
             className="group-hover:translate-x-1 transition-transform duration-200"

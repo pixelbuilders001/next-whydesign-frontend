@@ -622,16 +622,16 @@ export async function trackVideosViews(Id) {
   }
 }
 
-export async function getTeams(page = 1, limit = 6, sortBy = "createdAt", order = "desc") {
+export async function getTeams(page = 1, limit = 6) {
   try {
-    const url = `${API_ENDPOINTS.TEAMS.GET_TEAMS}?page=${page}&limit=${limit}&sortBy=${sortBy}&order=${order}&status=published&isActive=true`;
+    const url = `${API_ENDPOINTS.TEAMS.GET_TEAMS}?page=${page}&limit=${limit}&isPublished=true&isActive=true`;
 
     const response = await axios.get(url);
 
     return {
       success: true,
       statusCode: response.status,
-      data: response.data, // includes blogs + pagination info
+      data: response.data, 
     };
   } catch (error) {
     console.log("Get teams list error:", error);
