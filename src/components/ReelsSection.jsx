@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { PlayCircle, Volume2, VolumeX } from "lucide-react";
 import { getReels, trackReelsViews } from '../services/auth'; // Adjust import path as needed
+import Image from "next/image";
 
 const ReelsSection = () => {
   const [activeReel, setActiveReel] = useState(null);
@@ -301,7 +302,9 @@ const ReelsSection = () => {
               className="group relative rounded-2xl overflow-hidden shadow-xl bg-white transition-transform duration-300 hover:-translate-y-2 hover:shadow-amber-200/40 cursor-pointer"
               onClick={() => openModal(reel._id)}
             >
-              <img
+              <Image
+                width={400}
+                height={600}
                 src={reel.thumbnailUrl}
                 alt={reel.title}
                 className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"

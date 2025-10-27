@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { PlayCircle, Volume2, VolumeX, Heart, MessageCircle, Share, Bookmark } from "lucide-react";
 import { getReels, trackReelsViews, trackReelsLikes, trackReelsUnlikes } from "@/lib/authService";
+import Image from "next/image";
 
 const ReelsSection = () => {
   const [activeReel, setActiveReel] = useState(null);
@@ -258,11 +259,15 @@ const ReelsSection = () => {
               className="group relative rounded-2xl overflow-hidden shadow-xl bg-white transition-transform hover:-translate-y-2 hover:shadow-amber-200/40 cursor-pointer"
               onClick={() => openModal(reel._id)}
             >
-              <img
-                src={reel.thumbnailUrl}
-                alt={reel.title}
-                className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-              />
+               {/* <div className="relative w-full aspect-video"> */}
+                <Image
+                  src={reel.thumbnailUrl}
+                  alt={reel.title}
+                  width={400}
+                  height={256}
+                  className="object-cover group-hover:scale-105 transition-transform duration-300 rounded-2xl"
+                />
+              {/* </div> */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
 
               <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">

@@ -9,7 +9,7 @@ const Footer = () => {
     // { name: 'Courses', href: '#courses' },
     // { name: 'Study Abroad', href: '#study-abroad' },
     // { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Blog', href: '/blogs' },
+    { name: 'Blogs', href: '/blogs' },
     // { name: 'FAQ', href: '#faq' },
   ];
 

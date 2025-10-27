@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Send, CheckCircle } from "lucide-react";
 import { createLead } from "@/lib/authService"; // ✅ import your API function
+import Image from "next/image";
 
 const LeadFormSection = () => {
   const [formData, setFormData] = useState({
@@ -64,7 +65,9 @@ const LeadFormSection = () => {
           {/* Image Side */}
           <div className="relative group order-2 lg:order-1">
             <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-              <img
+              <Image
+                width={800}
+                height={600}
                 src="https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop"
                 alt="Fashion design student"
                 className="w-full h-96 lg:h-[550px] object-cover group-hover:scale-105 transition-transform duration-700"

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Calendar, Clock, Video, CheckCircle, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import { bookCounselingSession, getCounselorList } from '@/lib/authService';
 import { formatTime } from '@/lib/helper';
+import Image from "next/image";
 
 const BookingSection = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -228,7 +229,9 @@ const BookingSection = () => {
                     onClick={() => setSelectedCounselor(counselor.id)}
                   >
                     <div className="flex-col items-center text-center lg:flex lg:flex-row lg:items-center lg:space-x-4 lg:text-left">
-                      <img
+                      <Image
+                      width={20}
+                      height={20}
                         src={counselor.image}
                         alt={counselor.name}
                         className="w-20 h-20 mb-4 lg:w-16 lg:h-16 lg:mb-0 rounded-full object-cover border-3 border-amber-200"
@@ -276,10 +279,12 @@ const BookingSection = () => {
             {selectedCounselorData && (
               <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-3xl p-8 border border-amber-200">
                 <div className="flex items-center space-x-4 mb-6">
-                  <img
+                  <Image
+                    width={60}
+                    height={60}
                     src={selectedCounselorData.image}
                     alt={selectedCounselorData.name}
-                    className="w-20 h-20 rounded-full object-cover border-4 border-amber-300"
+                    className="rounded-full object-cover border-4 border-amber-300"
                   />
                   <div>
                     <h4 className="text-2xl font-bold text-gray-900">{selectedCounselorData.name}</h4>

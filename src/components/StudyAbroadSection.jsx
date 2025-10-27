@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Star } from 'lucide-react';
 import { universities } from '../../data/universities.js';
+import Image from 'next/image.js';
 
 // Image Loader Component
 const ImageLoader = ({ src, alt, className, onLoad }) => {
@@ -29,7 +30,9 @@ const ImageLoader = ({ src, alt, className, onLoad }) => {
       
       {/* Actual Image */}
       {!hasError && (
-        <img
+        <Image
+          width={400}
+          height={600}
           src={src}
           alt={alt}
           className={`w-full h-full object-cover transition-opacity duration-500 ${

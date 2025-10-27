@@ -138,6 +138,18 @@ class APIEndpoints {
       CREATE_LEAD: this.buildUrl('/leads'),
     };
   }
+
+  get TEAMS() {
+    return {
+      GET_TEAMS: this.buildUrl('/team'),
+    };
+  }
+  get BANNERS() {
+    return {
+      GET_BANNERS: this.buildUrl('/banners/published'),
+    };
+  }
+
 }
 
 // Create and export a single instance

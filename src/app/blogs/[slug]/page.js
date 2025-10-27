@@ -6,6 +6,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getBlogById } from "@/lib/authService";
+import Image from "next/image";
 
 export default function BlogPost() {
   const { slug } = useParams(); // dynamic param (actually your blog.id)
@@ -112,11 +113,13 @@ export default function BlogPost() {
           {/* Hero Image */}
           {transformedBlog.image && (
             <div className="aspect-video overflow-hidden rounded-2xl mb-8">
-              <img
-                src={transformedBlog.image}
-                alt={transformedBlog.title}
-                className="w-full h-full object-cover"
-              />
+                <Image
+                        width={400}
+                        height={256}
+                        src={transformedBlog.image}
+                        alt={transformedBlog.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
             </div>
           )}
 

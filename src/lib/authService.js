@@ -269,7 +269,7 @@ export async function getUserProfile() {
 
 export async function getBlogsList(page = 1, limit = 6, sortBy = "createdAt", order = "desc") {
   try {
-    const url = `${API_ENDPOINTS.BLOG.GET_BLOGS}?page=${page}&limit=${limit}&sortBy=${sortBy}&order=${order}`;
+    const url = `${API_ENDPOINTS.BLOG.GET_BLOGS}?page=${page}&limit=${limit}&sortBy=${sortBy}&order=${order}&status=published&isActive=true`;
 
     const response = await axios.get(url);
 
@@ -309,7 +309,7 @@ export async function getBlogById(blogId) {
 
 export async function getCounselorList(page = 1, limit = 3, sortBy = "createdAt", order = "desc") {
   try {
-    const url = `${API_ENDPOINTS.COUNSELOR.GET_COUNSELOR}?page=${page}&limit=${limit}&sortBy=${sortBy}&order=${order}`;
+    const url = `${API_ENDPOINTS.COUNSELOR.GET_COUNSELOR}?page=${page}&limit=${limit}&sortBy=${sortBy}&order=${order}&isPublished=true&isActive=true`;
 
     const response = await axios.get(url);
 
@@ -613,6 +613,52 @@ export async function trackVideosViews(Id) {
     };
   } catch (error) {
     console.log("❌ Track download error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+export async function getTeams(page = 1, limit = 6, sortBy = "createdAt", order = "desc") {
+  try {
+    const url = `${API_ENDPOINTS.TEAMS.GET_TEAMS}?page=${page}&limit=${limit}&sortBy=${sortBy}&order=${order}&status=published&isActive=true`;
+
+    const response = await axios.get(url);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data, // includes blogs + pagination info
+    };
+  } catch (error) {
+    console.log("Get teams list error:", error);
+
+    return {
+      success: false,
+      statusCode: error.response?.status || null,
+      message: error.response?.data?.message || error.message,
+    };
+  }
+}
+
+export async function getBanners(page = 1, limit = 10) {
+  try {
+    console.log(`🔄 authService: getBanners called with page=${page}, limit=${limit}`);
+
+    const response = await axios.get(`${API_ENDPOINTS.BANNERS.GET_BANNERS}?page=${page}&limit=${limit}&isPublished=true&isActive=true`);
+
+    console.log("✅ Banners response:", response.data);
+
+    return {
+      success: true,
+      statusCode: response.status,
+      data: response.data.data, // banners array
+    };
+  } catch (error) {
+    console.log("❌ Get banners error:", error);
 
     return {
       success: false,

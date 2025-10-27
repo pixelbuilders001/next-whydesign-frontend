@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { userProfileUpdate, getUserProfile } from "../lib/authService";
+import Image from "next/image";
 
 const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip, initialData }) => {
   const [name, setName] = useState("");
@@ -225,13 +226,17 @@ console.log("the result",result)
                 <label className="cursor-pointer">
                   <div className="w-24 h-24 rounded-full bg-stone-200 flex items-center justify-center overflow-hidden">
                     {profilePic ? (
-                      <img
+                      <Image
+                        width={20}
+                        height={20}
                         src={URL.createObjectURL(profilePic)}
                         alt="Profile Preview"
                         className="w-full h-full object-cover"
                       />
                     ) : profilePicUrl ? (
-                      <img
+                      <Image
+                        width={80}
+                        height={80}
                         src={profilePicUrl}
                         alt="Profile Preview"
                         className="w-full h-full object-cover"

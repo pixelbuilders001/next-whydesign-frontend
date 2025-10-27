@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getBlogsList } from '@/lib/authService';
+import Image from "next/image";
 
 
 export default function BlogsPage() {
@@ -149,7 +150,9 @@ export default function BlogsPage() {
                     className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
                   >
                     <div className="aspect-video overflow-hidden">
-                      <img
+                      <Image
+                        width={400}
+                        height={256}
                         src={blog.image}
                         alt={blog.title}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"

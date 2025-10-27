@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Quote,Instagram } from "lucide-react";
 import { getTestimonials } from "@/lib/authService";
+import Image from "next/image";
 
 
 
@@ -94,7 +95,9 @@ const TestimonialsSection = () => {
 </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 border-t border-stone-200 pt-6">
-              <img
+              <Image
+                width={400}
+                height={600}
                 src={t.image || "/fallback-user.png"}
                 alt={t.name}
                 onError={(e) => {
@@ -110,16 +113,40 @@ const TestimonialsSection = () => {
                 <p className="text-gray-600">{t.role}</p>
                 <p className="text-amber-600 font-medium">{t.company}</p>
              
-                {t.socialMedia?.instagram && (
-                  <a
-                    href={t.socialMedia.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex text-sm text-amber-500 hover:text-amber-700 font-medium mt-1"
-                  >
-                 <Instagram className="w-5 h-5 bg-red mr-1" />  Instagram →
-                  </a>
-                )}
+                {t.socialMedia && (
+  <div className="flex justify-center sm:justify-start space-x-2 mt-1">
+    {Object.entries(t.socialMedia).map(([platform, url]) => {
+      if (!url) return null;
+
+      const Icon =
+        platform === "instagram"
+          ? Instagram
+          : platform === "linkedin"
+          ? require("lucide-react").Linkedin
+          : platform === "twitter"
+          ? require("lucide-react").Twitter
+          : platform === "facebook"
+          ? require("lucide-react").Facebook
+          : platform === "youtube"
+          ? require("lucide-react").Youtube
+          : null;
+
+      if (!Icon) return null;
+
+      return (
+        <a
+          key={platform}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-amber-600 hover:text-amber-700 transition-transform hover:scale-110"
+        >
+          <Icon className="w-5 h-5" />
+        </a>
+      );
+    })}
+  </div>
+)}
               </div>
             </div>
           </div>
@@ -162,7 +189,9 @@ const TestimonialsSection = () => {
               className="bg-white/70 rounded-2xl p-8 border border-white/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
               <div className="flex items-center mb-5">
-                <img
+                <Image
+                  width={400}
+                  height={600}
                   src={item.image || "/fallback-user.png"}
                   alt={item.name}
                   onError={(e) => {

@@ -31,13 +31,15 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
   const [resetPassword, setResetPassword] = useState("");
   const [confirmResetPassword, setConfirmResetPassword] = useState("");
   const [forgetPasswordMessage, setForgetPasswordMessage] = useState("");
+  const [messageExist, setMessageExist] = useState("");
+  console.log("the message---",message)
 
   // Use the authentication context
   const { login: contextLogin, isLoading: authLoading } = useAuth();
 
   const handleSignup = async () => {
     if (password !== confirmPassword) {
-      setMessage("❌ Passwords do not match!");
+      setMessageExist("❌ Passwords do not match!");
       return;
     }
     try {
@@ -49,41 +51,43 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
         setShowOTPModal(true);
         setIsAuthModalVisible(false);
         setMessage("");
+        setMessageExist("");
       } else {
         setLoading(false);
         if (result.statusCode === 409) {
-               setSignupEmail(email);
-        setShowOTPModal(true);
-          try {
-            setLoading(true);
-            const verifyRes = await resendOTP(email);
-            if (verifyRes.success) {
-              setLoading(false);
-              setSignupEmail(email);
-              setShowOTPModal(true);
-              setIsAuthModalVisible(false);
-              setMessage("⚠️ Please verify your email with the OTP sent.");
-            } else {
-              setLoading(false);
-              setMessage("❌ Verification failed. Try again.");
-            }
-          } catch {
-            setLoading(false);
-            setMessage("❌ Error while verifying email.");
-          }
-          setMessage("❌ User already exists with this email. Please login.");
+        //        setSignupEmail(email);
+        // setShowOTPModal(true);
+        //   try {
+        //     setLoading(true);
+        //     const verifyRes = await resendOTP(email);
+        //     if (verifyRes.success) {
+        //       setLoading(false);
+        //       setSignupEmail(email);
+        //       setShowOTPModal(true);
+        //       setIsAuthModalVisible(false);
+        //       setMessage("⚠️ Please verify your email with the OTP sent.");
+        //     } else {
+        //       setLoading(false);
+        //       setMessage("❌ Verification failed. Try again.");
+        //     }
+        //   } catch {
+        //     setLoading(false);
+        //     setMessage("❌ Error while verifying email.");
+        //   }
+          setMessageExist("❌ User already exists with this email. Please login.");
         } else {
           setLoading(false);
-          setMessage("❌ " + result.message);
+          setMessageExist("❌ " + result.message);
         }
       }
     } catch (err) {
-      setMessage("❌ " + err.message);
+      setMessageExist("❌ " + err.message);
     }
   };
 
   const handleLogin = async () => {
     try {
+      setLoading(true);
       const result = await contextLogin(email, password);
       if (result.success) {
         setMessage("✅ Logged in successfully!");
@@ -91,22 +95,27 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
         // Check if user has already completed profile
       const profileCompleted = localStorage.getItem("profileCompleted");
       if (!profileCompleted) {
+        setLoading(false);
         // Show Complete Profile modal — do NOT close AuthModal yet
         setShowCompleteProfileModal(true);
       } else {
         // Close only if profile already done
         setTimeout(() => {
+          setLoading(false);
           onClose();
           setEmail("");
           setPassword("");
           setMessage("");
+          setMessageExist("");
         }, 1500);
       }
       } else {
+        setLoading(false);
         if (result.message.includes("verify") || result.message.includes("401")) {
           try {
             const verifyRes = await resendOTP(email);
             if (verifyRes.success) {
+
               setSignupEmail(email);
               setShowOTPModal(true);
               setIsAuthModalVisible(false);
@@ -169,7 +178,13 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
               {/* Close button */}
               <button
                 className="absolute top-3 right-3 text-stone-400 hover:text-amber-600 transition-colors"
-                onClick={onClose}
+                onClick={()=>{onClose();
+                  setMessageExist("");
+                  setMessage("");
+                  setEmail("");
+                  setPassword("");
+                  setConfirmPassword("");
+                  }}
               >
                 <X size={24} />
               </button>
@@ -224,12 +239,16 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                   />
                 )}
 
-                {message && (
+                {messageExist && (
+                  <p className="text-center text-xs font-medium text-red-600">
+                    {messageExist}
+                  </p>
+                )}
+{message && (
                   <p className="text-center text-xs font-medium text-red-600">
                     {message}
                   </p>
                 )}
-
                 <button
                   type="submit"
                   disabled={loading}
@@ -245,7 +264,13 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                     <button
                       type="button"
                       className="cursor-pointer text-amber-700 font-semibold hover:underline"
-                      onClick={() => setAuthType("signup")}
+                      onClick={() => {setAuthType("signup");
+                        setMessageExist("");
+                        setMessage("");
+                        setEmail("");
+                        setPassword("");
+                        setConfirmPassword("");
+                      }}
                     >
                       Register now
                     </button>
@@ -257,7 +282,14 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                     <button
                       type="button"
                       className="cursor-pointer text-amber-700 font-semibold hover:underline"
-                      onClick={() => setAuthType("login")}
+                      onClick={() => {setAuthType("login");
+
+                        setMessageExist("");
+                        setMessage("");
+                        setEmail("");
+                        setPassword("");
+                        setConfirmPassword("");
+                      }}
                     >
                       Login
                     </button>
@@ -273,6 +305,11 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                       onClick={() => {
                         setShowForgetPasswordModal(true);
                         setIsAuthModalVisible(false);
+                        setMessageExist("");
+                        setMessage("");
+                        setEmail("");
+                        setPassword("");
+                        setConfirmPassword("");
                       }}
                     >
                       Forget password ?

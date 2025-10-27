@@ -117,7 +117,9 @@ const Header = () => {
     // { name: "Study Abroad", href: "#study-abroad", icon: "🌎" },
     { name: "Book Counselling", href: "#booking", icon: "📅" },
     { name: "Videos", href: "#videos", icon: "🎥" },
+    { name: "Blogs", href: "/blogs", icon: "✍️" },
     { name: "Contact", href: "#contact", icon: "📞" },
+ 
   ];
 
   const quickActions = [
