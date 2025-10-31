@@ -23,3 +23,45 @@ export function formatTime(timeString) {
     return timeString;
   }
   
+
+  export const getCroppedImg = (imageSrc, croppedAreaPixels) => {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imageSrc;
+      image.crossOrigin = "anonymous"; // important if image is from another domain
+  
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+  
+        canvas.width = croppedAreaPixels.width;
+        canvas.height = croppedAreaPixels.height;
+  
+        ctx.drawImage(
+          image,
+          croppedAreaPixels.x,
+          croppedAreaPixels.y,
+          croppedAreaPixels.width,
+          croppedAreaPixels.height,
+          0,
+          0,
+          croppedAreaPixels.width,
+          croppedAreaPixels.height
+        );
+  
+        // Convert the cropped image to Blob
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error("Canvas is empty"));
+            return;
+          }
+          resolve(blob);
+        }, "image/jpeg");
+      };
+  
+      image.onerror = (err) => {
+        reject(err);
+      };
+    });
+  };
+  

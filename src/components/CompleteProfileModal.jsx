@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { userProfileUpdate, getUserProfile } from "../lib/authService";
 import Image from "next/image";
+import { ImageCropModal } from "./ImageCropModal";
 
 const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip, initialData }) => {
   const [name, setName] = useState("");
@@ -18,6 +19,8 @@ const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip, initia
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   console.log("open", name);
+  const [cropModalOpen, setCropModalOpen] = useState(false);
+  const [tempImageSrc, setTempImageSrc] = useState(null);
 
 
   // Fetch and pre-populate user profile data when modal opens
@@ -65,26 +68,48 @@ const CompleteProfileModal = ({ open, onClose, onProfileComplete, onSkip, initia
     fetchAndPopulateProfile();
   }, [open, initialData]);
 
+  // const handleProfilePicChange = (e) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     // Validate file size (5MB limit)
+  //     const file = e.target.files[0];
+  //     if (file.size > 5 * 1024 * 1024) {
+  //       setMessage("Profile picture must be less than 5MB");
+  //       return;
+  //     }
+
+  //     // Validate file type
+  //     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  //     if (!allowedTypes.includes(file.type)) {
+  //       setMessage("Please select a valid image file (JPEG, PNG, GIF, WebP)");
+  //       return;
+  //     }
+
+  //     setProfilePic(file);
+  //     setMessage("");
+  //   }
+  // };
   const handleProfilePicChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      // Validate file size (5MB limit)
       const file = e.target.files[0];
+  
       if (file.size > 5 * 1024 * 1024) {
         setMessage("Profile picture must be less than 5MB");
         return;
       }
-
-      // Validate file type
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  
+      const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
       if (!allowedTypes.includes(file.type)) {
         setMessage("Please select a valid image file (JPEG, PNG, GIF, WebP)");
         return;
       }
-
-      setProfilePic(file);
-      setMessage("");
+  
+      // Convert image to temporary URL and open cropper
+      const imageURL = URL.createObjectURL(file);
+      setTempImageSrc(imageURL);
+      setCropModalOpen(true);
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -338,6 +363,29 @@ console.log("the result",result)
             </form>
           )}
         </div>
+
+        {cropModalOpen && tempImageSrc && (
+  <ImageCropModal
+    imageSrc={tempImageSrc}
+    open={cropModalOpen}
+    onClose={() => {
+      setCropModalOpen(false);
+      setTempImageSrc(null);
+    }}
+    onCropComplete={(croppedBlob) => {
+      const croppedFile = new File([croppedBlob], "cropped-profile.jpg", {
+        type: "image/jpeg",
+      });
+
+      setProfilePic(croppedFile);
+      setProfilePicUrl(URL.createObjectURL(croppedFile));
+      setCropModalOpen(false);
+      setTempImageSrc(null);
+    }}
+  />
+)}
+
+
       </div>
     </div>
   );
