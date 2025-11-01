@@ -4,10 +4,83 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MessageFromFounders from '@/components/MessageFromFounders';
+import { createLead } from '@/lib/authService';
+import { Send } from 'lucide-react';
 
+// src/app/about-us/page.js
+ const metadata = {
+  title: "About Why Designers - Fashion Education & Study Abroad",
+  description: "Learn about Why Designers' mission to democratize fashion education, our story, and our commitment to excellence in creative learning.",
+  keywords: "fashion education, design school, about why designers, fashion courses, study abroad fashion",
+  openGraph: {
+    title: "About Why Designers - Fashion Education & Study Abroad",
+    description: "Learn about Why Designers' mission to democratize fashion education, our story, and our commitment to excellence in creative learning.",
+    images: [
+      {
+        url: '/about-og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Why Designers About Us',
+      },
+    ],
+  },
+};
 
 export default function AboutUsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    areaOfInterest: "",
+  });
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      fullName: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      areaOfInterest: formData.areaOfInterest,
+    };
+
+    try {
+      setLoading(true);
+      const response = await createLead(payload);
+
+      if (response.success) {
+        setIsSubmitted(true);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          areaOfInterest: "",
+        });
+
+        // Auto-reset "Thank You" button after 3 seconds
+        setTimeout(() => setIsSubmitted(false), 3000);
+      } else {
+        alert("Submission failed. Please try again!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again!");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-50 to-amber-50">
@@ -171,7 +244,7 @@ export default function AboutUsPage() {
                   </p>
                 </div>
 
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -180,6 +253,8 @@ export default function AboutUsPage() {
                       <input
                         type="text"
                         name="name"
+                        value={formData.name}
+                        onChange={handleChange}
                         className="w-full px-5 py-4 border border-stone-200 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500"
                         placeholder="Enter your name"
                         required
@@ -193,6 +268,8 @@ export default function AboutUsPage() {
                       <input
                         type="email"
                         name="email"
+                        value={formData.email}
+                        onChange={handleChange}
                         className="w-full px-5 py-4 border border-stone-200 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500"
                         placeholder="your@email.com"
                         required
@@ -208,6 +285,8 @@ export default function AboutUsPage() {
                       <input
                         type="tel"
                         name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
                         className="w-full px-5 py-4 border border-stone-200 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500"
                         placeholder="(+91) 123-4567"
                         required
@@ -219,7 +298,9 @@ export default function AboutUsPage() {
                         Area of Interest
                       </label>
                       <select
-                        name="interest"
+                        name="areaOfInterest"
+                        value={formData.areaOfInterest}
+                        onChange={handleChange}
                         className="w-full px-5 py-4 border border-stone-200 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black appearance-none"
                         required
                       >
@@ -234,9 +315,19 @@ export default function AboutUsPage() {
 
                   <button
                     type="submit"
+                    disabled={loading || isSubmitted}
                     className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-8 py-5 rounded-2xl font-medium text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center space-x-3"
                   >
+                   {isSubmitted ? (
+                  <span>Thank You!</span>
+                ) : loading ? (
+                  <span>Submitting...</span>
+                ) : (
+                  <>
                     <span>Get Free Consultation</span>
+                    <Send size={20} aria-hidden="true" />
+                  </>
+                )}
                   </button>
                 </form>
               </div>

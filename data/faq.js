@@ -29,24 +29,24 @@ export const faqs = [
     question: 'What kind of career support do you provide?',
     answer: 'We provide extensive career support including portfolio development, industry networking events, job placement assistance, internship opportunities, and connections with top fashion houses. Our alumni work at brands like Chanel, Gucci, Zara, and Vogue.'
   },
-  {
-    id: 7,
-    question: 'How much do the courses cost?',
-    answer: 'Course fees vary by program length and intensity. Foundation courses start at $2,500, comprehensive programs range from $8,000-$15,000, and our premium mentorship packages can go up to $25,000. We offer payment plans and scholarships for eligible students.'
-  },
-  {
-    id: 8,
-    question: 'Do you offer refunds?',
-    answer: 'We offer a 30-day money-back guarantee for most courses. If you\'re not satisfied with your learning experience, you can request a full refund within the first month. For longer programs, we have prorated refund policies based on completion percentage.'
-  },
-  {
-    id: 9,
-    question: 'Can I study abroad through your program?',
-    answer: 'Yes! Our study abroad programs allow you to spend 3-6 months in fashion capitals learning from industry professionals and experiencing fashion culture firsthand. These programs include housing, cultural immersion activities, and guaranteed internships.'
-  },
-  {
-    id: 10,
-    question: 'What materials and software do I need?',
-    answer: 'We provide digital access to all required software and templates. For physical materials, you\'ll need basic art supplies (sketchbooks, pencils, markers) and fabric for projects. We provide detailed supply lists for each course and offer student discounts at art supply stores.'
-  }
+  // {
+  //   id: 7,
+  //   question: 'How much do the courses cost?',
+  //   answer: 'Course fees vary by program length and intensity. Foundation courses start at $2,500, comprehensive programs range from $8,000-$15,000, and our premium mentorship packages can go up to $25,000. We offer payment plans and scholarships for eligible students.'
+  // },
+  // {
+  //   id: 8,
+  //   question: 'Do you offer refunds?',
+  //   answer: 'We offer a 30-day money-back guarantee for most courses. If you\'re not satisfied with your learning experience, you can request a full refund within the first month. For longer programs, we have prorated refund policies based on completion percentage.'
+  // },
+  // {
+  //   id: 9,
+  //   question: 'Can I study abroad through your program?',
+  //   answer: 'Yes! Our study abroad programs allow you to spend 3-6 months in fashion capitals learning from industry professionals and experiencing fashion culture firsthand. These programs include housing, cultural immersion activities, and guaranteed internships.'
+  // },
+  // {
+  //   id: 10,
+  //   question: 'What materials and software do I need?',
+  //   answer: 'We provide digital access to all required software and templates. For physical materials, you\'ll need basic art supplies (sketchbooks, pencils, markers) and fabric for projects. We provide detailed supply lists for each course and offer student discounts at art supply stores.'
+  // }
 ];

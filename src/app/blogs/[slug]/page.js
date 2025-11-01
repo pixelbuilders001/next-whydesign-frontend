@@ -58,7 +58,9 @@ export default function BlogPost() {
       <div className="min-h-screen bg-gradient-to-br from-stone-50 to-amber-50">
         <Header />
         <main className="pt-10 text-center py-16">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Blog not found</h2>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            Blog not found
+          </h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <Link href="/blogs" className="text-amber-600 hover:text-amber-700">
             Go back to Blogs
@@ -71,15 +73,14 @@ export default function BlogPost() {
 
   // 🧠 Transform API data for consistency
   const transformedBlog = {
-    id: blog._id || blog.id,
+    id: blog.id,
     title: blog.title,
     image: blog.featuredImage,
     date: blog.publishedAt || blog.createdAt,
-    author:
-      blog.authorId?.fullName ||
-      `${blog.authorId?.firstName || ""} ${blog.authorId?.lastName || ""}`.trim() ||
-      "Unknown Author",
+    author: blog.author.name || "Unknown Author",
     content: blog.content,
+    tags: blog.tags,
+    readTime: blog.readTime,
   };
 
   return (
@@ -113,13 +114,13 @@ export default function BlogPost() {
           {/* Hero Image */}
           {transformedBlog.image && (
             <div className="aspect-video overflow-hidden rounded-2xl mb-8">
-                <Image
-                        width={400}
-                        height={256}
-                        src={transformedBlog.image}
-                        alt={transformedBlog.title}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      />
+              <Image
+                width={400}
+                height={256}
+                src={transformedBlog.image}
+                alt={transformedBlog.title}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
             </div>
           )}
 
@@ -128,16 +129,27 @@ export default function BlogPost() {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               {transformedBlog.title}
             </h1>
-            <div className="flex items-center text-gray-600 mb-6">
-              <span className="font-medium">{transformedBlog.author}</span>
-              <span className="mx-2">•</span>
-              <time dateTime={transformedBlog.date}>
-                {new Date(transformedBlog.date).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </time>
+            <div className="flex items-center justify-between text-gray-600 mb-6">
+              <div>
+                {" "}
+                <span className="font-medium">{transformedBlog.author}</span>
+                <span className="mx-2">•</span>
+                <time dateTime={transformedBlog.date}>
+                  {new Date(transformedBlog.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>{" "}
+              </div>
+
+              <div>
+                <span>{transformedBlog.readTime} min read</span>
+                <span className="mx-2">•</span>
+                <span className="bg-stone-100 text-stone-700 px-2 py-1 gap-2 rounded-full text-xs font-light border border-stone-200">
+                  {transformedBlog.tags.join(", ")}
+                </span>
+              </div>
             </div>
           </header>
 

@@ -114,12 +114,10 @@ const Header = () => {
   const navItems = [
     { name: "Home", href: "/", icon: "🏠" },
     { name: "About Us", href: "/about-us", icon: "👥" },
-    // { name: "Study Abroad", href: "#study-abroad", icon: "🌎" },
     { name: "Book Counselling", href: "#booking", icon: "📅" },
     { name: "Videos", href: "#videos", icon: "🎥" },
     { name: "Blogs", href: "/blogs", icon: "✍️" },
     { name: "Contact", href: "#contact", icon: "📞" },
- 
   ];
 
   const quickActions = [
@@ -130,23 +128,53 @@ const Header = () => {
   ];
 
   const supportItems = [
-    // { name: "Help & Support", icon: HelpCircle },
     { name: "Privacy Policy", icon: Shield, href: "/privacy-policy" },
-
     { name: "Terms & Conditions", icon: Shield, href: "/terms-conditions" },
-    // { name: "Rate Us", icon: Star },
   ];
-
-
 
   const handleCall = () => {
     window.open("tel:+917461824651", "_self");
   };
-  
+
   const handleWhatsApp = () => {
-    const message = encodeURIComponent("Hi! I’d like to know more about your services.");
+    const message = encodeURIComponent(
+      "Hi! I'd like to know more about your services."
+    );
     window.open(`https://wa.me/7461824651?text=${message}`, "_blank");
   };
+
+  const getUserName = () => {
+    if (status === "authenticated" && session) {
+      return session.user.name;
+    } else if (userProfile?.data?.firstName && userProfile?.data?.lastName) {
+      return `${userProfile.data.firstName} ${userProfile.data.lastName}`;
+    } else if (customUser?.firstName && customUser?.lastName) {
+      return `${customUser.firstName} ${customUser.lastName}`;
+    }
+    return customUser?.name || customUser?.email || "User";
+  };
+
+  const getUserEmail = () => {
+    if (status === "authenticated" && session) {
+      return session.user.email;
+    }
+    return customUser?.email || userProfile?.data?.email || "Authenticated";
+  };
+
+  const getUserImage = () => {
+    if (status === "authenticated" && session) {
+      return session.user.image || "/logo.png";
+    } else if (customAuthenticated && userProfile?.data?.profilePicture) {
+      return userProfile.data.profilePicture;
+    }
+    return "/logo.png";
+  };
+
+  const getUserAltText = () => {
+    const name = getUserName();
+    return name === "User" ? "User profile picture" : `Profile picture of ${name}`;
+  };
+
   return (
     <>
       {/* Header */}
@@ -161,10 +189,10 @@ const Header = () => {
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Link href="/">
+              <Link href="/" aria-label="Why Designers Home">
                 <Image
                   src={logo}
-                  alt="Logo"
+                  alt="Why Designers - Fashion Education Platform"
                   width={50}
                   height={50}
                   className="ml-4 border rounded-lg lg:ml-0 cursor-pointer hover:opacity-80 transition-opacity"
@@ -175,9 +203,10 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center justify-center space-x-8">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.name}
                   href={item.href}
+                  aria-label={`Navigate to ${item.name}`}
                   className={`font-medium transition-colors duration-200 ${
                     isScrolled
                       ? "text-gray-700 hover:text-primary-600"
@@ -185,56 +214,45 @@ const Header = () => {
                   }`}
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
             </nav>
 
             {/* Desktop CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-3">
-              <button   onClick={handleCall} className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-secondary-500 hover:from-primary-700 hover:to-secondary-600 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <button
+                onClick={handleCall}
+                aria-label="Call us now"
+                className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-secondary-500 hover:from-primary-700 hover:to-secondary-600 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+              >
                 <Phone size={16} />
                 <span>Call Us</span>
               </button>
-              <button   onClick={handleWhatsApp} className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-accent-500 to-primary-400 hover:from-accent-600 hover:to-primary-500 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <button
+                onClick={handleWhatsApp}
+                aria-label="Contact us on WhatsApp"
+                className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-accent-500 to-primary-400 hover:from-accent-600 hover:to-primary-500 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+              >
                 <MessageCircle size={16} />
                 <span>WhatsApp</span>
               </button>
 
-              {/* Auth / Profile - PRESERVED DESKTOP DROPDOWN */}
-              {(status === "authenticated" && session) ||
-              customAuthenticated ? (
+              {/* Auth / Profile */}
+              {(status === "authenticated" && session) || customAuthenticated ? (
                 <div className="relative dropdown-container">
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    aria-expanded={isDropdownOpen}
+                    aria-label="User menu"
                     className="flex items-center space-x-3 p-2 rounded-full transition-all duration-200 hover:bg-white/10"
                   >
-                    {status === "authenticated" && session ? (
-                      <Image
-                        src={session.user.image || "/logo.png"}
-                        alt="Profile"
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                      />
-                    ) : customAuthenticated &&
-                      userProfile?.data?.profilePicture ? (
-                      <Image
-                        src={userProfile.data.profilePicture}
-                        alt="Profile"
-                        fill
-                        className="object-cover rounded-full"
-                      />
-                    ) : (
-                      <div
-                        className={`p-2.5 rounded-full ${
-                          isScrolled
-                            ? "bg-primary-100 text-primary-600"
-                            : "bg-white/20 text-white"
-                        }`}
-                      >
-                        <User size={20} />
-                      </div>
-                    )}
+                    <Image
+                      src={getUserImage()}
+                      alt={getUserAltText()}
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
                     <ChevronDown
                       size={18}
                       className={`transition-transform ${
@@ -247,55 +265,25 @@ const Header = () => {
                       {/* Header */}
                       <div className="relative bg-gradient-to-br from-primary-500 via-primary-600 to-secondary-500 p-6">
                         <div className="absolute inset-0 bg-black/10"></div>
-
                         <div className="relative flex items-center space-x-4">
                           {/* Profile Image */}
                           <div className="relative w-14 h-14 rounded-full overflow-hidden ring-4 ring-white/30 shadow-lg">
-                            {status === "authenticated" && session ? (
-                              <Image
-                                src={session.user.image || "/logo.png"}
-                                alt="Profile"
-                                fill
-                                className="object-cover rounded-full"
-                              />
-                            ) : customAuthenticated &&
-                              userProfile?.data?.profilePicture ? (
-                              <Image
-                                src={userProfile.data.profilePicture}
-                                alt="Profile"
-                                fill
-                                className="object-cover rounded-full"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                                <User size={24} className="text-white" />
-                              </div>
-                            )}
+                            <Image
+                              src={getUserImage()}
+                              alt={getUserAltText()}
+                              fill
+                              className="object-cover rounded-full"
+                            />
                           </div>
 
                           {/* User Info */}
                           <div className="flex-1 min-w-0">
                             <h3 className="text-white font-semibold text-lg truncate">
-                              {status === "authenticated" && session
-                                ? session.user.name
-                                : userProfile?.data?.firstName &&
-                                  userProfile?.data?.lastName
-                                ? `${userProfile.data.firstName} ${userProfile.data.lastName}`
-                                : customUser?.firstName && customUser?.lastName
-                                ? `${customUser.firstName} ${customUser.lastName}`
-                                : customUser?.name ||
-                                  customUser?.email ||
-                                  "User"}
+                              {getUserName()}
                             </h3>
-
                             <p className="text-white/80 text-sm truncate">
-                              {status === "authenticated" && session
-                                ? session.user.email
-                                : customUser?.email ||
-                                  userProfile?.data?.email ||
-                                  "Authenticated"}
+                              {getUserEmail()}
                             </p>
-
                             {userProfile?.data?.phoneNumber && (
                               <p className="text-white/70 text-xs mt-1 flex items-center">
                                 <Phone size={12} className="mr-1" />
@@ -315,6 +303,7 @@ const Header = () => {
                                 setShowProfileModal(true);
                                 setIsDropdownOpen(false);
                               }}
+                              aria-label="Complete your profile"
                               className="w-full flex items-center space-x-3 p-3 bg-gradient-to-r from-primary-50 to-secondary-50 hover:from-primary-100 hover:to-secondary-100 rounded-xl transition-all duration-200 group"
                             >
                               <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors">
@@ -333,7 +322,6 @@ const Header = () => {
                                 className="text-gray-400 rotate-[-90deg]"
                               />
                             </button>
-
                             <div className="border-t border-gray-100 my-3"></div>
                           </>
                         ) : null}
@@ -348,6 +336,7 @@ const Header = () => {
                             }
                             setIsDropdownOpen(false);
                           }}
+                          aria-label="Sign out of your account"
                           className="w-full flex items-center space-x-3 p-3 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 group"
                         >
                           <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors">
@@ -372,6 +361,7 @@ const Header = () => {
                     setAuthType("login");
                     setAuthOpen(true);
                   }}
+                  aria-label="Login or sign up"
                   className={`p-2.5 rounded-full transition-all duration-200 ${
                     isScrolled
                       ? "text-gray-700 hover:text-primary-600 hover:bg-primary-50"
@@ -387,6 +377,7 @@ const Header = () => {
             <div className="lg:hidden mr-2">
               <button
                 onClick={isMenuOpen ? closeMenu : openMenu}
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                 className={`p-2 rounded-lg transition-all duration-200 ${
                   isScrolled
                     ? "text-gray-700 hover:text-primary-600 hover:bg-primary-50"
@@ -424,6 +415,7 @@ const Header = () => {
                 <h2 className="text-white font-bold text-xl">Menu</h2>
                 <button
                   onClick={closeMenu}
+                  aria-label="Close menu"
                   className="p-2 bg-white/20 rounded-full text-white hover:bg-white/30 transition-colors"
                 >
                   <X size={20} />
@@ -431,52 +423,26 @@ const Header = () => {
               </div>
 
               {/* User Profile Card */}
-              {(status === "authenticated" && session) ||
-              customAuthenticated ? (
+              {(status === "authenticated" && session) || customAuthenticated ? (
                 <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
                   <div className="flex items-center space-x-3">
                     {/* Profile Image */}
                     <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-white/30 shadow-lg">
-                      {status === "authenticated" && session ? (
-                        <Image
-                          src={session.user.image || "/logo.png"}
-                          alt="Profile"
-                          fill
-                          className="object-cover rounded-full"
-                        />
-                      ) : customAuthenticated &&
-                        userProfile?.data?.profilePicture ? (
-                        <Image
-                          src={userProfile.data.profilePicture}
-                          alt="Profile"
-                          fill
-                          className="object-cover rounded-full"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-white/20 flex items-center justify-center">
-                          <User size={24} className="text-white" />
-                        </div>
-                      )}
+                      <Image
+                        src={getUserImage()}
+                        alt={getUserAltText()}
+                        fill
+                        className="object-cover rounded-full"
+                      />
                     </div>
 
                     {/* User Info */}
                     <div className="flex-1 min-w-0">
                       <h3 className="text-white font-semibold text-lg truncate">
-                        {status === "authenticated" && session
-                          ? session.user.name
-                          : userProfile?.data?.firstName &&
-                            userProfile?.data?.lastName
-                          ? `${userProfile.data.firstName} ${userProfile.data.lastName}`
-                          : customUser?.firstName && customUser?.lastName
-                          ? `${customUser.firstName} ${customUser.lastName}`
-                          : customUser?.name || customUser?.email || "User"}
+                        {getUserName()}
                       </h3>
                       <p className="text-white/80 text-sm truncate">
-                        {status === "authenticated" && session
-                          ? session.user.email
-                          : customUser?.email ||
-                            userProfile?.data?.email ||
-                            "Authenticated"}
+                        {getUserEmail()}
                       </p>
                       {userProfile?.data?.phoneNumber && (
                         <p className="text-white/70 text-xs mt-1 flex items-center">
@@ -495,6 +461,7 @@ const Header = () => {
                       setAuthOpen(true);
                       closeMenu();
                     }}
+                    aria-label="Login or sign up"
                     className="bg-white text-primary-600 px-6 py-3 rounded-full font-semibold text-sm hover:bg-gray-50 transition-colors shadow-lg"
                   >
                     Login / Sign Up
@@ -502,55 +469,42 @@ const Header = () => {
                 </div>
               )}
             </div>
-    {/* Profile Actions */}
-    <div className="p-4 space-y-2">
-                        {status !== "authenticated" || !session ? (
-                          <>
-                            <button
-                              onClick={() => {
-                                setShowProfileModal(true);
-                                closeMenu();
-                              }}
-                              className="w-full flex items-center space-x-3 p-3 bg-gradient-to-r from-primary-50 to-secondary-50 hover:from-primary-100 hover:to-secondary-100 rounded-xl transition-all duration-200 group"
-                            >
-                              <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors">
-                                <User size={18} className="text-primary-600" />
-                              </div>
-                              <div className="flex-1 text-left">
-                                <p className="font-medium text-gray-900">Complete Profile</p>
-                                <p className="text-sm text-gray-500">Add your details and preferences</p>
-                              </div>
-                              <ChevronDown size={16} className="text-gray-400 rotate-[-90deg]" />
-                            </button>
 
-                            <div className="border-t border-gray-100 my-3"></div>
-                          </>
-                        ) : null}
-                      </div>
+            {/* Profile Actions */}
+            <div className="p-4 space-y-2">
+              {status === "authenticated" || session ? (
+                <>
+                  <button
+                    onClick={() => {
+                      setShowProfileModal(true);
+                      closeMenu();
+                    }}
+                    aria-label="Complete your profile"
+                    className="w-full flex items-center space-x-3 p-3 bg-gradient-to-r from-primary-50 to-secondary-50 hover:from-primary-100 hover:to-secondary-100 rounded-xl transition-all duration-200 group"
+                  >
+                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors">
+                      <User size={18} className="text-primary-600" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <p className="font-medium text-gray-900">
+                        Complete Profile
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Add your details and preferences
+                      </p>
+                    </div>
+                    <ChevronDown
+                      size={16}
+                      className="text-gray-400 rotate-[-90deg]"
+                    />
+                  </button>
+                  <div className="border-t border-gray-100 my-3"></div>
+                </>
+              ) : null}
+            </div>
+
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto pb-20">
-              {/* Quick Actions */}
-              {/* {((status === "authenticated" && session) ||
-                customAuthenticated) && (
-                <div className="p-4 border-b border-gray-100">
-                  <div className="grid grid-cols-2 gap-3">
-                    {quickActions.map((action, index) => (
-                      <button
-                        key={index}
-                        className="flex flex-col items-center p-3 bg-gray-50 rounded-xl hover:bg-primary-50 transition-colors group"
-                      >
-                        <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center group-hover:bg-primary-200 transition-colors mb-2">
-                          <action.icon size={18} className="text-primary-600" />
-                        </div>
-                        <span className="text-xs font-medium text-gray-700 text-center">
-                          {action.name}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )} */}
-
               {/* Navigation Menu */}
               <div className="p-4">
                 <h3 className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-3 px-2">
@@ -558,10 +512,11 @@ const Header = () => {
                 </h3>
                 <div className="space-y-1">
                   {navItems.map((item, index) => (
-                    <a
+                    <Link
                       key={index}
                       href={item.href}
                       onClick={closeMenu}
+                      aria-label={`Navigate to ${item.name}`}
                       className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
                     >
                       <span className="text-lg w-6 text-center">
@@ -574,7 +529,7 @@ const Header = () => {
                         size={16}
                         className="text-gray-400 group-hover:text-gray-600"
                       />
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -586,9 +541,11 @@ const Header = () => {
                 </h3>
                 <div className="space-y-1">
                   {supportItems.map((item, index) => (
-                    <a
+                    <Link
                       key={index}
                       href={item.href}
+                      onClick={closeMenu}
+                      aria-label={`View ${item.name}`}
                       className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group w-full text-left"
                     >
                       <item.icon size={18} className="text-gray-500" />
@@ -599,29 +556,31 @@ const Header = () => {
                         size={16}
                         className="text-gray-400 group-hover:text-gray-600"
                       />
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
 
               {/* CTA Buttons */}
               <div className="mt-4 px-3.5 flex flex-col gap-3">
-                <button   onClick={handleCall} className="flex items-center justify-center space-x-2 px-4 py-3 border border-amber-500 text-amber-500 rounded-md font-medium text-base hover:bg-amber-50 hover:scale-105 transition-all duration-200">
-                  {" "}
-                  <Phone size={16} /> <span>Call Us</span>{" "}
-                </button>{" "}
-                <button 
-                onClick={handleWhatsApp}
-                className="w-full flex items-center justify-center space-x-2 py-3.5 border border-green-500 text-green-500 rounded-md font-medium text-base hover:bg-green-50 hover:scale-105 transition-all duration-200">
-                  {" "}
-                  <MessageCircle size={16} /> <span>WhatsApp</span>{" "}
-                </button>{" "}
-             
+                <button
+                  onClick={handleCall}
+                  aria-label="Call us now"
+                  className="flex items-center justify-center space-x-2 px-4 py-3 border border-amber-500 text-amber-500 rounded-md font-medium text-base hover:bg-amber-50 hover:scale-105 transition-all duration-200"
+                >
+                  <Phone size={16} /> <span>Call Us</span>
+                </button>
+                <button
+                  onClick={handleWhatsApp}
+                  aria-label="Contact us on WhatsApp"
+                  className="w-full flex items-center justify-center space-x-2 py-3.5 border border-green-500 text-green-500 rounded-md font-medium text-base hover:bg-green-50 hover:scale-105 transition-all duration-200"
+                >
+                  <MessageCircle size={16} /> <span>WhatsApp</span>
+                </button>
               </div>
 
               {/* Logout Section */}
-              {((status === "authenticated" && session) ||
-                customAuthenticated) && (
+              {((status === "authenticated" && session) || customAuthenticated) && (
                 <div className="p-4 border-t border-gray-100">
                   <button
                     onClick={() => {
@@ -632,6 +591,7 @@ const Header = () => {
                       }
                       closeMenu();
                     }}
+                    aria-label="Sign out of your account"
                     className="w-full flex items-center justify-center space-x-2 py-3.5 border border-red-500 text-red-500 rounded-xl font-semibold text-sm hover:bg-red-50 transition-colors"
                   >
                     <LogOut size={18} />
@@ -640,16 +600,6 @@ const Header = () => {
                 </div>
               )}
             </div>
-
-            {/* Footer */}
-            {/* <div className="absolute bottom-0 left-0 right-0 bg-gray-50 border-t border-gray-200 p-4">
-              <div className="text-center">
-                <p className="text-xs text-gray-500">
-                  © 2024 Your Company. All rights reserved.
-                </p>
-                <p className="text-xs text-gray-400 mt-1">Version 1.0.0</p>
-              </div>
-            </div> */}
           </div>
         </div>
       )}

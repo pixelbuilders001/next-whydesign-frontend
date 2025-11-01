@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getBlogsList } from '@/lib/authService';
 import Image from "next/image";
+import Head from 'next/head';
 
 
 export default function BlogsPage() {
@@ -54,19 +55,53 @@ export default function BlogsPage() {
 
   // Transform API data to match your component structure
   const transformedBlogs = blogs.map(blog => ({
-    id: blog._id,
+    id: blog.id,
     title: blog.title,
     slug: blog.slug,
     excerpt: blog.excerpt,
     image: blog.featuredImage,
     date: blog.publishedAt,
-    author: blog.authorId?.fullName || 'Unknown Author',
+    author: blog?.author?.name || 'Unknown Author',
     content: blog.content,
     readTime: blog.readTime
   }));
 
   if (loading) {
     return (
+      <>
+         <Head>
+        <title>Blog - Fashion Design Insights & Education | Why Designers</title>
+        <meta 
+          name="description" 
+          content="Explore our fashion design blog featuring industry insights, study abroad guidance, design education tips, and career advice for aspiring designers." 
+        />
+        <meta 
+          name="keywords" 
+          content="fashion design blog, design education, study abroad, fashion trends, design career, fashion tips, design inspiration" 
+        />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Blog - Fashion Design Insights & Education | Why Designers" />
+        <meta 
+          property="og:description" 
+          content="Explore our fashion design blog featuring industry insights, study abroad guidance, design education tips, and career advice for aspiring designers." 
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://whydesigners.com/blogs" />
+        <meta property="og:image" content="https://whydesigners.com/og-blog-image.jpg" />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Blog - Fashion Design Insights & Education | Why Designers" />
+        <meta 
+          name="twitter:description" 
+          content="Explore our fashion design blog featuring industry insights, study abroad guidance, design education tips, and career advice for aspiring designers." 
+        />
+        <meta name="twitter:image" content="https://whydesigners.com/twitter-blog-image.jpg" />
+        
+        {/* Canonical */}
+        <link rel="canonical" href="https://whydesigners.com/blogs" />
+      </Head>
       <div className="min-h-screen bg-gradient-to-br from-stone-50 to-amber-50">
         <Header />
         <main className="pt-10">
@@ -93,6 +128,8 @@ export default function BlogsPage() {
         </main>
         <Footer />
       </div>
+      </>
+    
     );
   }
 

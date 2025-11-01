@@ -8,7 +8,7 @@ import LeadFormSection from "@/components/LeadFormSection";
 import BookingSection from "@/components/BookingSection";
 import PDFDownloadSection from "@/components/PDFDownloadSection";
 import VideoSection from "@/components/VideoSection";
-import ReelsSection from "@/components/RealsSection";
+import RealsSection from "@/components/RealsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import MessageFromFounders from "@/components/MessageFromFounders";
 import ContactSection from "@/components/ContactSection";
@@ -51,7 +51,7 @@ export default function Home() {
         <BookingSection />
         <PDFDownloadSection />
         <VideoSection />
-        <ReelsSection />
+        <RealsSection />
         <TestimonialsSection />
         <MessageFromFounders />
         <ContactSection />

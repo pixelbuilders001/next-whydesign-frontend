@@ -1,14 +1,18 @@
 User-agent: *
 Allow: /
 
-# Sitemap
 Sitemap: https://whydesigners.com/sitemap.xml
 
-# Disallow admin or private areas (if any)
-# Disallow: /admin/
-# Disallow: /private/
+# Disallow admin or private areas
+Disallow: /api/
+Disallow: /_next/
+Disallow: /404
+Disallow: /500
 
 # Allow all crawlers to access PWA files
 Allow: /manifest.json
 Allow: /sw.js
 Allow: /offline.html
+
+# Crawl delay for better bot behavior
+Crawl-delay: 1

@@ -69,10 +69,10 @@ const LeadFormSection = () => {
                 width={800}
                 height={600}
                 src="https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop"
-                alt="Fashion design student"
+                alt="Fashion design student working on design"
                 className="w-full h-96 lg:h-[550px] object-cover group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" aria-hidden="true" />
               <div className="absolute bottom-8 left-8 text-white">
                 <p className="text-xl font-medium mb-2">
                   Join 10,000+ Fashion Designers
@@ -85,7 +85,7 @@ const LeadFormSection = () => {
           </div>
 
           {/* Form Side */}
-          <div className="space-y-10 order-1 lg:order-2 ">
+          <div className="space-y-10 order-1 lg:order-2">
             <div className="text-center">
               <h2 className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
                 Ready to Begin Your
@@ -103,11 +103,12 @@ const LeadFormSection = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-3">
                     Full Name
                   </label>
                   <input
                     type="text"
+                    id="name"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
@@ -118,11 +119,12 @@ const LeadFormSection = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-3">
                     Email Address
                   </label>
                   <input
                     type="email"
+                    id="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
@@ -135,11 +137,12 @@ const LeadFormSection = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-3">
                     Phone Number
                   </label>
                   <input
                     type="tel"
+                    id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
@@ -150,10 +153,11 @@ const LeadFormSection = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="interest" className="block text-sm font-medium text-gray-700 mb-3">
                     Area of Interest
                   </label>
                   <select
+                    id="interest"
                     name="interest"
                     value={formData.interest}
                     onChange={handleChange}
@@ -172,11 +176,12 @@ const LeadFormSection = () => {
               <button
                 type="submit"
                 disabled={loading || isSubmitted}
-                className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-8 py-5 rounded-2xl font-medium text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center space-x-3 disabled:opacity-75"
+                aria-label={isSubmitted ? "Form submitted successfully" : loading ? "Submitting form" : "Get free consultation"}
+                className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-8 py-5 rounded-2xl font-medium text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center space-x-3 disabled:opacity-75 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
               >
                 {isSubmitted ? (
                   <>
-                    <CheckCircle size={22} />
+                    <CheckCircle size={22} aria-hidden="true" />
                     <span>Thank You!</span>
                   </>
                 ) : loading ? (
@@ -184,7 +189,7 @@ const LeadFormSection = () => {
                 ) : (
                   <>
                     <span>Get Free Consultation</span>
-                    <Send size={20} />
+                    <Send size={20} aria-hidden="true" />
                   </>
                 )}
               </button>

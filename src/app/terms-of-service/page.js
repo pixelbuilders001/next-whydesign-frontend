@@ -2,6 +2,29 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
+export const metadata = {
+  title: "Terms of Service - Why Designers | Legal Agreement",
+  description: "Read Why Designers' Terms of Service to understand the rules and guidelines for using our platform, courses, and services. Learn about user responsibilities and platform policies.",
+  keywords: "terms of service, user agreement, legal terms, platform rules, service terms, Why Designers terms",
+  authors: [{ name: "Why Designers" }],
+  openGraph: {
+    title: "Terms of Service - Why Designers | Legal Agreement",
+    description: "Read Why Designers' Terms of Service to understand the rules and guidelines for using our platform, courses, and services.",
+    type: "website",
+    url: "https://whydesigners.com/terms-of-service",
+    siteName: "Why Designers",
+  },
+  twitter: {
+    card: "summary",
+    title: "Terms of Service - Why Designers",
+    description: "Read Why Designers' Terms of Service to understand the rules and guidelines for using our platform.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
 export default function TermsOfServicePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-50 to-amber-50">
@@ -27,7 +50,7 @@ export default function TermsOfServicePage() {
               Terms of Service
             </h1>
             <p className="text-lg text-gray-600">
-              Last updated: January 15, 2024
+              Last updated: January 15, 2025
             </p>
           </div>
 
@@ -68,8 +91,8 @@ export default function TermsOfServicePage() {
 
             <h2>Contact Information</h2>
             <p>If you have any questions about these Terms of Service, please contact us at:</p>
-            <p>Email: legal@whydesigners.com<br />
-            Address: 123 Fashion District, New York, NY 10001</p>
+            <p>Email: info@whydesigners.com<br />
+    </p>
           </div>
         </div>
       </main>

@@ -1,13 +1,12 @@
-
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+// import "./critical.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ToastProvider } from "@/components/Toast";
 import NoInternetBanner from "@/components/NoInternetBanner";
 import ModernLoader from "@/components/ModernLoader";
 import { Suspense } from "react";
 import Providers from "@/components/Providers";
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,44 +18,49 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "Why Designers - Fashion Education & Study Abroad",
-  description: "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance at Why Designers.",
-  keywords: "fashion design, study abroad, fashion education, NIFT, fashion courses, design school, PWA, progressive web app",
-  authors: [{ name: "Why Designers" }],
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Why Designers",
-  },
-  formatDetection: {
-    telephone: false,
-  },
-  openGraph: {
+  export const metadata = {
     title: "Why Designers - Fashion Education & Study Abroad",
-    description: "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
-    type: "website",
-    siteName: "Why Designers",
-    locale: "en_US",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Why Designers - Fashion Education & Study Abroad",
-    description: "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    description:
+      "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance at Why Designers. Join our comprehensive fashion design programs and unlock your creative potential.",
+    keywords:
+      "fashion design, study abroad, fashion education, NIFT, fashion courses, design school, PWA, progressive web app, fashion career, design education",
+    authors: [{ name: "Why Designers" }],
+    manifest: "/manifest.json",
+     viewport: "width=device-width, initial-scale=1", 
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: "Why Designers",
+    },
+    formatDetection: {
+      telephone: false,
+    },
+    openGraph: {
+      title: "Why Designers - Fashion Education & Study Abroad",
+      description:
+        "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
+      type: "website",
+      siteName: "Why Designers",
+      locale: "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Why Designers - Fashion Education & Study Abroad",
+      description:
+        "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
-  },
-};
+  };
 
 export default function RootLayout({ children }) {
   return (
@@ -76,24 +80,54 @@ export default function RootLayout({ children }) {
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="format-detection" content="telephone=no" />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Why Designers",
+              url: "https://whydesigners.com",
+              logo: "https://whydesigners.com/logo.png",
+              description:
+                "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Your City",
+                addressRegion: "Your State",
+                postalCode: "Your Postal Code",
+                addressCountry: "IN",
+              },
+              contactPoint: {
+                "@type": "ContactPoint",
+                telephone: "+919421095929",
+                contactType: "customer service",
+                email: "info@whydesigners.com",
+              },
+              sameAs: [
+                "https://facebook.com/whydesigners",
+                "https://www.instagram.com/why.designers?igsh=MXYxOHRvcmRucHVicA==",
+                "https://linkedin.com/company/whydesigners",
+                "https://youtube.com/@whydesigner?si=y9R3hy0daxRCtlpa",
+              ],
+            }),
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-white text-gray-900`}
       >
-      
         {/* <ErrorBoundary> */}
-          <ToastProvider>
-            {/* <Suspense fallback={<ModernLoader onFinish={() => {}} />}> */}
-              <NoInternetBanner />
-              <div className="relative">
-              <Providers 
-              
-              >{children}</Providers>
-                {/* Dark Mode Toggle - Fixed Position */}
-              
-              </div>
-            {/* </Suspense> */}
-          </ToastProvider>
+        <ToastProvider>
+          {/* <Suspense fallback={<ModernLoader onFinish={() => {}} />}> */}
+          <NoInternetBanner />
+          <div className="relative">
+            <Providers>{children}</Providers>
+            {/* Dark Mode Toggle - Fixed Position */}
+          </div>
+          {/* </Suspense> */}
+        </ToastProvider>
         {/* </ErrorBoundary> */}
 
         {/* PWA Install Prompt */}

@@ -349,3 +349,31 @@ select option {
 .animate-slide-in-bottom {
   animation: slide-in-bottom 0.7s ease-out forwards;
 }
+
+
+/* Optimize rendering performance */
+.hero-optimize {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .hero-optimize {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Improve font loading */
+.font-serif {
+  font-display: swap;
+}
+
+/* Optimize image rendering */
+.hero-image {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}

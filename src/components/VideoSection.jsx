@@ -13,7 +13,7 @@ const VideoSection = () => {
   const [isPosterModalOpen, setIsPosterModalOpen] = useState(false);
   const [activeVideo, setActiveVideo] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [posterLoading, setPosterLoading] = useState(false); // New state for poster loading
+  const [posterLoading, setPosterLoading] = useState(false);
   const videoRef = useRef(null);
   const [openModalContactModal, setOpenContactModal] = useState(false);
 
@@ -55,7 +55,6 @@ const VideoSection = () => {
       console.error('❌ Failed to track video view:', error);
     }
     
-    // Only set loading to false if there's no poster (video will load)
     if (!video.posterUrl) {
       setTimeout(() => {
         if (videoRef.current) {
@@ -63,14 +62,14 @@ const VideoSection = () => {
         }
       }, 100);
     } else {
-      setLoading(false); // Hide loader immediately if we have poster
+      setLoading(false);
     }
   };
 
   const openPosterModal = (video) => {
     setActiveVideo(video);
     setIsPosterModalOpen(true);
-    setPosterLoading(true); // Start loading when opening poster modal
+    setPosterLoading(true);
   };
 
   const closeModal = () => {
@@ -86,7 +85,7 @@ const VideoSection = () => {
   const closePosterModal = () => {
     setIsPosterModalOpen(false);
     setActiveVideo(null);
-    setPosterLoading(false); // Reset loading state when closing modal
+    setPosterLoading(false);
   };
 
   const handleVideoLoad = () => {
@@ -94,11 +93,11 @@ const VideoSection = () => {
   };
 
   const handlePosterLoad = () => {
-    setPosterLoading(false); // Hide loader when poster image is loaded
+    setPosterLoading(false);
   };
 
   const handlePosterError = () => {
-    setPosterLoading(false); // Hide loader even if there's an error
+    setPosterLoading(false);
     console.error('Failed to load poster image');
   };
 
@@ -149,11 +148,12 @@ const VideoSection = () => {
     <section
       id="videos"
       className="py-24 bg-gradient-to-b from-stone-50/30 to-white"
+      aria-labelledby="videos-heading"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="text-center mb-20">
-          <h2 className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
+          <h2 id="videos-heading" className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
             Master Fashion
             <span className="text-amber-600 block font-normal">
               Through Video
@@ -169,24 +169,39 @@ const VideoSection = () => {
         <div className="relative">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {videos.map((video, index) => (
-              <div
+              <article
                 key={video.id}
                 className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-stone-100 cursor-pointer"
               >
-                <div onClick={() => openModal(video)} className="relative overflow-hidden">
+                <div 
+                  onClick={() => openModal(video)} 
+                  className="relative overflow-hidden"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openModal(video);
+                    }
+                  }}
+                  aria-label={`Watch video: ${video.title} - ${video.description}`}
+                >
                   <Image
                     width={400}
                     height={600}
                     src={video.thumbnailUrl}
-                    alt={video.title}
+                    alt={`Thumbnail for video: ${video.title}`}
                     className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300" />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300" aria-hidden="true" />
 
                   {/* Play Button */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <button className="bg-white/95 hover:bg-white text-gray-900 rounded-full p-5 transform group-hover:scale-110 transition-all duration-300 shadow-xl backdrop-blur-sm">
-                      <Play className="ml-1" size={28} fill="currentColor" />
+                    <button 
+                      className="bg-white/95 hover:bg-white text-gray-900 rounded-full p-5 transform group-hover:scale-110 transition-all duration-300 shadow-xl backdrop-blur-sm focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
+                      aria-label={`Play video: ${video.title}`}
+                    >
+                      <Play className="ml-1" size={28} fill="currentColor" aria-hidden="true" />
                     </button>
                   </div>
 
@@ -231,15 +246,16 @@ const VideoSection = () => {
                     <span className="text-stone-500 text-sm font-light">
                       {video.viewCount} views
                     </span>
-                    <span 
+                    <button
                       onClick={() => openPosterModal(video)}
-                      className="text-amber-600 text-sm font-medium group-hover:translate-x-1 transform transition-transform duration-200 cursor-pointer"
+                      aria-label={`View details for ${video.title}`}
+                      className="text-amber-600 text-sm font-medium group-hover:translate-x-1 transform transition-transform duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-opacity-50 rounded"
                     >
                       View details →
-                    </span>
+                    </button>
                   </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
 
@@ -247,18 +263,21 @@ const VideoSection = () => {
           <div className="flex items-center justify-center space-x-6">
             <button
               onClick={prevSlide}
-              className="p-4 bg-white border border-stone-200 rounded-full hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg transition-all duration-200 transform hover:scale-110"
+              aria-label="Previous videos"
+              className="p-4 bg-white border border-stone-200 rounded-full hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
             >
-              <ArrowLeft size={20} className="text-gray-600" />
+              <ArrowLeft size={20} className="text-gray-600" aria-hidden="true" />
             </button>
 
-            <div className="flex space-x-3">
+            <div className="flex space-x-3" aria-label="Video pagination">
               {Array.from({ length: Math.ceil(videos.length / 3) }).map(
                 (_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentIndex(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                    aria-label={`Go to page ${index + 1}`}
+                    aria-current={index === currentIndex ? 'page' : undefined}
+                    className={`w-3 h-3 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                       index === currentIndex
                         ? "bg-amber-600 scale-125"
                         : "bg-stone-300 hover:bg-amber-300"
@@ -270,28 +289,30 @@ const VideoSection = () => {
 
             <button
               onClick={nextSlide}
-              className="p-4 bg-white border border-stone-200 rounded-full hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg transition-all duration-200 transform hover:scale-110"
+              aria-label="Next videos"
+              className="p-4 bg-white border border-stone-200 rounded-full hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
             >
-              <ArrowRight size={20} className="text-gray-600" />
+              <ArrowRight size={20} className="text-gray-600" aria-hidden="true" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Your Original Video Modal - Kept Exactly As Is */}
+      {/* Video Modal */}
       {isModalOpen && activeVideo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           {/* Overlay */}
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={closeModal}
+            aria-hidden="true"
           />
 
           {/* Loader */}
           {loading && (
             <div className="absolute inset-0 z-30 flex items-center justify-center bg-white/30 backdrop-blur-sm">
               <div className="flex flex-col items-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-amber-500 border-solid"></div>
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-amber-500 border-solid" aria-hidden="true"></div>
                 <p className="mt-4 text-white text-lg font-semibold drop-shadow-lg">Loading Video...</p>
               </div>
             </div>
@@ -300,17 +321,16 @@ const VideoSection = () => {
           {/* Close button */}
           <button
             onClick={closeModal}
-            className="absolute top-6 right-6 bg-white/80 hover:bg-white text-gray-900 rounded-full p-2 shadow-lg z-10"
+            aria-label="Close video modal"
+            className="absolute top-6 right-6 bg-white/80 hover:bg-white text-gray-900 rounded-full p-2 shadow-lg z-10 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
           >
-            <X size={22} />
+            <X size={22} aria-hidden="true" />
           </button>
 
           {/* Video player with poster and CTA */}
           <div className="relative z-20 w-[90%] md:w-[70%] lg:w-[60%] xl:w-[50%] rounded-2xl overflow-hidden shadow-2xl bg-white">
-          
-
-            {/* Video player (hidden if poster is present, shown when play is clicked) */}
-            <div >
+            {/* Video player */}
+            <div>
               <video
                 ref={videoRef}
                 src={activeVideo.videoUrl}
@@ -318,6 +338,7 @@ const VideoSection = () => {
                 autoPlay
                 className="w-full h-auto rounded-t-2xl"
                 onLoadedData={handleVideoLoad}
+                aria-label={`Video: ${activeVideo.title}`}
               />
             </div>
 
@@ -335,11 +356,11 @@ const VideoSection = () => {
               {/* Stats */}
               <div className="flex items-center gap-4 mb-4 text-sm text-gray-500">
                 <span>{activeVideo.viewCount} views</span>
-                <span>•</span>
+                <span aria-hidden="true">•</span>
                 <span>{activeVideo.duration}</span>
                 {activeVideo.category && (
                   <>
-                    <span>•</span>
+                    <span aria-hidden="true">•</span>
                     <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded-full text-xs">
                       {activeVideo.category}
                     </span>
@@ -351,74 +372,18 @@ const VideoSection = () => {
         </div>
       )}
 
-      {/* New Poster Modal - Separate from Video Modal */}
+      {/* Poster Modal */}
       {isPosterModalOpen && activeVideo && activeVideo.posterUrl && (
-        // <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-        //   {/* Overlay */}
-        //   <div
-        //     className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        //     onClick={closePosterModal}
-        //   />
-
-        //   {/* Close button */}
-        //   <button
-        //     onClick={closePosterModal}
-        //     className="absolute top-6 right-6 bg-white/90 hover:bg-white text-gray-900 rounded-full p-3 shadow-2xl z-10 transition-all duration-200 hover:scale-110"
-        //   >
-        //     <X size={24} />
-        //   </button>
-
-        //   {/* Poster Loader */}
-        //   {posterLoading && (
-        //     <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-        //       <div className="flex flex-col items-center">
-        //         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-amber-500 border-solid"></div>
-        //         <p className="mt-4 text-white text-lg font-semibold drop-shadow-lg">Loading content...</p>
-        //       </div>
-        //     </div>
-        //   )}
-
-        //   {/* Full Poster Image */}
-        //   <div className="relative z-20 max-w-7xl max-h-[90vh] flex flex-col items-center">
-        //     <Image
-        //       width={800}
-        //       height={1200}
-        //       src={activeVideo.posterUrl}
-        //       alt={activeVideo.title}
-        //       className="w-auto max-w-full h-auto max-h-[80vh] object-contain rounded-lg shadow-2xl"
-        //       onLoad={handlePosterLoad}
-        //       onError={handlePosterError}
-        //     />
-            
-        //     {/* CTA Buttons */}
-        //     <div className="flex flex-col sm:flex-row gap-4 mt-2 w-full max-w-md">
-        //       <button
-        //         onClick={handleContactNow}
-        //        className="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-4 px-6 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-3 shadow-2xl hover:shadow-3xl text-lg"
-        //       >
-        //         <Mail size={24} />
-        //         Contact Now
-        //       </button>
-        //     </div>
-        //   </div>
-        // </div>
         <PosterWithFormModal
-  isOpen={isPosterModalOpen}
-  onClose={closePosterModal}
-  posterUrl={activeVideo?.posterUrl}
-  title={activeVideo?.title}
-  description={activeVideo?.description}
-  category={activeVideo?.category}
-  duration={activeVideo?.duration}
-/>
-
+          isOpen={isPosterModalOpen}
+          onClose={closePosterModal}
+          posterUrl={activeVideo?.posterUrl}
+          title={activeVideo?.title}
+          description={activeVideo?.description}
+          category={activeVideo?.category}
+          duration={activeVideo?.duration}
+        />
       )}
-        {/* <FormModal
-        isOpen={openModalContactModal}
-        onClose={() => setOpenContactModal(false)}
-        title="Start Your Fashion Journey"
-        description="Fill out this form and our experts will guide you."
-      /> */}
     </section>
   );
 };

@@ -2,6 +2,30 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
+export const metadata = {
+  title: "Privacy Policy - Why Designers | Data Protection & Privacy",
+  description: "Read Why Designers' Privacy Policy to understand how we collect, use, and protect your personal information. Learn about your data rights and our commitment to privacy.",
+  keywords: "privacy policy, data protection, personal information, privacy rights, GDPR, data security, Why Designers privacy",
+  authors: [{ name: "Why Designers" }],
+  openGraph: {
+    title: "Privacy Policy - Why Designers | Data Protection & Privacy",
+    description: "Read Why Designers' Privacy Policy to understand how we collect, use, and protect your personal information.",
+    type: "website",
+    url: "https://whydesigners.com/privacy-policy",
+    siteName: "Why Designers",
+  },
+  twitter: {
+    card: "summary",
+    title: "Privacy Policy - Why Designers",
+    description: "Read Why Designers' Privacy Policy to understand how we collect, use, and protect your personal information.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+
 export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-50 to-amber-50">
@@ -27,7 +51,7 @@ export default function PrivacyPolicyPage() {
               Privacy Policy
             </h1>
             <p className="text-lg text-gray-600">
-              Last updated: January 15, 2024
+              Last updated: January 15, 2025
             </p>
           </div>
 
@@ -75,8 +99,8 @@ export default function PrivacyPolicyPage() {
 
             <h2>Contact Us</h2>
             <p>If you have any questions about this Privacy Policy, please contact us at:</p>
-            <p>Email: privacy@whydesigners.com<br />
-            Address: 123 Fashion District, New York, NY 10001</p>
+            <p>Email: info@whydesigners.com<br />
+              </p>
           </div>
         </div>
       </main>

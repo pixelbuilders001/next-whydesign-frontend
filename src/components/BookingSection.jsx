@@ -9,11 +9,9 @@ const BookingSection = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [isLoading, setIsLoading] = useState(true);
   const [counselors, setCounselors] = useState([]);
   const [selectedCounselor, setSelectedCounselor] = useState('');
-  console.log("selectedCounselor", selectedCounselor);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [formData, setFormData] = useState({
     name: '',
@@ -22,33 +20,6 @@ const BookingSection = () => {
     topic: ''
   });
   const [isBooked, setIsBooked] = useState(false);
-
-  // const counselors = [
-  //   {
-  //     id: 'sarah',
-  //     name: 'Sarah Chen',
-  //     title: 'Senior Fashion Consultant',
-  //     experience: '10+ years',
-  //     image: 'https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-  //     specialties: ['Portfolio Review', 'Career Guidance', 'Study Abroad']
-  //   },
-  //   {
-  //     id: 'marco',
-  //     name: 'Marco Rodriguez',
-  //     title: 'Creative Director',
-  //     experience: '8+ years',
-  //     image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-  //     specialties: ['Fashion Design', 'Brand Development', 'Industry Insights']
-  //   },
-  //   {
-  //     id: 'emma',
-  //     name: 'Emma Thompson',
-  //     title: 'Fashion Entrepreneur',
-  //     experience: '12+ years',
-  //     image: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-  //     specialties: ['Business Strategy', 'Entrepreneurship', 'Fashion Marketing']
-  //   }
-  // ];
 
   const timeSlots = [
     '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
@@ -121,9 +92,9 @@ const BookingSection = () => {
       guestName: formData.name,
       guestEmail: formData.email,
       guestPhone: formData.phone,
-      bookingDate: selectedDate, // ISO format from your calendar
+      bookingDate: selectedDate,
       bookingTime: formatTime(selectedTime),
-      duration: 60, // or 45 if you want
+      duration: 60,
       discussionTopic: formData.topic,
     };
   
@@ -134,7 +105,7 @@ const BookingSection = () => {
       if (result.success) {
         setIsSubmitting(false);
         setIsBooked(true);
-        alert("🎉 Session booked successfully!Please check your email for meeting link");
+        alert("🎉 Session booked successfully! Please check your email for meeting link");
         setFormData({ name: '', email: '', phone: '', topic: '' });
         setSelectedDate('');
         setSelectedTime('');
@@ -148,7 +119,6 @@ const BookingSection = () => {
       alert("Something went wrong while booking the session.");
     }
   };
-  
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -157,17 +127,14 @@ const BookingSection = () => {
     }));
   };
 
-
   useEffect(() => {
     const fetchCounselors = async () => {
       setIsLoading(true);
       try {
         const result = await getCounselorList(1, 10);
-        console.log("result", result);
         if (result.success && result.data?.data) {
-          // Transform API data to match component structure
           const transformedCounselors = result.data.data.map((counselor) => ({
-            id: counselor._id,
+            id: counselor.id,
             name: counselor.fullName,
             title: counselor.title,
             experience: `${counselor.yearsOfExperience}+ years`,
@@ -191,7 +158,6 @@ const BookingSection = () => {
     fetchCounselors();
   }, []);
 
-
   const selectedCounselorData = counselors.find(c => c.id === selectedCounselor);
 
   return (
@@ -213,7 +179,7 @@ const BookingSection = () => {
           <div className="space-y-10">
             <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-4 lg:p-10 shadow-xl border border-white/50">
               <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-                <User className="text-amber-600 mr-4" size={32} />
+                <User className="text-amber-600 mr-4" size={32} aria-hidden="true" />
                 Choose Your Counselor
               </h3>
 
@@ -221,45 +187,51 @@ const BookingSection = () => {
                 {counselors.map((counselor) => (
                   <div
                     key={counselor.id}
-                    className={`p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 flex-shrink-0 lg:w-full w-3/4 ${
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setSelectedCounselor(counselor.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedCounselor(counselor.id);
+                      }
+                    }}
+                    aria-label={`Select counselor ${counselor.name}, ${counselor.title} with ${counselor.experience} experience`}
+                    aria-pressed={selectedCounselor === counselor.id}
+                    className={`p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 flex-shrink-0 lg:w-full w-3/4 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50 ${
                       selectedCounselor === counselor.id
                         ? 'border-amber-500 bg-amber-50 shadow-lg'
                         : 'border-stone-200 bg-white hover:border-amber-300 hover:shadow-md'
                     }`}
-                    onClick={() => setSelectedCounselor(counselor.id)}
                   >
                     <div className="flex-col items-center text-center lg:flex lg:flex-row lg:items-center lg:space-x-4 lg:text-left">
                       <Image
-                      width={20}
-                      height={20}
+                        width={80}
+                        height={80}
                         src={counselor.image}
-                        alt={counselor.name}
+                        alt={`Portrait of ${counselor.name}`}
                         className="w-20 h-20 mb-4 lg:w-16 lg:h-16 lg:mb-0 rounded-full object-cover border-3 border-amber-200"
                       />
-                  <div className="flex-1 text-center lg:text-left lg:flex-1">
-  <h4 className="font-bold text-gray-900 text-lg">{counselor.name}</h4>
-  <p className="text-amber-600 font-medium">{counselor.title}</p>
-  <p className="text-gray-600 text-sm mb-1">{counselor.experience} experience</p>
-
-  {/* ⭐ Rating Row */}
-  <div className="flex items-center justify-center lg:justify-start text-sm">
-    <span className="text-amber-500 mr-1">⭐</span>
-    <span className="text-gray-800 font-medium">{counselor.rating.toFixed(1)}</span>
-    <span className="text-gray-500 ml-1">/ 5</span>
-  </div>
-</div>
-
+                      <div className="flex-1 text-center lg:text-left lg:flex-1">
+                        <h4 className="font-bold text-gray-900 text-lg">{counselor.name}</h4>
+                        <p className="text-amber-600 font-medium">{counselor.title}</p>
+                        <p className="text-gray-600 text-sm mb-1">{counselor.experience} experience</p>
+                        <div className="flex items-center justify-center lg:justify-start text-sm">
+                          <span className="text-amber-500 mr-1" aria-hidden="true">⭐</span>
+                          <span className="text-gray-800 font-medium">{counselor.rating.toFixed(1)}</span>
+                          <span className="text-gray-500 ml-1">/ 5</span>
+                        </div>
+                      </div>
                       <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mt-4 lg:mt-0 ${
                         selectedCounselor === counselor.id
                           ? 'border-amber-500 bg-amber-500'
                           : 'border-stone-300'
-                      }`}>
+                      }`} aria-hidden="true">
                         {selectedCounselor === counselor.id && (
                           <div className="w-3 h-3 bg-white rounded-full" />
                         )}
                       </div>
                     </div>
-
                     <div className="mt-4 flex flex-wrap gap-2">
                       {counselor.specialties.map((specialty, index) => (
                         <span
@@ -283,7 +255,7 @@ const BookingSection = () => {
                     width={60}
                     height={60}
                     src={selectedCounselorData.image}
-                    alt={selectedCounselorData.name}
+                    alt={`Selected counselor ${selectedCounselorData.name}`}
                     className="rounded-full object-cover border-4 border-amber-300"
                   />
                   <div>
@@ -303,7 +275,7 @@ const BookingSection = () => {
           {/* Booking Form */}
           <div className="bg-white rounded-3xl shadow-2xl p-10 border border-stone-100">
             <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-              <Video className="text-amber-600 mr-4" size={32} />
+              <Video className="text-amber-600 mr-4" size={32} aria-hidden="true" />
               Schedule Your Session
             </h3>
 
@@ -311,11 +283,12 @@ const BookingSection = () => {
               {/* Personal Information */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-3">
                     Full Name
                   </label>
                   <input
                     type="text"
+                    id="name"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
@@ -326,11 +299,12 @@ const BookingSection = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-3">
                     Email Address
                   </label>
                   <input
                     type="email"
+                    id="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
@@ -343,11 +317,12 @@ const BookingSection = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-3">
                     Phone Number
                   </label>
                   <input
                     type="tel"
+                    id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
@@ -358,10 +333,11 @@ const BookingSection = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="topic" className="block text-sm font-medium text-gray-700 mb-3">
                     Discussion Topic
                   </label>
                   <select
+                    id="topic"
                     name="topic"
                     value={formData.topic}
                     onChange={handleChange}
@@ -379,7 +355,7 @@ const BookingSection = () => {
               {/* Calendar Date Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
-                  <Calendar className="mr-2" size={16} />
+                  <Calendar className="mr-2" size={16} aria-hidden="true" />
                   Select Date
                 </label>
                 <div className="bg-stone-50 rounded-2xl p-6 border border-stone-200">
@@ -388,24 +364,26 @@ const BookingSection = () => {
                     <button
                       type="button"
                       onClick={() => navigateMonth(-1)}
-                      className="p-2 hover:bg-stone-200 rounded-lg transition-colors"
+                      aria-label="Previous month"
+                      className="p-2 hover:bg-stone-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
                     >
-                      <ChevronLeft size={20} />
+                      <ChevronLeft size={20} aria-hidden="true" />
                     </button>
-                    <h4 className="text-lg font-semibold text-gray-900">
+                    <h4 className="text-lg font-semibold text-gray-900" aria-live="polite">
                       {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                     </h4>
                     <button
                       type="button"
                       onClick={() => navigateMonth(1)}
-                      className="p-2 hover:bg-stone-200 rounded-lg transition-colors"
+                      aria-label="Next month"
+                      className="p-2 hover:bg-stone-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
                     >
-                      <ChevronRight size={20} />
+                      <ChevronRight size={20} aria-hidden="true" />
                     </button>
                   </div>
 
                   {/* Days of Week */}
-                  <div className="grid grid-cols-7 gap-2 mb-4">
+                  <div className="grid grid-cols-7 gap-2 mb-4" aria-hidden="true">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                       <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
                         {day}
@@ -421,7 +399,9 @@ const BookingSection = () => {
                         type="button"
                         onClick={() => day.isAvailable && setSelectedDate(day.value)}
                         disabled={!day.isAvailable}
-                        className={`aspect-square flex items-center justify-center text-sm font-medium rounded-xl transition-all duration-200 ${
+                        aria-label={`${day.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}${!day.isAvailable ? ' - Not available' : ''}${day.isSelected ? ' - Selected' : ''}`}
+                        aria-pressed={day.isSelected}
+                        className={`aspect-square flex items-center justify-center text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                           day.isSelected
                             ? 'bg-amber-500 text-white shadow-lg'
                             : day.isAvailable
@@ -439,7 +419,7 @@ const BookingSection = () => {
               {/* Time Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
-                  <Clock className="mr-2" size={16} />
+                  <Clock className="mr-2" size={16} aria-hidden="true" />
                   Select Time
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -448,7 +428,9 @@ const BookingSection = () => {
                       key={time}
                       type="button"
                       onClick={() => setSelectedTime(time)}
-                      className={`p-3 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
+                      aria-pressed={selectedTime === time}
+                      aria-label={`Select time ${time}`}
+                      className={`p-3 rounded-xl border-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                         selectedTime === time
                           ? 'border-amber-500 bg-amber-50 text-amber-700'
                           : 'border-stone-200 hover:border-amber-300 hover:bg-amber-50 text-gray-700'
@@ -461,16 +443,16 @@ const BookingSection = () => {
               </div>
 
               <button
-  type="submit"
-  disabled={!selectedCounselor || !selectedDate || !selectedTime || isSubmitting}
-  className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-8 py-5 rounded-2xl font-medium text-lg transition-all duration-300"
->
-  {isSubmitting ? "Booking..." : "Book Video Counselling"}
-</button>
-
+                type="submit"
+                disabled={!selectedCounselor || !selectedDate || !selectedTime || isSubmitting}
+                aria-label={isSubmitting ? "Booking session in progress" : "Book video counselling session"}
+                className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-8 py-5 rounded-2xl font-medium text-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Booking..." : "Book Video Counselling"}
+              </button>
 
               {selectedDate && selectedTime && selectedCounselor && (
-                <div className="bg-stone-50 rounded-2xl p-6 border border-stone-200">
+                <div className="bg-stone-50 rounded-2xl p-6 border border-stone-200" aria-live="polite">
                   <h4 className="font-bold text-gray-900 mb-3">Booking Summary:</h4>
                   <div className="space-y-2 text-sm text-gray-700">
                     <p><span className="font-medium">Counselor:</span> {selectedCounselorData?.name}</p>

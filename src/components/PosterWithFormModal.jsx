@@ -91,7 +91,7 @@ const FormModal = ({
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 z-30 bg-white/80 backdrop-blur-sm rounded-full p-1.5 text-gray-500 hover:text-gray-800 transition-all hover:scale-105"
+          className="absolute top-1 right-1 z-30 bg-white/80 backdrop-blur-sm rounded-full p-1 text-gray-500 hover:text-gray-800 transition-all hover:scale-105"
         >
           <X size={24} />
         </button>

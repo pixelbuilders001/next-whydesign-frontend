@@ -94,11 +94,10 @@ const PDFDownloadSection = () => {
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-20">
-         
           <h2 className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-4">
-          Fashion Knowledge
+            Fashion Knowledge
             <span className="text-amber-600 block font-normal text-3xl mt-2">
-            Guides & Insights
+              Guides & Insights
             </span>
           </h2>
           <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
@@ -117,26 +116,27 @@ const PDFDownloadSection = () => {
           {guides.map((guide) => {
             const Icon = guide.icon;
             return (
-              <div
+              <article
                 key={guide.id}
                 className="relative overflow-hidden rounded-3xl group bg-white/80 backdrop-blur-lg border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-500"
               >
                 {/* Background Gradient */}
                 <div
                   className={`absolute inset-0 bg-gradient-to-r ${guide.color} opacity-0 group-hover:opacity-10 transition-all duration-500 pointer-events-none`}
+                  aria-hidden="true"
                 />
 
                 {/* Image */}
                 <div className="relative h-56 overflow-hidden">
                   <Image
                     src={guide.image}
-                    alt={guide.title}
+                    alt={`Cover image for ${guide.title} - ${guide.description}`}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" aria-hidden="true" />
                   <div className="absolute bottom-4 left-4 text-white flex items-center space-x-2">
-                    <Icon size={22} className="opacity-90" />
+                    <Icon size={22} className="opacity-90" aria-hidden="true" />
                     <h3 className="text-xl font-semibold">{guide.title}</h3>
                   </div>
                 </div>
@@ -147,35 +147,38 @@ const PDFDownloadSection = () => {
 
                   <div className="flex items-center justify-between text-gray-500 text-sm mt-4">
                     <div className="flex items-center space-x-1">
-                      <BookOpen size={16} /> <span>{guide.stats.pages}</span>
+                      <BookOpen size={16} aria-hidden="true" /> 
+                      <span>{guide.stats.pages}</span>
                     </div>
                     <div className="flex items-center space-x-1">
-                      <Star className="text-amber-400 fill-current" size={16} />
+                      <Star className="text-amber-400 fill-current" size={16} aria-hidden="true" />
                       <span>{guide.stats.rating}</span>
                     </div>
                     <div className="flex items-center space-x-1">
-                      <Users size={16} /> <span>{guide.stats.downloads}</span>
+                      <Users size={16} aria-hidden="true" /> 
+                      <span>{guide.stats.downloads}</span>
                     </div>
                   </div>
 
                   {/* Button */}
                   <button
                     onClick={() => handleDownload(guide.id)}
-                    // disabled={loading || materials.length === 0}
+                    aria-label={`Download ${guide.title} - ${guide.description}`}
                     className={`cursor-pointer group w-full mt-6 py-4 bg-gradient-to-r ${guide.color} text-white
                      rounded-2xl font-medium tracking-wide transition-all duration-300 hover:shadow-xl 
-                     hover:scale-[1.02] flex items-center justify-center space-x-3`}
+                     hover:scale-[1.02] flex items-center justify-center space-x-3 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50`}
                   >
                     <Download
                       size={20}
                       className={`${
                         loading ? "animate-spin" : "group-hover:translate-y-1"
                       } transition-transform`}
+                      aria-hidden="true"
                     />
                     <span>{loading ? "Preparing..." : "Download Free Guide"}</span>
                   </button>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
