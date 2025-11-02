@@ -23,7 +23,8 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/useAuth";
 
-import logo from "../../public/logo.png";
+import logo from "../../public/logo3c.png";
+import logo2 from "../../public/logo3.png";
 import AuthModal from "./AuthModal";
 import CompleteProfileModal from "./CompleteProfileModal";
 
@@ -191,7 +192,7 @@ const Header = () => {
             <div className="flex-shrink-0">
               <Link href="/" aria-label="Why Designers Home">
                 <Image
-                  src={logo}
+                   src={isScrolled ? logo2 : logo}
                   alt="Why Designers - Fashion Education Platform"
                   width={50}
                   height={50}
@@ -207,7 +208,7 @@ const Header = () => {
                   key={item.name}
                   href={item.href}
                   aria-label={`Navigate to ${item.name}`}
-                  className={`font-medium transition-colors duration-200 ${
+                  className={`font-medium text-sm transition-colors duration-200 ${
                     isScrolled
                       ? "text-gray-700 hover:text-primary-600"
                       : "text-white/90 hover:text-primary-300"
@@ -223,7 +224,7 @@ const Header = () => {
               <button
                 onClick={handleCall}
                 aria-label="Call us now"
-                className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-secondary-500 hover:from-primary-700 hover:to-secondary-600 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                className="flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-primary-600 to-secondary-500 hover:from-primary-700 hover:to-secondary-600 text-white rounded-full font-semibold text-xs shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
               >
                 <Phone size={16} />
                 <span>Call Us</span>
@@ -231,7 +232,7 @@ const Header = () => {
               <button
                 onClick={handleWhatsApp}
                 aria-label="Contact us on WhatsApp"
-                className="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-accent-500 to-primary-400 hover:from-accent-600 hover:to-primary-500 text-white rounded-full font-semibold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+                className="flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-accent-500 to-primary-400 hover:from-accent-600 hover:to-primary-500 text-white rounded-full font-semibold text-xs shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
               >
                 <MessageCircle size={16} />
                 <span>WhatsApp</span>

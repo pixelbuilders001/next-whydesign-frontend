@@ -1,7 +1,7 @@
 import React from 'react';
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 import Image from 'next/image';
-import logo from '../../public/logo.png';
+import logo from '../../public/logo3c.png';
 
 const Footer = () => {
   const quickLinks = [

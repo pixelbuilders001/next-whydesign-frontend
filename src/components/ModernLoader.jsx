@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import Image from "next/image";
-import logo from "../../public/logo.png";
+import logo from "../../public/logo3.png";
 
 const ModernLoader = ({ onFinish }) => {
   const [progress, setProgress] = useState(0);

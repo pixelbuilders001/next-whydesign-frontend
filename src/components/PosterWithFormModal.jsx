@@ -23,6 +23,9 @@ const FormModal = ({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  
+  // 👇 New state for image loading
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -70,24 +73,16 @@ const FormModal = ({
     }
   };
 
-  const handleContactNow = () => {
-    setShowForm(true);
-  };
-
-  const handleClose = () => {
-    setShowForm(false);
-    onClose();
-  };
-
-  const handleBackToBanner = () => {
-    setShowForm(false);
-  };
+  const handleContactNow = () => setShowForm(true);
+  const handleClose = () => { setShowForm(false); onClose(); };
+  const handleBackToBanner = () => setShowForm(false);
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-white rounded-3xl w-full max-w-4xl flex flex-col md:flex-row shadow-2xl relative overflow-hidden max-h-[90vh] md:max-h-[95vh]">
+        
         {/* Close Button */}
         <button
           onClick={handleClose}
@@ -96,7 +91,7 @@ const FormModal = ({
           <X size={24} />
         </button>
 
-        {/* Mobile Back Button (shown only when form is open) */}
+        {/* Mobile Back Button */}
         {showForm && (
           <button
             onClick={handleBackToBanner}
@@ -106,28 +101,30 @@ const FormModal = ({
           </button>
         )}
 
-        {/* Poster Image - Full height on mobile */}
+        {/* Poster Image Section */}
         <div className={`w-full md:w-2/5 lg:w-1/2 relative ${showForm ? 'hidden md:block' : 'block'} h-screen md:h-auto`}>
+          
+          {/* 👇 Loader while image loads */}
+          {!imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse">
+              <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+
           <Image
             src={posterUrl || "/your-poster.jpg"}
             alt="Poster"
             fill
-            className="object-cover"
+            className={`object-cover transition-opacity duration-500 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
             priority
+            onLoad={() => setImageLoaded(true)} // 👈 Detect when image finishes loading
           />
-          
+
           {/* Mobile Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent md:hidden" />
           
           {/* Mobile Content */}
           <div className="absolute bottom-2 left-6 right-6 text-white md:hidden">
-            {/* {title && <h2 className="text-2xl font-bold mb-2">{title}</h2>}
-   
-            {description && (
-              <p className="text-sm mb-4 opacity-90 leading-relaxed">{description}</p>
-            )} */}
-            
-            {/* Contact Now Button on Banner */}
             <button
               onClick={handleContactNow}
               className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white px-6 py-2 rounded-2xl font-medium text-lg transition-all duration-300 flex items-center justify-center space-x-2 hover:shadow-lg active:scale-95 mt-2"
@@ -138,17 +135,13 @@ const FormModal = ({
           </div>
         </div>
 
-        {/* Form Section - Hidden on mobile until Contact Now is clicked */}
+        {/* Form Section */}
         <div className={`w-full md:w-3/5 lg:w-1/2 p-6 md:p-8 bg-white overflow-y-auto ${showForm ? 'block' : 'hidden md:block'}`}>
-          {/* Desktop title */}
           {title && (
             <h2 className="hidden md:block text-2xl font-bold text-gray-900 mb-3">
               {title}
             </h2>
           )}
-          {/* {description && (
-            <p className="hidden md:block text-gray-600 mb-6">{description}</p>
-          )} */}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
