@@ -16,9 +16,9 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Follow us on Facebook' },
+    { icon: Facebook, href: 'https://www.facebook.com/share/14QLQ7HoUda/?mibextid=wwXIfr', label: 'Follow us on Facebook' },
     { icon: Instagram, href: 'https://www.instagram.com/why.designers?igsh=MXYxOHRvcmRucHVicA==', label: 'Follow us on Instagram' },
-    { icon: Twitter, href: '#', label: 'Follow us on Twitter' },
+    { icon: Twitter, href: 'https://x.com/whydesignerr?s=11', label: 'Follow us on Twitter' },
     { icon: Youtube, href: 'https://youtube.com/@whydesigner?si=y9R3hy0daxRCtlpa', label: 'Subscribe to our YouTube channel' },
   ];
 
@@ -103,7 +103,8 @@ const Footer = () => {
             <div className="space-y-6">
               <div className="flex items-center space-x-4">
                 <Phone className="text-primary-400 flex-shrink-0" size={20} aria-hidden="true" />
-                <span className="text-stone-300 font-light">+91 (756) 123-4567</span>
+                <span className="text-stone-300 font-light">+91-9421095929</span>
+
               </div>
               <div className="flex items-center space-x-4">
                 <Mail className="text-primary-400 flex-shrink-0" size={20} aria-hidden="true" />

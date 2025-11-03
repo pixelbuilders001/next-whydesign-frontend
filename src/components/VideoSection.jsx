@@ -27,15 +27,42 @@ const VideoSection = () => {
     totalPages: 0
   });
 
+  // Calculate visible videos based on current index and screen size
+  const getVideosPerPage = () => {
+    if (typeof window === 'undefined') return 3;
+    
+    const width = window.innerWidth;
+    if (width < 768) return 1; // Mobile: 1 card
+    if (width < 1024) return 2; // Tablet: 2 cards
+    return 3; // Desktop: 3 cards
+  };
+
+  const [videosPerPage, setVideosPerPage] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setVideosPerPage(getVideosPerPage());
+      // Reset to first page when screen size changes
+      setCurrentIndex(0);
+    };
+
+    // Set initial value
+    setVideosPerPage(getVideosPerPage());
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const totalSlides = Math.ceil(videos.length / videosPerPage);
+  const startIndex = currentIndex * videosPerPage;
+  const visibleVideos = videos.slice(startIndex, startIndex + videosPerPage);
+
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % Math.ceil(videos.length / 3));
+    setCurrentIndex((prev) => (prev + 1) % totalSlides);
   };
 
   const prevSlide = () => {
-    setCurrentIndex(
-      (prev) =>
-        (prev - 1 + Math.ceil(videos.length / 3)) % Math.ceil(videos.length / 3)
-    );
+    setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
   };
 
   const openModal = async (video) => {
@@ -167,134 +194,280 @@ const VideoSection = () => {
 
         {/* Video Cards */}
         <div className="relative">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {videos.map((video, index) => (
-              <article
-                key={video.id}
-                className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-stone-100 cursor-pointer"
+          {/* Show loading state */}
+          {apiLoading && (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-amber-500 border-solid"></div>
+            </div>
+          )}
+
+          {/* Show error state */}
+          {error && !apiLoading && (
+            <div className="text-center py-20">
+              <p className="text-red-500 text-lg mb-4">Error: {error}</p>
+              <button 
+                onClick={() => fetchVideos()} 
+                className="bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition-colors"
               >
-                <div 
-                  onClick={() => openModal(video)} 
-                  className="relative overflow-hidden"
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      openModal(video);
-                    }
-                  }}
-                  aria-label={`Watch video: ${video.title} - ${video.description}`}
-                >
-                  <Image
-                    width={400}
-                    height={600}
-                    src={video.thumbnailUrl}
-                    alt={`Thumbnail for video: ${video.title}`}
-                    className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300" aria-hidden="true" />
+                Try Again
+              </button>
+            </div>
+          )}
 
-                  {/* Play Button */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <button 
-                      className="bg-white/95 hover:bg-white text-gray-900 rounded-full p-5 transform group-hover:scale-110 transition-all duration-300 shadow-xl backdrop-blur-sm focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
-                      aria-label={`Play video: ${video.title}`}
+          {/* Show videos when loaded */}
+          {!apiLoading && !error && (
+            <>
+              {/* Mobile View - Single Card with Horizontal Scroll */}
+              <div className="block md:hidden">
+                <div className="relative py-1">
+                  <div className="overflow-hidden">
+                    <div 
+                      className="flex transition-transform duration-300 ease-in-out"
+                      style={{ 
+                        transform: `translateX(-${currentIndex * 100}%)` 
+                      }}
                     >
-                      <Play className="ml-1" size={28} fill="currentColor" aria-hidden="true" />
-                    </button>
-                  </div>
+                      {videos.map((video, index) => (
+                        <div 
+                          key={video.id}
+                          className="w-full flex-shrink-0 px-2"
+                        >
+                          <article
+                            className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-stone-100 cursor-pointer"
+                          >
+                            <div 
+                              onClick={() => openModal(video)} 
+                              className="relative overflow-hidden"
+                              role="button"
+                              tabIndex={0}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  openModal(video);
+                                }
+                              }}
+                              aria-label={`Watch video: ${video.title} - ${video.description}`}
+                            >
+                              <Image
+                                width={400}
+                                height={600}
+                                src={video.thumbnailUrl}
+                                alt={`Thumbnail for video: ${video.title}`}
+                                className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
+                              />
+                              <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300" aria-hidden="true" />
 
-                  {/* Duration Badge */}
-                  <div className="absolute bottom-4 right-4 bg-black/80 text-white px-3 py-1.5 rounded-full text-sm font-medium">
-                    {video.duration}
+                              {/* Play Button */}
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <button 
+                                  className="bg-white/95 hover:bg-white text-gray-900 rounded-full p-5 transform group-hover:scale-110 transition-all duration-300 shadow-xl backdrop-blur-sm focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
+                                  aria-label={`Play video: ${video.title}`}
+                                >
+                                  <Play className="ml-1" size={28} fill="currentColor" aria-hidden="true" />
+                                </button>
+                              </div>
+
+                              {/* Duration Badge */}
+                              <div className="absolute bottom-4 right-4 bg-black/80 text-white px-3 py-1.5 rounded-full text-sm font-medium">
+                                {video.duration}
+                              </div>
+                            </div>
+
+                            <div className="p-6">
+                              <div className="flex items-center gap-2 justify-between mb-3">
+                                <span className="inline-block bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-xs font-medium">
+                                  {video.category}
+                                </span>
+
+                                {video.tags && video.tags.length > 0 && (
+                                  <div className="flex items-center gap-1">
+                                    {video.tags.slice(0, 2).map((tag, tagIndex) => (
+                                      <span
+                                        key={tagIndex}
+                                        className="inline-block bg-stone-100 text-stone-700 px-2 py-1 rounded-full text-xs font-light border border-stone-200"
+                                      >
+                                        {tag}
+                                      </span>
+                                    ))}
+                                    {video.tags.length > 2 && (
+                                      <span className="text-xs text-stone-500 font-light">
+                                        +{video.tags.length - 2}
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                          
+                              <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-amber-700 transition-colors duration-300">
+                                {video.title}
+                              </h3>
+                              <p className="text-gray-600 text-sm line-clamp-3 font-light leading-relaxed mb-4">
+                                {video.description}
+                              </p>
+                              <div className="flex items-center justify-between">
+                                <span className="text-stone-500 text-sm font-light">
+                                  {video.viewCount} views
+                                </span>
+                                <button
+                                  onClick={() => openPosterModal(video)}
+                                  aria-label={`View details for ${video.title}`}
+                                  className="text-amber-600 text-sm font-medium group-hover:translate-x-1 transform transition-transform duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-opacity-50 rounded"
+                                >
+                                  View details →
+                                </button>
+                              </div>
+                            </div>
+                          </article>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="p-8">
-                  <div className="flex items-center gap-2 justify-between">
-                    <span className="inline-block bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-xs font-medium mb-4">
-                      {video.category}
-                    </span>
+              {/* Desktop/Tablet View - Grid Layout */}
+              <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                {visibleVideos.map((video, index) => (
+                  <article
+                    key={video.id}
+                    className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-stone-100 cursor-pointer"
+                  >
+                    <div 
+                      onClick={() => openModal(video)} 
+                      className="relative overflow-hidden"
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          openModal(video);
+                        }
+                      }}
+                      aria-label={`Watch video: ${video.title} - ${video.description}`}
+                    >
+                      <Image
+                        width={400}
+                        height={600}
+                        src={video.thumbnailUrl}
+                        alt={`Thumbnail for video: ${video.title}`}
+                        className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300" aria-hidden="true" />
 
-                    {video.tags && video.tags.length > 0 && (
-                      <div className="flex items-center gap-1">
-                        {video.tags.slice(0, 3).map((tag, tagIndex) => (
-                          <span
-                            key={tagIndex}
-                            className="inline-block bg-stone-100 text-stone-700 px-2 py-1 rounded-full text-xs font-light border border-stone-200"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                        {video.tags.length > 3 && (
-                          <span className="text-xs text-stone-500 font-light">
-                            +{video.tags.length - 3}
-                          </span>
+                      {/* Play Button */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <button 
+                          className="bg-white/95 hover:bg-white text-gray-900 rounded-full p-5 transform group-hover:scale-110 transition-all duration-300 shadow-xl backdrop-blur-sm focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
+                          aria-label={`Play video: ${video.title}`}
+                        >
+                          <Play className="ml-1" size={28} fill="currentColor" aria-hidden="true" />
+                        </button>
+                      </div>
+
+                      {/* Duration Badge */}
+                      <div className="absolute bottom-4 right-4 bg-black/80 text-white px-3 py-1.5 rounded-full text-sm font-medium">
+                        {video.duration}
+                      </div>
+                    </div>
+
+                    <div className="p-8">
+                      <div className="flex items-center gap-2 justify-between">
+                        <span className="inline-block bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-xs font-medium mb-4">
+                          {video.category}
+                        </span>
+
+                        {video.tags && video.tags.length > 0 && (
+                          <div className="flex items-center gap-1">
+                            {video.tags.slice(0, 3).map((tag, tagIndex) => (
+                              <span
+                                key={tagIndex}
+                                className="inline-block bg-stone-100 text-stone-700 px-2 py-1 rounded-full text-xs font-light border border-stone-200"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                            {video.tags.length > 3 && (
+                              <span className="text-xs text-stone-500 font-light">
+                                +{video.tags.length - 3}
+                              </span>
+                            )}
+                          </div>
                         )}
                       </div>
+                  
+                      <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-amber-700 transition-colors duration-300">
+                        {video.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm line-clamp-2 font-light leading-relaxed">
+                        {video.description}
+                      </p>
+                      <div className="flex items-center justify-between mt-6">
+                        <span className="text-stone-500 text-sm font-light">
+                          {video.viewCount} views
+                        </span>
+                        <button
+                          onClick={() => openPosterModal(video)}
+                          aria-label={`View details for ${video.title}`}
+                          className="text-amber-600 text-sm font-medium group-hover:translate-x-1 transform transition-transform duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-opacity-50 rounded"
+                        >
+                          View details →
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {/* Navigation - Only show if there are more videos than current view */}
+              {videos.length > videosPerPage && (
+                <div className="flex items-center justify-center space-x-6 mt-8">
+                  <button
+                    onClick={prevSlide}
+                    disabled={currentIndex === 0}
+                    aria-label="Previous videos"
+                    className={`p-4 bg-white border border-stone-200 rounded-full transition-all duration-200 transform focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50 ${
+                      currentIndex === 0 
+                        ? "opacity-50 cursor-not-allowed" 
+                        : "hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg hover:scale-110"
+                    }`}
+                  >
+                    <ArrowLeft size={20} className="text-gray-600" aria-hidden="true" />
+                  </button>
+
+                  <div className="flex space-x-3" aria-label="Video pagination">
+                    {Array.from({ length: totalSlides }).map(
+                      (_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentIndex(index)}
+                          aria-label={`Go to page ${index + 1}`}
+                          aria-current={index === currentIndex ? 'page' : undefined}
+                          className={`w-3 h-3 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
+                            index === currentIndex
+                              ? "bg-amber-600 scale-125"
+                              : "bg-stone-300 hover:bg-amber-300"
+                          }`}
+                        />
+                      )
                     )}
                   </div>
-              
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-amber-700 transition-colors duration-300">
-                    {video.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm line-clamp-2 font-light leading-relaxed">
-                    {video.description}
-                  </p>
-                  <div className="flex items-center justify-between mt-6">
-                    <span className="text-stone-500 text-sm font-light">
-                      {video.viewCount} views
-                    </span>
-                    <button
-                      onClick={() => openPosterModal(video)}
-                      aria-label={`View details for ${video.title}`}
-                      className="text-amber-600 text-sm font-medium group-hover:translate-x-1 transform transition-transform duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-opacity-50 rounded"
-                    >
-                      View details →
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
 
-          {/* Navigation */}
-          <div className="flex items-center justify-center space-x-6">
-            <button
-              onClick={prevSlide}
-              aria-label="Previous videos"
-              className="p-4 bg-white border border-stone-200 rounded-full hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
-            >
-              <ArrowLeft size={20} className="text-gray-600" aria-hidden="true" />
-            </button>
-
-            <div className="flex space-x-3" aria-label="Video pagination">
-              {Array.from({ length: Math.ceil(videos.length / 3) }).map(
-                (_, index) => (
                   <button
-                    key={index}
-                    onClick={() => setCurrentIndex(index)}
-                    aria-label={`Go to page ${index + 1}`}
-                    aria-current={index === currentIndex ? 'page' : undefined}
-                    className={`w-3 h-3 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
-                      index === currentIndex
-                        ? "bg-amber-600 scale-125"
-                        : "bg-stone-300 hover:bg-amber-300"
+                    onClick={nextSlide}
+                    disabled={currentIndex === totalSlides - 1}
+                    aria-label="Next videos"
+                    className={`p-4 bg-white border border-stone-200 rounded-full transition-all duration-200 transform focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50 ${
+                      currentIndex === totalSlides - 1
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg hover:scale-110"
                     }`}
-                  />
-                )
+                  >
+                    <ArrowRight size={20} className="text-gray-600" aria-hidden="true" />
+                  </button>
+                </div>
               )}
-            </div>
-
-            <button
-              onClick={nextSlide}
-              aria-label="Next videos"
-              className="p-4 bg-white border border-stone-200 rounded-full hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg transition-all duration-200 transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
-            >
-              <ArrowRight size={20} className="text-gray-600" aria-hidden="true" />
-            </button>
-          </div>
+            </>
+          )}
         </div>
       </div>
 

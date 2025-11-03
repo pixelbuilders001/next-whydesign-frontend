@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { PlayCircle, Volume2, VolumeX, Heart, MessageCircle, Share, Bookmark } from "lucide-react";
+import { PlayCircle, Volume2, VolumeX, Heart, MessageCircle, Share, Bookmark, ArrowLeft, ArrowRight } from "lucide-react";
 import { getReels, trackReelsViews, trackReelsLikes, trackReelsUnlikes } from "@/lib/authService";
 import Image from "next/image";
 
@@ -23,6 +23,57 @@ const ReelsSection = () => {
   const videoRefs = useRef([]);
   const scrollContainerRef = useRef(null);
   const observerRef = useRef(null);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Calculate visible reels based on current index and screen size
+const getReelsPerPage = () => {
+  if (typeof window === 'undefined') return 6;
+
+  const width = window.innerWidth;
+  if (width < 768) return 1; // Mobile
+  if (width < 1024) return 2; // Tablet
+  return 6; // Desktop
+};
+
+
+  const [reelsPerPage, setReelsPerPage] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setReelsPerPage(getReelsPerPage());
+      // Reset to first page when screen size changes
+      setCurrentIndex(0);
+    };
+
+    // Set initial value
+    setReelsPerPage(getReelsPerPage());
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const totalSlides = Math.ceil(reels.length / reelsPerPage);
+  const startIndex = currentIndex * reelsPerPage;
+  const visibleReels = reels.slice(startIndex, startIndex + reelsPerPage);
+
+const nextSlide = () => {
+  setCurrentIndex((prev) => {
+    if (prev < totalSlides - 1) {
+      return prev + 1;
+    }
+    return prev; // stay at last page
+  });
+};
+
+const prevSlide = () => {
+  setCurrentIndex((prev) => {
+    if (prev > 0) {
+      return prev - 1;
+    }
+    return prev; // stay at first page
+  });
+};
 
   // Fetch reels from API
   const fetchReels = async (page = 1, limit = 10) => {
@@ -255,63 +306,191 @@ const ReelsSection = () => {
         </div>
 
         {/* Thumbnails */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-          {reels.map((reel) => (
-            <article
-              key={reel.id}
-              className="group relative rounded-2xl overflow-hidden shadow-xl bg-white transition-transform hover:-translate-y-2 hover:shadow-amber-200/40 cursor-pointer"
-              role="button"
-              tabIndex={0}
-              onClick={() => openModal(reel.id)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  openModal(reel.id);
-                }
-              }}
-              aria-label={`Watch reel: ${reel.title}`}
-            >
-              <Image
-                src={reel.thumbnailUrl}
-                alt={`Thumbnail for reel: ${reel.title}`}
-                width={400}
-                height={256}
-                className="object-cover group-hover:scale-105 transition-transform duration-300 rounded-2xl"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" aria-hidden="true" />
-
-              <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
-                <span className="text-white text-lg font-semibold drop-shadow-lg line-clamp-1">
-                  {reel.title}
-                </span>
-                <button
-                  className="bg-amber-600 rounded-full p-2 shadow-lg hover:bg-rose-500 transition-colors focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModal(reel.id);
+        <div className="relative">
+          {/* Mobile View - Single Card with Horizontal Scroll */}
+          <div className="block md:hidden">
+            <div className="relative py-1">
+              <div className="overflow-hidden">
+                <div
+                  className="flex transition-transform duration-300 ease-in-out"
+                  style={{
+                    transform: `translateX(-${currentIndex * 100}%)`
                   }}
-                  aria-label={`Play reel: ${reel.title}`}
                 >
-                  <PlayCircle size={28} className="text-white" aria-hidden="true" />
-                </button>
+                  {reels.map((reel, index) => (
+                    <div
+                      key={reel.id}
+                      className="w-full flex-shrink-0 px-2"
+                    >
+                      <article
+                        className="group relative rounded-2xl overflow-hidden shadow-xl bg-white transition-transform hover:-translate-y-2 hover:shadow-amber-200/40 cursor-pointer"
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => openModal(reel.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            openModal(reel.id);
+                          }
+                        }}
+                        aria-label={`Watch reel: ${reel.title}`}
+                      >
+                        <Image
+                          src={reel.thumbnailUrl}
+                          alt={`Thumbnail for reel: ${reel.title}`}
+                          width={400}
+                          height={256}
+                          className="object-cover group-hover:scale-105 transition-transform duration-300 rounded-2xl"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" aria-hidden="true" />
+
+                        <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
+                          <span className="text-white text-lg font-semibold drop-shadow-lg line-clamp-1">
+                            {reel.title}
+                          </span>
+                          <button
+                            className="bg-amber-600 rounded-full p-2 shadow-lg hover:bg-rose-500 transition-colors focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openModal(reel.id);
+                            }}
+                            aria-label={`Play reel: ${reel.title}`}
+                          >
+                            <PlayCircle size={28} className="text-white" aria-hidden="true" />
+                          </button>
+                        </div>
+
+                        {/* View count */}
+                        {reel.viewCount > 0 && (
+                          <div className="absolute top-3 left-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                            👁️ {reel.viewCount.toLocaleString()} views
+                          </div>
+                        )}
+
+                        {/* Like count */}
+                        {reel.likeCount > 0 && (
+                          <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                            <Heart size={12} fill="currentColor" className={reel.isLiked ? "text-red-500" : "text-white"} aria-hidden="true" />
+                            {reel.likeCount.toLocaleString()}
+                          </div>
+                        )}
+                      </article>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop/Tablet View - Grid Layout */}
+<div className="hidden md:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-8">
+
+            {visibleReels.map((reel) => (
+              <article
+                key={reel.id}
+                className="group relative rounded-2xl overflow-hidden shadow-xl bg-white transition-transform hover:-translate-y-2 hover:shadow-amber-200/40 cursor-pointer"
+                role="button"
+                tabIndex={0}
+                onClick={() => openModal(reel.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openModal(reel.id);
+                  }
+                }}
+                aria-label={`Watch reel: ${reel.title}`}
+              >
+                <Image
+                  src={reel.thumbnailUrl}
+                  alt={`Thumbnail for reel: ${reel.title}`}
+                  width={400}
+                  height={256}
+                  className="object-cover group-hover:scale-105 transition-transform duration-300 rounded-2xl"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" aria-hidden="true" />
+
+                <div className="absolute bottom-0 left-0 right-0 p-4 flex items-center justify-between">
+                  <span className="text-white text-lg font-semibold drop-shadow-lg line-clamp-1">
+                    {reel.title}
+                  </span>
+                  <button
+                    className="bg-amber-600 rounded-full p-2 shadow-lg hover:bg-rose-500 transition-colors focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openModal(reel.id);
+                    }}
+                    aria-label={`Play reel: ${reel.title}`}
+                  >
+                    <PlayCircle size={28} className="text-white" aria-hidden="true" />
+                  </button>
+                </div>
+
+                {/* View count */}
+                {reel.viewCount > 0 && (
+                  <div className="absolute top-3 left-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+                    👁️ {reel.viewCount.toLocaleString()} views
+                  </div>
+                )}
+
+                {/* Like count */}
+                {reel.likeCount > 0 && (
+                  <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                    <Heart size={12} fill="currentColor" className={reel.isLiked ? "text-red-500" : "text-white"} aria-hidden="true" />
+                    {reel.likeCount.toLocaleString()}
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+
+          {/* Navigation - Only show if there are more videos than current view */}
+          {reels.length > reelsPerPage && (
+            <div className="flex items-center justify-center space-x-6 mt-8">
+              <button
+                onClick={prevSlide}
+                disabled={currentIndex === 0}
+                aria-label="Previous reels"
+                className={`p-4 bg-white border border-stone-200 rounded-full transition-all duration-200 transform focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50 ${
+                  currentIndex === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg hover:scale-110"
+                }`}
+              >
+                <ArrowLeft size={20} className="text-gray-600" aria-hidden="true" />
+              </button>
+
+              <div className="flex space-x-3" aria-label="Reel pagination">
+                {Array.from({ length: totalSlides }).map(
+                  (_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentIndex(index)}
+                      aria-label={`Go to page ${index + 1}`}
+                      aria-current={index === currentIndex ? 'page' : undefined}
+                      className={`w-3 h-3 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
+                        index === currentIndex
+                          ? "bg-amber-600 scale-125"
+                          : "bg-stone-300 hover:bg-amber-300"
+                      }`}
+                    />
+                  )
+                )}
               </div>
 
-              {/* View count */}
-              {reel.viewCount > 0 && (
-                <div className="absolute top-3 left-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
-                  👁️ {reel.viewCount.toLocaleString()} views
-                </div>
-              )}
-
-              {/* Like count */}
-              {reel.likeCount > 0 && (
-                <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                  <Heart size={12} fill="currentColor" className={reel.isLiked ? "text-red-500" : "text-white"} aria-hidden="true" />
-                  {reel.likeCount.toLocaleString()}
-                </div>
-              )}
-            </article>
-          ))}
+              <button
+                onClick={nextSlide}
+                disabled={currentIndex === totalSlides - 1}
+                aria-label="Next reels"
+                className={`p-4 bg-white border border-stone-200 rounded-full transition-all duration-200 transform focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50 ${
+                  currentIndex === totalSlides - 1
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-amber-50 hover:border-amber-300 hover:shadow-lg hover:scale-110"
+                }`}
+              >
+                <ArrowRight size={20} className="text-gray-600" aria-hidden="true" />
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Load More */}

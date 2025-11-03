@@ -134,14 +134,14 @@ const Header = () => {
   ];
 
   const handleCall = () => {
-    window.open("tel:+917461824651", "_self");
+    window.open("tel:+917007894388", "_self");
   };
 
   const handleWhatsApp = () => {
     const message = encodeURIComponent(
       "Hi! I'd like to know more about your services."
     );
-    window.open(`https://wa.me/7461824651?text=${message}`, "_blank");
+    window.open(`https://wa.me/7007894388?text=${message}`, "_blank");
   };
 
   const getUserName = () => {
@@ -168,7 +168,7 @@ const Header = () => {
     } else if (customAuthenticated && userProfile?.data?.profilePicture) {
       return userProfile.data.profilePicture;
     }
-    return "/logo.png";
+    return "/logo3.png";
   };
 
   const getUserAltText = () => {
@@ -245,13 +245,13 @@ const Header = () => {
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     aria-expanded={isDropdownOpen}
                     aria-label="User menu"
-                    className="flex items-center space-x-3 p-2 rounded-full transition-all duration-200 hover:bg-white/10"
+                    className="flex items-center space-x-2 p-1 rounded-full transition-all duration-200 hover:bg-white/10"
                   >
                     <Image
                       src={getUserImage()}
                       alt={getUserAltText()}
-                      width={40}
-                      height={40}
+                      width={35}
+                      height={35}
                       className="rounded-full"
                     />
                     <ChevronDown
