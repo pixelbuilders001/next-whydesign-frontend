@@ -127,7 +127,7 @@ class TokenStorage {
       this.storage.setItem(TOKEN_KEYS.PROFILE_COMPLETED, completed.toString());
       return true;
     } catch (error) {
-      console.error('Error setting profile completion status:', error);
+      // console.error('Error setting profile completion status:', error);
       return false;
     }
   }
