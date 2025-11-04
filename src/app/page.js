@@ -16,12 +16,12 @@ import Footer from "@/components/Footer";
 import ModernLoader from "@/components/ModernLoader";
 import PWAInstall from "@/components/PWAInstall";
 
-console.log("NEXTAUTH_URL runtime:", process.env.NEXTAUTH_URL);
+
 
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  console.log("NEXTAUTH_URL runtime:", process.env.NEXTAUTH_URL);
+ 
 
 
   useEffect(() => {
