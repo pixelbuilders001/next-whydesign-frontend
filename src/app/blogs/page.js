@@ -206,9 +206,10 @@ export default function BlogsPage() {
                       <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                         {blog.title}
                       </h2>
-                      <p className="text-gray-600 mb-4 line-clamp-3">
-                        {blog.content}
-                      </p>
+                      <div
+  className="text-gray-600 mb-4 line-clamp-5"
+  dangerouslySetInnerHTML={{ __html: blog.content }}
+></div>
                       <Link
                         href={`/blogs/${blog.id}`}
                         className="inline-flex items-center text-amber-600 hover:text-amber-700 font-medium"
