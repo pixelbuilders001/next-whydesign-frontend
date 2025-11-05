@@ -16,6 +16,12 @@ import {
   Shield,
   Star,
   ChevronRight,
+  Home,
+  Users,
+  Calendar,
+  Video,
+  FileText,
+  Contact,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -113,12 +119,12 @@ const Header = () => {
   }, [customAuthenticated, session, getUserProfile]);
 
   const navItems = [
-    { name: "Home", href: "/", icon: "🏠" },
-    { name: "About Us", href: "/about-us", icon: "👥" },
-    { name: "Book Counselling", href: "#booking", icon: "📅" },
-    { name: "Videos", href: "#videos", icon: "🎥" },
-    { name: "Blogs", href: "/blogs", icon: "✍️" },
-    { name: "Contact", href: "#contact", icon: "📞" },
+    { name: "Home", href: "/", icon: Home },
+    { name: "About Us", href: "/about-us", icon: Users },
+    { name: "Book Counselling", href: "#booking", icon: Calendar },
+    { name: "Videos", href: "#videos", icon: Video },
+    { name: "Blogs", href: "/blogs", icon: FileText },
+    { name: "Contact", href: "#contact", icon: Contact },
   ];
 
   const quickActions = [
@@ -375,7 +381,7 @@ const Header = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="lg:hidden mr-2">
+            <div className="lg:hidden mr-4">
               <button
                 onClick={isMenuOpen ? closeMenu : openMenu}
                 aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -385,7 +391,7 @@ const Header = () => {
                     : "text-white hover:text-primary-300 hover:bg-white/20"
                 }`}
               >
-                {isMenuOpen ? null : <Menu size={28} />}
+                {isMenuOpen ? null : <Menu size={34} />}
               </button>
             </div>
           </div>
@@ -398,72 +404,53 @@ const Header = () => {
           className={`fixed inset-0 z-[9999] transition-all duration-300 ease-in-out ${
             isMenuAnimating ? "opacity-100" : "opacity-0"
           }`}
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         >
           {/* Overlay */}
-          <div className="absolute inset-0" onClick={closeMenu}></div>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeMenu}></div>
 
-          {/* Left Side Sliding Menu */}
+          {/* Drawer Panel */}
           <div
-            className={`absolute top-0 left-0 h-full w-85 max-w-full shadow-2xl border-r border-gray-200 flex flex-col transition-transform duration-300 ease-in-out bg-white ${
+            className={`absolute top-0 left-0 h-full w-[85%] max-w-sm bg-white/90 backdrop-blur-xl border-r border-gray-200/30 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
               isMenuAnimating ? "translate-x-0" : "-translate-x-full"
-            }`}
-            style={{ zIndex: 10 }}
+            } rounded-tr-3xl rounded-br-3xl`}
           >
-            {/* Header Section */}
-            <div className="bg-gradient-to-r from-primary-600 to-secondary-500 p-6 pb-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-white font-bold text-xl">Menu</h2>
+            {/* Header */}
+            <div className="relative bg-gradient-to-r from-primary-600 to-secondary-500 text-white px-6 py-6 rounded-tr-3xl">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-semibold text-xl tracking-wide">Menu</h2>
                 <button
                   onClick={closeMenu}
-                  aria-label="Close menu"
-                  className="p-2 bg-white/20 rounded-full text-white hover:bg-white/30 transition-colors"
+                  className="p-2 bg-white/20 rounded-full hover:bg-white/30 transition"
                 >
                   <X size={20} />
                 </button>
               </div>
 
-              {/* User Profile Card */}
+              {/* User Info */}
               {(status === "authenticated" && session) || customAuthenticated ? (
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20">
-                  <div className="flex items-center space-x-3">
-                    {/* Profile Image */}
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-white/30 shadow-lg">
-                      <Image
-                        src={getUserImage()}
-                        alt={getUserAltText()}
-                        fill
-                        className="object-cover rounded-full"
-                      />
-                    </div>
-
-                    {/* User Info */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-white font-semibold text-lg truncate">
-                        {getUserName()}
-                      </h3>
-                      <p className="text-white/80 text-sm truncate">
-                        {getUserEmail()}
-                      </p>
-                      {userProfile?.data?.phoneNumber && (
-                        <p className="text-white/70 text-xs mt-1 flex items-center">
-                          <Phone size={12} className="mr-1" />
-                          {userProfile.data.phoneNumber}
-                        </p>
-                      )}
-                    </div>
+                <div className="flex items-center space-x-4 bg-white/10 p-3 rounded-2xl shadow-inner border border-white/20">
+                  <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/30 shadow-lg">
+                    <Image
+                      src={getUserImage()}
+                      alt={getUserAltText()}
+                      fill
+                      className="object-cover rounded-full"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-white truncate">{getUserName()}</h3>
+                    <p className="text-white/80 text-sm truncate">{getUserEmail()}</p>
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-4">
+                <div className="text-center py-3">
                   <button
                     onClick={() => {
                       setAuthType("login");
                       setAuthOpen(true);
                       closeMenu();
                     }}
-                    aria-label="Login or sign up"
-                    className="bg-white text-primary-600 px-6 py-3 rounded-full font-semibold text-sm hover:bg-gray-50 transition-colors shadow-lg"
+                    className="bg-white text-primary-600 px-6 py-2 rounded-full font-semibold text-sm hover:bg-gray-50 shadow-lg transition"
                   >
                     Login / Sign Up
                   </button>
@@ -471,64 +458,24 @@ const Header = () => {
               )}
             </div>
 
-            {/* Profile Actions */}
-            <div className="p-4 space-y-2">
-              {status === "authenticated" || session ? (
-                <>
-                  <button
-                    onClick={() => {
-                      setShowProfileModal(true);
-                      closeMenu();
-                    }}
-                    aria-label="Complete your profile"
-                    className="w-full flex items-center space-x-3 p-3 bg-gradient-to-r from-primary-50 to-secondary-50 hover:from-primary-100 hover:to-secondary-100 rounded-xl transition-all duration-200 group"
-                  >
-                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors">
-                      <User size={18} className="text-primary-600" />
-                    </div>
-                    <div className="flex-1 text-left">
-                      <p className="font-medium text-gray-900">
-                        Complete Profile
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Add your details and preferences
-                      </p>
-                    </div>
-                    <ChevronDown
-                      size={16}
-                      className="text-gray-400 rotate-[-90deg]"
-                    />
-                  </button>
-                  <div className="border-t border-gray-100 my-3"></div>
-                </>
-              ) : null}
-            </div>
-
-            {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto pb-20">
-              {/* Navigation Menu */}
-              <div className="p-4">
-                <h3 className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-3 px-2">
-                  Navigation
-                </h3>
+            {/* Scrollable Menu */}
+            <div className="flex-1 overflow-y-auto py-5">
+              {/* Navigation */}
+              <div className="px-5 mb-5">
+                <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-2">Navigation</h3>
                 <div className="space-y-1">
-                  {navItems.map((item, index) => (
+                  {navItems.map((item, i) => (
                     <Link
-                      key={index}
+                      key={i}
                       href={item.href}
                       onClick={closeMenu}
-                      aria-label={`Navigate to ${item.name}`}
-                      className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all group"
                     >
-                      <span className="text-lg w-6 text-center">
-                        {item.icon}
-                      </span>
-                      <span className="flex-1 font-medium text-gray-700">
-                        {item.name}
-                      </span>
+                      <item.icon size={20} className="text-primary-600" />
+                      <span className="font-medium text-gray-700 flex-1">{item.name}</span>
                       <ChevronRight
                         size={16}
-                        className="text-gray-400 group-hover:text-gray-600"
+                        className="text-gray-400 group-hover:text-primary-600"
                       />
                     </Link>
                   ))}
@@ -536,64 +483,61 @@ const Header = () => {
               </div>
 
               {/* Support Section */}
-              <div className="p-4 border-t border-gray-100">
-                <h3 className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-3 px-2">
-                  Support
-                </h3>
+              {/* <div className="px-5 border-t border-gray-100 pt-4">
+                <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-2">Support</h3>
                 <div className="space-y-1">
-                  {supportItems.map((item, index) => (
+                  {supportItems.map((item, i) => (
                     <Link
-                      key={index}
+                      key={i}
                       href={item.href}
                       onClick={closeMenu}
-                      aria-label={`View ${item.name}`}
-                      className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group w-full text-left"
+                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all"
                     >
                       <item.icon size={18} className="text-gray-500" />
-                      <span className="flex-1 font-medium text-gray-700">
-                        {item.name}
-                      </span>
-                      <ChevronRight
-                        size={16}
-                        className="text-gray-400 group-hover:text-gray-600"
-                      />
+                      <span className="font-medium text-gray-700 flex-1">{item.name}</span>
+                      <ChevronRight size={16} className="text-gray-400" />
                     </Link>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
-              {/* CTA Buttons */}
-              <div className="mt-4 px-3.5 flex flex-col gap-3">
-                <button
-                  onClick={handleCall}
-                  aria-label="Call us now"
-                  className="flex items-center justify-center space-x-2 px-4 py-3 border border-amber-500 text-amber-500 rounded-md font-medium text-base hover:bg-amber-50 hover:scale-105 transition-all duration-200"
-                >
-                  <Phone size={16} /> <span>Call Us</span>
-                </button>
-                <button
-                  onClick={handleWhatsApp}
-                  aria-label="Contact us on WhatsApp"
-                  className="w-full flex items-center justify-center space-x-2 py-3.5 border border-green-500 text-green-500 rounded-md font-medium text-base hover:bg-green-50 hover:scale-105 transition-all duration-200"
-                >
-                  <MessageCircle size={16} /> <span>WhatsApp</span>
-                </button>
-              </div>
-
-              {/* Logout Section */}
-              {((status === "authenticated" && session) || customAuthenticated) && (
-                <div className="p-4 border-t border-gray-100">
+              {/* Actions - Fixed to ensure visibility */}
+              <div className="mt-6 px-5 pb-6">
+                <div className="flex flex-col gap-3">
                   <button
                     onClick={() => {
-                      if (status === "authenticated" && session) {
-                        signOut({ callbackUrl: "/" });
-                      } else {
-                        customLogout();
-                      }
+                      handleCall();
                       closeMenu();
                     }}
-                    aria-label="Sign out of your account"
-                    className="w-full flex items-center justify-center space-x-2 py-3.5 border border-red-500 text-red-500 rounded-xl font-semibold text-sm hover:bg-red-50 transition-colors"
+                    className="flex items-center justify-center gap-2 py-3 rounded-xl border border-amber-500 text-amber-600 font-medium hover:bg-amber-50 hover:scale-105 transition-all shadow-sm"
+                  >
+                    <Phone size={18} />
+                    <span>Call Us</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      handleWhatsApp();
+                      closeMenu();
+                    }}
+                    className="flex items-center justify-center gap-2 py-3 rounded-xl border border-green-500 text-green-600 font-medium hover:bg-green-50 hover:scale-105 transition-all shadow-sm"
+                  >
+                    <MessageCircle size={18} />
+                    <span>WhatsApp</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Logout */}
+              {((status === "authenticated" && session) || customAuthenticated) && (
+                <div className="px-5 pb-6 border-t border-gray-100 pt-4">
+                  <button
+                    onClick={() => {
+                      if (status === "authenticated" && session) signOut({ callbackUrl: "/" });
+                      else customLogout();
+                      closeMenu();
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-red-500 text-red-600 font-semibold hover:bg-red-50 hover:scale-105 transition-all shadow-sm"
                   >
                     <LogOut size={18} />
                     <span>Logout</span>

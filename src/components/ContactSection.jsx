@@ -68,12 +68,12 @@ const ContactSection = () => {
       aria-labelledby="contact-heading"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-20">
-          <h2 id="contact-heading" className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
+        <div className="text-center mb-10">
+          <h2 id="contact-heading" className="text-4xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
             Get in Touch
             <span className="text-amber-600 block font-normal">With Our Experts</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light">
+          <p className="text-base text-gray-600 max-w-3xl mx-auto leading-relaxed font-light">
             Ready to take the next step? Our team is here to guide you through your fashion education journey.
           </p>
         </div>

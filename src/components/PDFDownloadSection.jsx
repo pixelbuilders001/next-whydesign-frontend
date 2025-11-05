@@ -94,13 +94,13 @@ const PDFDownloadSection = () => {
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-20">
-          <h2 className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-4">
+          <h2 className="text-4xl lg:text-6xl font-serif font-light text-gray-900 mb-4">
             Fashion Knowledge
             <span className="text-amber-600 block font-normal text-3xl mt-2">
               Guides & Insights
             </span>
           </h2>
-          <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
+          <p className="text-base text-gray-600 mt-4 max-w-2xl mx-auto">
             Download beautifully designed free PDFs to boost your career and study abroad plans.
           </p>
         </div>

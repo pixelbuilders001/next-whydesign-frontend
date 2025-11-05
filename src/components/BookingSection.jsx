@@ -161,29 +161,29 @@ const BookingSection = () => {
   const selectedCounselorData = counselors.find(c => c.id === selectedCounselor);
 
   return (
-    <section id="booking" className="py-24 bg-gradient-to-br from-stone-50 via-rose-50/30 to-amber-50/20">
+    <section id="booking" className="py-12 md:py-24 bg-gradient-to-br from-stone-50 via-rose-50/30 to-amber-50/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-20">
-          <h2 className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
+        <div className="text-center mb-12 md:mb-20">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-4 md:mb-8 leading-tight">
             Book Your Personal
-            <span className="text-amber-600 block font-normal">Video Counselling</span>
+            <span className="text-amber-600 block font-normal mt-2">Video Counselling</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light">
+          <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light px-2">
             Get personalized guidance from industry experts. Schedule a one-on-one video
             consultation to discuss your fashion career goals and receive tailored advice.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16">
           {/* Counselor Selection */}
-          <div className="space-y-10">
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-4 lg:p-10 shadow-xl border border-white/50">
-              <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-                <User className="text-amber-600 mr-4" size={32} aria-hidden="true" />
+          <div className="space-y-6 md:space-y-10">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl md:rounded-3xl p-4 md:p-6 lg:p-10 shadow-xl border border-white/50">
+              <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 md:mb-8 flex items-center">
+                <User className="text-amber-600 mr-3" size={24} aria-hidden="true" />
                 Choose Your Counselor
               </h3>
 
-              <div className="flex flex-row gap-4 overflow-x-auto pb-4 lg:flex-col lg:gap-6 lg:overflow-visible lg:pb-0">
+              <div className="flex flex-row gap-3 md:gap-4 overflow-x-auto pb-4 lg:flex-col lg:gap-6 lg:overflow-visible lg:pb-0">
                 {counselors.map((counselor) => (
                   <div
                     key={counselor.id}
@@ -198,49 +198,54 @@ const BookingSection = () => {
                     }}
                     aria-label={`Select counselor ${counselor.name}, ${counselor.title} with ${counselor.experience} experience`}
                     aria-pressed={selectedCounselor === counselor.id}
-                    className={`p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 flex-shrink-0 lg:w-full w-3/4 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50 ${
+                    className={`p-4 md:p-6 rounded-xl md:rounded-2xl border-2 cursor-pointer transition-all duration-300 flex-shrink-0 lg:w-full w-[280px] focus:outline-none focus:ring-2 focus:ring-amber-300 ${
                       selectedCounselor === counselor.id
                         ? 'border-amber-500 bg-amber-50 shadow-lg'
                         : 'border-stone-200 bg-white hover:border-amber-300 hover:shadow-md'
                     }`}
                   >
-                    <div className="flex-col items-center text-center lg:flex lg:flex-row lg:items-center lg:space-x-4 lg:text-left">
+                    <div className="flex flex-col items-center text-center lg:flex-row lg:items-center lg:space-x-4 lg:text-left">
                       <Image
-                        width={80}
-                        height={80}
+                        width={64}
+                        height={64}
                         src={counselor.image}
                         alt={`Portrait of ${counselor.name}`}
-                        className="w-20 h-20 mb-4 lg:w-16 lg:h-16 lg:mb-0 rounded-full object-cover border-3 border-amber-200"
+                        className="w-16 h-16 mb-3 lg:mb-0 rounded-full object-cover border-2 border-amber-200"
                       />
                       <div className="flex-1 text-center lg:text-left lg:flex-1">
-                        <h4 className="font-bold text-gray-900 text-lg">{counselor.name}</h4>
-                        <p className="text-amber-600 font-medium">{counselor.title}</p>
-                        <p className="text-gray-600 text-sm mb-1">{counselor.experience} experience</p>
-                        <div className="flex items-center justify-center lg:justify-start text-sm">
+                        <h4 className="font-bold text-gray-900 text-base md:text-lg">{counselor.name}</h4>
+                        <p className="text-amber-600 font-medium text-sm md:text-base">{counselor.title}</p>
+                        <p className="text-gray-600 text-xs md:text-sm mb-1">{counselor.experience} experience</p>
+                        <div className="flex items-center justify-center lg:justify-start text-xs md:text-sm">
                           <span className="text-amber-500 mr-1" aria-hidden="true">⭐</span>
                           <span className="text-gray-800 font-medium">{counselor.rating.toFixed(1)}</span>
                           <span className="text-gray-500 ml-1">/ 5</span>
                         </div>
                       </div>
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mt-4 lg:mt-0 ${
+                      <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center mt-3 lg:mt-0 ${
                         selectedCounselor === counselor.id
                           ? 'border-amber-500 bg-amber-500'
                           : 'border-stone-300'
                       }`} aria-hidden="true">
                         {selectedCounselor === counselor.id && (
-                          <div className="w-3 h-3 bg-white rounded-full" />
+                          <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full" />
                         )}
                       </div>
                     </div>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {counselor.specialties.map((specialty, index) => (
+                    <div className="mt-3 flex flex-wrap gap-1 md:gap-2 justify-center lg:justify-start">
+                      {counselor.specialties.slice(0, 2).map((specialty, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 bg-stone-100 text-stone-700 rounded-full text-xs font-medium"
+                          className="px-2 py-1 bg-stone-100 text-stone-700 rounded-full text-xs font-medium"
                         >
-                          {specialty}
+                          {specialty.length > 15 ? `${specialty.substring(0, 15)}...` : specialty}
                         </span>
                       ))}
+                      {counselor.specialties.length > 2 && (
+                        <span className="px-2 py-1 bg-stone-100 text-stone-700 rounded-full text-xs font-medium">
+                          +{counselor.specialties.length - 2}
+                        </span>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -249,22 +254,23 @@ const BookingSection = () => {
 
             {/* Selected Counselor Details */}
             {selectedCounselorData && (
-              <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-3xl p-8 border border-amber-200">
-                <div className="flex items-center space-x-4 mb-6">
+              <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-2xl md:rounded-3xl p-4 md:p-6 border border-amber-200">
+                <div className="flex items-center space-x-3 md:space-x-4 mb-4 md:mb-6">
                   <Image
-                    width={60}
-                    height={60}
+                    width={48}
+                    height={48}
                     src={selectedCounselorData.image}
                     alt={`Selected counselor ${selectedCounselorData.name}`}
-                    className="rounded-full object-cover border-4 border-amber-300"
+                    className="rounded-full object-cover border-3 border-amber-300"
                   />
                   <div>
-                    <h4 className="text-2xl font-bold text-gray-900">{selectedCounselorData.name}</h4>
-                    <p className="text-amber-700 font-medium text-lg">{selectedCounselorData.title}</p>
+                    <h4 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900">{selectedCounselorData.name}</h4>
+                    <p className="text-amber-700 font-medium text-base md:text-lg">{selectedCounselorData.title}</p>
                   </div>
                 </div>
-                <p className="text-gray-700 font-light">
-                  Specializing in {selectedCounselorData.specialties.join(', ').toLowerCase()},
+                <p className="text-gray-700 font-light text-sm md:text-base">
+                  Specializing in {selectedCounselorData.specialties.slice(0, 2).join(', ').toLowerCase()}
+                  {selectedCounselorData.specialties.length > 2 && ' and more'},{' '}
                   {selectedCounselorData.name.split(' ')[0]} brings {selectedCounselorData.experience} of
                   industry experience to help guide your fashion career journey.
                 </p>
@@ -273,17 +279,17 @@ const BookingSection = () => {
           </div>
 
           {/* Booking Form */}
-          <div className="bg-white rounded-3xl shadow-2xl p-10 border border-stone-100">
-            <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-              <Video className="text-amber-600 mr-4" size={32} aria-hidden="true" />
+          <div className="bg-white rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 lg:p-10 border border-stone-100">
+            <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 md:mb-8 flex items-center">
+              <Video className="text-amber-600 mr-3" size={24} aria-hidden="true" />
               Schedule Your Session
             </h3>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
               {/* Personal Information */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-4 md:gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                     Full Name
                   </label>
                   <input
@@ -292,14 +298,14 @@ const BookingSection = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-5 py-4 border border-stone-200 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500"
+                    className="w-full px-4 py-3 md:px-5 md:py-4 border border-stone-200 rounded-xl md:rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500 text-sm md:text-base"
                     placeholder="Your name"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                     Email Address
                   </label>
                   <input
@@ -308,16 +314,14 @@ const BookingSection = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-5 py-4 border border-stone-200 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500"
+                    className="w-full px-4 py-3 md:px-5 md:py-4 border border-stone-200 rounded-xl md:rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500 text-sm md:text-base"
                     placeholder="your@email.com"
                     required
                   />
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
                     Phone Number
                   </label>
                   <input
@@ -326,14 +330,14 @@ const BookingSection = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-5 py-4 border border-stone-200 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500"
+                    className="w-full px-4 py-3 md:px-5 md:py-4 border border-stone-200 rounded-xl md:rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500 text-sm md:text-base"
                     placeholder="+1 (555) 123-4567"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="topic" className="block text-sm font-medium text-gray-700 mb-3">
+                  <label htmlFor="topic" className="block text-sm font-medium text-gray-700 mb-2">
                     Discussion Topic
                   </label>
                   <select
@@ -341,7 +345,7 @@ const BookingSection = () => {
                     name="topic"
                     value={formData.topic}
                     onChange={handleChange}
-                    className="w-full px-5 py-4 border border-stone-200 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black appearance-none"
+                    className="w-full px-4 py-3 md:px-5 md:py-4 border border-stone-200 rounded-xl md:rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black appearance-none text-sm md:text-base"
                     required
                   >
                     <option value="">Select topic</option>
@@ -354,45 +358,45 @@ const BookingSection = () => {
 
               {/* Calendar Date Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                   <Calendar className="mr-2" size={16} aria-hidden="true" />
                   Select Date
                 </label>
-                <div className="bg-stone-50 rounded-2xl p-6 border border-stone-200">
+                <div className="bg-stone-50 rounded-xl md:rounded-2xl p-3 md:p-6 border border-stone-200">
                   {/* Calendar Header */}
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center justify-between mb-4 md:mb-6">
                     <button
                       type="button"
                       onClick={() => navigateMonth(-1)}
                       aria-label="Previous month"
-                      className="p-2 hover:bg-stone-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="p-1 md:p-2 hover:bg-stone-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
                     >
-                      <ChevronLeft size={20} aria-hidden="true" />
+                      <ChevronLeft size={18} aria-hidden="true" />
                     </button>
-                    <h4 className="text-lg font-semibold text-gray-900" aria-live="polite">
+                    <h4 className="text-base md:text-lg font-semibold text-gray-900" aria-live="polite">
                       {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                     </h4>
                     <button
                       type="button"
                       onClick={() => navigateMonth(1)}
                       aria-label="Next month"
-                      className="p-2 hover:bg-stone-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="p-1 md:p-2 hover:bg-stone-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
                     >
-                      <ChevronRight size={20} aria-hidden="true" />
+                      <ChevronRight size={18} aria-hidden="true" />
                     </button>
                   </div>
 
                   {/* Days of Week */}
-                  <div className="grid grid-cols-7 gap-2 mb-4" aria-hidden="true">
-                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
+                  <div className="grid grid-cols-7 gap-1 md:gap-2 mb-3 md:mb-4" aria-hidden="true">
+                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
+                      <div key={day} className="text-center text-xs md:text-sm font-medium text-gray-500 py-1 md:py-2">
                         {day}
                       </div>
                     ))}
                   </div>
 
                   {/* Calendar Grid */}
-                  <div className="grid grid-cols-7 gap-2">
+                  <div className="grid grid-cols-7 gap-1 md:gap-2">
                     {generateCalendar().map((day, index) => (
                       <button
                         key={index}
@@ -401,7 +405,7 @@ const BookingSection = () => {
                         disabled={!day.isAvailable}
                         aria-label={`${day.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}${!day.isAvailable ? ' - Not available' : ''}${day.isSelected ? ' - Selected' : ''}`}
                         aria-pressed={day.isSelected}
-                        className={`aspect-square flex items-center justify-center text-sm font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
+                        className={`aspect-square flex items-center justify-center text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                           day.isSelected
                             ? 'bg-amber-500 text-white shadow-lg'
                             : day.isAvailable
@@ -418,11 +422,11 @@ const BookingSection = () => {
 
               {/* Time Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center">
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                   <Clock className="mr-2" size={16} aria-hidden="true" />
                   Select Time
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
                   {timeSlots.map((time) => (
                     <button
                       key={time}
@@ -430,7 +434,7 @@ const BookingSection = () => {
                       onClick={() => setSelectedTime(time)}
                       aria-pressed={selectedTime === time}
                       aria-label={`Select time ${time}`}
-                      className={`p-3 rounded-xl border-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
+                      className={`p-2 md:p-3 rounded-lg md:rounded-xl border-2 text-xs md:text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                         selectedTime === time
                           ? 'border-amber-500 bg-amber-50 text-amber-700'
                           : 'border-stone-200 hover:border-amber-300 hover:bg-amber-50 text-gray-700'
@@ -446,17 +450,17 @@ const BookingSection = () => {
                 type="submit"
                 disabled={!selectedCounselor || !selectedDate || !selectedTime || isSubmitting}
                 aria-label={isSubmitting ? "Booking session in progress" : "Book video counselling session"}
-                className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-8 py-5 rounded-2xl font-medium text-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-amber-300 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 md:px-8 md:py-5 rounded-xl md:rounded-2xl font-medium text-base md:text-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "Booking..." : "Book Video Counselling"}
               </button>
 
               {selectedDate && selectedTime && selectedCounselor && (
-                <div className="bg-stone-50 rounded-2xl p-6 border border-stone-200" aria-live="polite">
-                  <h4 className="font-bold text-gray-900 mb-3">Booking Summary:</h4>
-                  <div className="space-y-2 text-sm text-gray-700">
+                <div className="bg-stone-50 rounded-xl md:rounded-2xl p-4 md:p-6 border border-stone-200" aria-live="polite">
+                  <h4 className="font-bold text-gray-900 mb-2 md:mb-3 text-sm md:text-base">Booking Summary:</h4>
+                  <div className="space-y-1 md:space-y-2 text-xs md:text-sm text-gray-700">
                     <p><span className="font-medium">Counselor:</span> {selectedCounselorData?.name}</p>
-                    <p><span className="font-medium">Date:</span> {new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                    <p><span className="font-medium">Date:</span> {new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</p>
                     <p><span className="font-medium">Time:</span> {selectedTime}</p>
                     <p><span className="font-medium">Duration:</span> 45 minutes</p>
                     <p><span className="font-medium">Platform:</span> Zoom (link will be sent via email)</p>

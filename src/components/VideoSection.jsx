@@ -180,13 +180,13 @@ const VideoSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="text-center mb-20">
-          <h2 id="videos-heading" className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
+          <h2 id="videos-heading" className="text-4xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
             Master Fashion
             <span className="text-amber-600 block font-normal">
               Through Video
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light">
+          <p className="text-base text-gray-600 max-w-3xl mx-auto leading-relaxed font-light">
             Learn from industry experts through our curated collection of fashion design tutorials,
             masterclasses, and behind-the-scenes content.
           </p>

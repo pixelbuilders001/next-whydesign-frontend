@@ -87,13 +87,13 @@ const LeadFormSection = () => {
           {/* Form Side */}
           <div className="space-y-10 order-1 lg:order-2">
             <div className="text-center">
-              <h2 className="text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
+              <h2 className="text-4xl lg:text-6xl font-serif font-light text-gray-900 mb-8 leading-tight">
                 Ready to Begin Your
                 <span className="text-amber-600 block font-normal">
                   Fashion Journey?
                 </span>
               </h2>
-              <p className="text-xl text-gray-600 leading-relaxed font-light">
+              <p className="text-base text-gray-600 leading-relaxed font-light">
                 Get personalized guidance from industry experts. Share your
                 details and we'll create a custom roadmap for your fashion
                 career.
