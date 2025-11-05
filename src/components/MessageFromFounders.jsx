@@ -9,7 +9,8 @@ const founders = [
   {
     name: 'Piyush Katiyar',
     title: 'Co-Founder & CEO',
-    message: 'At Why Designs, we believe in empowering the next generation of fashion designers. Our journey started with a simple idea: to make quality fashion education accessible to everyone, everywhere.',
+    message:
+      'At Why Designs, we believe in empowering the next generation of fashion designers. Our journey started with a simple idea: to make quality fashion education accessible to everyone, everywhere.',
     image: founder1,
   },
 ];
@@ -17,7 +18,6 @@ const founders = [
 const MessageFromFounders = () => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log("teamMembers", teamMembers);
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -38,11 +38,9 @@ const MessageFromFounders = () => {
   }, []);
 
   return (
-    <section 
-      className="py-16 bg-gradient-to-b from-white to-stone-50"
-      aria-labelledby="founders-heading"
-    >
+    <section className="py-16 bg-gradient-to-b from-white to-stone-50" aria-labelledby="founders-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
         {/* Founders Section */}
         <div className="mb-16">
           <div className="text-center mb-16">
@@ -53,10 +51,11 @@ const MessageFromFounders = () => {
               Hear directly from the visionaries who founded Why Designs and the dedicated team members who bring our mission to life
             </p>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
             {founders.map((founder, index) => (
-              <article 
-                key={index} 
+              <article
+                key={index}
                 className="bg-white rounded-2xl shadow-lg p-8 text-center"
                 aria-labelledby={`founder-name-${index}`}
               >
@@ -69,9 +68,17 @@ const MessageFromFounders = () => {
                     className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-primary-200"
                   />
                 </div>
-                <h3 id={`founder-name-${index}`} className="text-2xl font-bold text-gray-900 mb-2">{founder.name}</h3>
+                <h3 id={`founder-name-${index}`} className="text-2xl font-bold text-gray-900 mb-2">
+                  {founder.name}
+                </h3>
                 <p className="text-primary-600 font-medium mb-4">{founder.title}</p>
-                <p className="text-gray-700 leading-relaxed">{founder.message}</p>
+
+                {/* ✅ Quoted message styling */}
+                <blockquote className="relative text-gray-700 italic leading-relaxed px-6 py-4 border-l-4 border-primary-500 bg-primary-50 rounded-lg">
+                  <span className="text-5xl text-primary-400 absolute -top-3 left-2">“</span>
+                  {founder.message}
+                  <span className="text-5xl text-primary-400 absolute -bottom-8 right-2">”</span>
+                </blockquote>
               </article>
             ))}
           </div>
@@ -87,13 +94,10 @@ const MessageFromFounders = () => {
               Meet the dedicated professionals who make our vision a reality
             </p>
           </div>
-          
+
           {loading ? (
             <div className="flex justify-center items-center py-12">
-              <div 
-                className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600" 
-                aria-label="Loading team members"
-              />
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600" aria-label="Loading team members" />
             </div>
           ) : teamMembers.length === 0 ? (
             <div className="text-center py-12">
@@ -102,8 +106,8 @@ const MessageFromFounders = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {teamMembers.map((member, index) => (
-                <article 
-                  key={index} 
+                <article
+                  key={index}
                   className="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow duration-300"
                   aria-labelledby={`team-member-${index}`}
                 >
@@ -120,9 +124,17 @@ const MessageFromFounders = () => {
                       }}
                     />
                   </div>
-                  <h3 id={`team-member-${index}`} className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
+                  <h3 id={`team-member-${index}`} className="text-xl font-bold text-gray-900 mb-2">
+                    {member.name}
+                  </h3>
                   <p className="text-primary-600 font-medium mb-3 text-sm">{member.designation}</p>
-                  <p className="text-gray-700 leading-relaxed text-sm">{member.description}</p>
+
+                  {/* ✅ Quoted team message */}
+                  <blockquote className="relative text-gray-700 italic leading-relaxed px-4 py-3 border-l-4 border-primary-500 bg-primary-50 rounded-md">
+                    <span className="text-3xl text-primary-400 absolute -top-2 left-2">“</span>
+                    {member.description}
+                    <span className="text-3xl text-primary-400 absolute -bottom-4 right-2">”</span>
+                  </blockquote>
                 </article>
               ))}
             </div>
