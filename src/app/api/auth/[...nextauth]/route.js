@@ -7,6 +7,13 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     }),
   ],
   callbacks: {
@@ -23,8 +30,6 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
-
-      console.log("Request Host:", process.env.NEXTAUTH_URL)
       // Add user properties to the session
       session.user.name = token.name;
       session.user.email = token.email;
@@ -32,8 +37,13 @@ export const authOptions = {
       return session;
     },
   },
+  debug: process.env.NODE_ENV === 'development',
+  // Explicitly set the URL for production
+  ...(process.env.NEXTAUTH_URL && { 
+    url: process.env.NEXTAUTH_URL 
+  }),
 };
 
-export const { handlers: { GET, POST } } = NextAuth(authOptions);
-
-export { GET, POST };
+// ✅ ALSO CORRECT
+export const { handlers } = NextAuth(authOptions);
+export const { GET, POST } = handlers;
