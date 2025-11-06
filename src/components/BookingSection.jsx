@@ -388,11 +388,11 @@ const BookingSection = () => {
 
                   {/* Days of Week */}
                   <div className="grid grid-cols-7 gap-1 md:gap-2 mb-3 md:mb-4" aria-hidden="true">
-                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(day => (
-                      <div key={day} className="text-center text-xs md:text-sm font-medium text-gray-500 py-1 md:py-2">
-                        {day}
-                      </div>
-                    ))}
+                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+  <div key={`${day}-${index}`} className="text-center text-xs md:text-sm font-medium text-gray-500 py-1 md:py-2">
+    {day}
+  </div>
+))}
                   </div>
 
                   {/* Calendar Grid */}

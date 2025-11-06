@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { Play, ArrowLeft, ArrowRight, X, Mail } from "lucide-react";
-import { videos } from "../../data/videos";
 import { getVideos, trackVideosViews } from "@/lib/authService";
 import FormModal from "./FormModal";
 import Image from "next/image";
