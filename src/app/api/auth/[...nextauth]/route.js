@@ -1,4 +1,3 @@
-// app/api/auth/[...nextauth]/route.js
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -12,7 +11,10 @@ export const authOptions = {
   ],
   callbacks: {
     async jwt({ token, account, profile }) {
-      if (account) token.accessToken = account.access_token;
+      // Persist the OAuth access_token and profile data to the token right after signin
+      if (account) {
+        token.accessToken = account.access_token;
+      }
       if (profile) {
         token.name = profile.name;
         token.email = profile.email;
@@ -21,6 +23,9 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
+
+      console.log("Request Host:", process.env.NEXTAUTH_URL)
+      // Add user properties to the session
       session.user.name = token.name;
       session.user.email = token.email;
       session.user.image = token.picture;
@@ -29,7 +34,6 @@ export const authOptions = {
   },
 };
 
-// App Router style: export handlers for GET and POST
-const handler = NextAuth(authOptions);
+export const { handlers: { GET, POST } } = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+export { GET, POST };
