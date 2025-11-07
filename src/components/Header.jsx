@@ -22,6 +22,8 @@ import {
   Video,
   FileText,
   Contact,
+  Layout,
+  Palette,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -42,6 +44,7 @@ const Header = () => {
   const [authType, setAuthType] = useState("login");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
 
   const { data: session, status } = useSession();
   const {
@@ -90,6 +93,8 @@ const Header = () => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(".dropdown-container"))
         setIsDropdownOpen(false);
+      if (!event.target.closest(".services-dropdown-container"))
+        setIsServicesDropdownOpen(false); // Add this line
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -125,6 +130,22 @@ const Header = () => {
     { name: "Videos", href: "#videos", icon: Video },
     { name: "Blogs", href: "/blogs", icon: FileText },
     { name: "Contact", href: "#contact", icon: Contact },
+    // { name: "Services", href: "/services/website-design", icon: Contact, isNew: true }
+  ];
+
+  const servicesItems = [
+    { 
+      name: "Website Design", 
+      href: "/services/website-design", 
+      icon: Layout,
+      description: "Custom website design and development"
+    },
+    { 
+      name: "Logo Design", 
+      href: "/services/logo-design", 
+      icon: Palette,
+      description: "Professional logo design services"
+    },
   ];
 
   const quickActions = [
@@ -223,6 +244,73 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
+              
+              {/* Services Dropdown */}
+              <div className="relative services-dropdown-container">
+                <button
+                  onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
+                  onMouseEnter={() => setIsServicesDropdownOpen(true)}
+                  className={`flex items-center space-x-1 font-medium text-sm transition-colors duration-200 ${
+                    isScrolled
+                      ? "text-gray-700 hover:text-primary-600"
+                      : "text-white/90 hover:text-primary-300"
+                  }`}
+                >
+                  <span>Services</span>
+                  <ChevronDown 
+                    size={16} 
+                    className={`transition-transform ${
+                      isServicesDropdownOpen ? "rotate-180" : ""
+                    }`} 
+                  />
+                </button>
+
+                {/* Services Dropdown Menu */}
+                {isServicesDropdownOpen && (
+                  <div 
+                    className="absolute top-full left-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100/50 backdrop-blur-xl z-50 overflow-hidden"
+                    onMouseLeave={() => setIsServicesDropdownOpen(false)}
+                  >
+                    <div className="p-2">
+                      {servicesItems.map((service, index) => (
+                        <Link
+                          key={service.name}
+                          href={service.href}
+                          onClick={() => setIsServicesDropdownOpen(false)}
+                          className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all duration-200 group"
+                        >
+                          <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center group-hover:bg-primary-200 transition-colors">
+                            <service.icon size={18} className="text-primary-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 group-hover:text-primary-700">
+                              {service.name}
+                            </p>
+                            <p className="text-sm text-gray-500 truncate">
+                              {service.description}
+                            </p>
+                          </div>
+                          <ChevronRight 
+                            size={16} 
+                            className="text-gray-400 group-hover:text-primary-600 transition-colors" 
+                          />
+                        </Link>
+                      ))}
+                    </div>
+                    
+                    {/* View All Services Link */}
+                    {/* <div className="border-t border-gray-100 p-3 bg-gray-50/50">
+                      <Link
+                        href="/services"
+                        onClick={() => setIsServicesDropdownOpen(false)}
+                        className="block text-center text-primary-600 font-medium text-sm hover:text-primary-700 transition-colors py-2"
+                      >
+                        View All Services
+                      </Link>
+                    </div> */}
+                  </div>
+                )}
+              </div>
             </nav>
 
             {/* Desktop CTA Buttons */}
@@ -479,6 +567,28 @@ const Header = () => {
                       />
                     </Link>
                   ))}
+
+                  {/* Services */}
+                  {/* <div className="px-5 mb-5"> */}
+                    {/* <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-2">Services</h3> */}
+                    <div className="space-y-1">
+                      {servicesItems.map((item, i) => (
+                        <Link
+                          key={i}
+                          href={item.href}
+                          onClick={closeMenu}
+                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all group"
+                        >
+                          <item.icon size={20} className="text-primary-600" />
+                          <span className="font-medium text-gray-700 flex-1">{item.name}</span>
+                          <ChevronRight
+                            size={16}
+                            className="text-gray-400 group-hover:text-primary-600"
+                          />
+                        </Link>
+                      ))}
+                    </div>
+                  {/* </div> */}
                 </div>
               </div>
 

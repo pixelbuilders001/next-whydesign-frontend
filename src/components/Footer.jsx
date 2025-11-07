@@ -10,6 +10,9 @@ const Footer = () => {
   ];
 
   const services = [
+    { name: 'Website Design', href: '/services/website-design' },
+    { name: 'Logo Design', href: '/services/logo-design' },
+
     { name: 'Privacy Policy', href: '/privacy-policy' },
     { name: 'Terms of Service', href: '/terms-of-service' },
     { name: 'FAQ', href: '/faq' },

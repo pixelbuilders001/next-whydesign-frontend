@@ -15,6 +15,7 @@ import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import ModernLoader from "@/components/ModernLoader";
 import PWAInstall from "@/components/PWAInstall";
+import WebsiteDesignCTA from "@/components/WebsiteDesignServices";
 
 
 
@@ -51,7 +52,9 @@ export default function Home() {
       <main>
         <HeroSection />
         <StudyAbroadSection />
+   
        <ProgramBriefSection />
+       <WebsiteDesignCTA />
          <LeadFormSection />
         <BookingSection />
         <PDFDownloadSection />
@@ -60,6 +63,7 @@ export default function Home() {
         <TestimonialsSection />
         <MessageFromFounders />
         <ContactSection />
+        <WebsiteDesignCTA />
         <Footer /> 
       </main>
       

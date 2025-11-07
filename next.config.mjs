@@ -7,6 +7,7 @@ const nextConfig = {
     domains: [
       'images.pexels.com',
       'lh3.googleusercontent.com',
+      'ui-avatars.com',
       'why-designers.s3.ap-south-1.amazonaws.com', // ✅ fixed
     ],
     formats: ['image/webp', 'image/avif'],
