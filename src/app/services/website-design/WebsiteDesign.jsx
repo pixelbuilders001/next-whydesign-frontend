@@ -313,7 +313,7 @@ export default function WebsiteDesignPage() {
               Convert & Inspire
             </span>
           </h1>
-          <p className="text-xl text-gray-600 leading-relaxed max-w-2xl">
+          <p className="hidden lg:block text-md lg:text-xl text-gray-600 leading-relaxed max-w-2xl">
             We design and develop stunning, high-performance websites
             that don't just look beautiful - they drive real business
             results and create unforgettable user experiences.
@@ -321,7 +321,7 @@ export default function WebsiteDesignPage() {
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 pt-4">
+        <div className="hidden lg:flex flex-col sm:flex-row gap-4 pt-4">
           <button
             onClick={() => setIsModalOpen(true)}
             className="group relative bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white px-8 py-4 rounded-full font-medium text-lg transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl overflow-hidden"
@@ -458,7 +458,59 @@ export default function WebsiteDesignPage() {
           <div className="absolute top-10 left-10 w-20 h-20 bg-amber-200 rounded-2xl opacity-50 blur-xl"></div>
           <div className="absolute bottom-10 right-10 w-20 h-20 bg-rose-200 rounded-2xl opacity-50 blur-xl"></div>
         </div>
+
+   
       </div>
+      <div className=" lg:hidden flex flex-col sm:flex-row gap-4 pt-4">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="group relative bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white px-8 py-4 rounded-full font-medium text-lg transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl overflow-hidden"
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              Start Your Project
+              <svg
+                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-600 to-rose-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </button>
+
+          <Link
+            href="#portfolio"
+            className="group bg-white text-gray-900 px-8 py-4 rounded-full font-medium text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg border border-gray-200 hover:shadow-xl flex items-center justify-center gap-2"
+          >
+            <span>View Our Work</span>
+            <svg
+              className="w-5 h-5 group-hover:scale-110 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+          </Link>
+        </div>
     </div>
   </div>
 

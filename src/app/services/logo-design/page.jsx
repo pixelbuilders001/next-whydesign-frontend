@@ -280,10 +280,10 @@ const resetForm = () => {
           </button>
           
           <Link 
-            href="#packages"
+            href="#services"
             className="group bg-white text-gray-900 px-8 py-4 rounded-full font-medium text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg border border-gray-200 hover:shadow-xl flex items-center justify-center gap-2"
           >
-            <span>View Packages</span>
+            <span>View Services</span>
             <svg 
               className="w-5 h-5 group-hover:scale-110 transition-transform" 
               fill="none" 
@@ -573,7 +573,7 @@ const resetForm = () => {
         </section> */}
 
         {/* Deliverables Section */}
-        <section className="py-20 bg-gradient-to-br from-amber-50 via-rose-50 to-white">
+        <section id="services" className="py-20 bg-gradient-to-br from-amber-50 via-rose-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl lg:text-5xl font-serif font-light text-gray-900 mb-4">
