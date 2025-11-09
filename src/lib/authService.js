@@ -55,7 +55,7 @@ export async function loginUser(email, password) {
     // Store tokens if available in the response
     // Handle different possible response structures
     let tokenData = null;
-
+console.log("response.data",response.data)
     if (response.data?.data?.accessToken && response.data?.data?.refreshToken) {
       // Structure: { data: { accessToken, refreshToken, user } }
       tokenData = response.data.data;

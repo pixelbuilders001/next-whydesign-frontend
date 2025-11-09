@@ -85,6 +85,7 @@ export const AuthProvider = ({ children }) => {
         // Get stored authentication data (tokens are already stored by authService)
         const storedToken = tokenStorage.getAccessToken();
         const storedUser = tokenStorage.getUserData();
+        console.log("Login successful, checking stored tokens...",storedUser);
 
         if (storedToken && storedUser) {
           console.log("Tokens and user data found in storage");
@@ -101,7 +102,7 @@ export const AuthProvider = ({ children }) => {
           if (shouldShowProfileModal) {
             // setShowProfileModal(true);
           }
-
+// console.log("shouldShowProfileModal",storedUser)
           return {
             success: true,
             user: storedUser,

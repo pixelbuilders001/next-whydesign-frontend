@@ -1,7 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { X, Mail } from "lucide-react";
-import { verifyOTP } from "@/lib/authService";
+import { resendOTP, verifyOTP } from "@/lib/authService";
+import useAuth from "@/lib/useAuth";
+// import { useAuth } from "@/lib/AuthContext";
+// import { useAuth } from "@/lib/useAuth";
 
 const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -9,6 +12,9 @@ const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const inputsRef = useRef([]);
+  const {
+    logout: customLogout,
+  } = useAuth();
 
   useEffect(() => {
     let timer;
@@ -40,6 +46,8 @@ const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
     try {
       await verifyOTP(email, otp.join(""));
       setMessage("✅ Email verified successfully!");
+      customLogout();
+      // window.location.reload();
       setTimeout(() => {
         onVerificationSuccess();
         onClose();
@@ -56,8 +64,12 @@ const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
     setResendCooldown(60);
     setMessage("📧 Sending new OTP...");
     try {
-      // Call resendOTP API if available
-      setMessage("✅ New OTP sent to your email");
+      const verifyRes = await resendOTP(email);
+      if (verifyRes.success) {
+        setMessage("✅ New OTP sent to your email");
+      } else {
+        setMessage("❌ Failed to resend OTP");
+      }
     } catch {
       setMessage("❌ Failed to resend OTP");
       setResendCooldown(0);
@@ -74,7 +86,7 @@ const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
         <div className="relative bg-gradient-to-b from-stone-50 to-rose-50/40 rounded-2xl shadow-lg p-6">
           <button
             className="absolute top-3 right-3 text-stone-400 hover:text-amber-600 transition-colors"
-            onClick={onClose}
+            onClick={() =>{ onClose(); customLogout();}}
           >
             <X size={24} />
           </button>

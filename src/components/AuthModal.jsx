@@ -85,55 +85,159 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
     }
   };
 
+  // const handleLogin = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const result = await contextLogin(email, password);
+  //     console.log("the result---",result.user)
+  //     if (result.success && result.user.isEmailVerified) {
+  //       console.log("the result---",result)
+  //       // setMessage("✅ Logged in successfully!");
+
+  //       // Check if user has already completed profile
+  //     const profileCompleted = localStorage.getItem("profileCompleted");
+  //     if (!profileCompleted) {
+  //       setLoading(false);
+  //       // Show Complete Profile modal — do NOT close AuthModal yet
+  //       setShowCompleteProfileModal(true);
+  //     } else {
+  //       // Close only if profile already done
+  //       setTimeout(() => {
+  //         setLoading(false);
+  //         onClose();
+  //         setEmail("");
+  //         setPassword("");
+  //         setMessage("");
+  //         setMessageExist("");
+  //       }, 1500);
+  //     }
+  //     }
+  //    else if(result.success && !result.user.isEmailVerified){
+
+  //       console.log("the result---",result.user.isEmailVerified)
+  //       setLoading(false);
+  //      try{
+  //       const verifyRes = await resendOTP(email);
+  //       if (verifyRes.success) {
+  //         setLoading(false);
+  //         setSignupEmail(email);
+  //         setShowOTPModal(true);
+  //         setIsAuthModalVisible(false);
+  //         setMessage("⚠️ Please verify your email with the OTP sent.");
+  //       } else {
+  //         setMessage("❌ Verification failed. Try again.");
+  //       }
+  //      }catch{
+
+  //       setMessage("❌ Error while verifying email.");
+  //      }
+        
+  //     }
+  //     else if(!result.success){
+  //       console.log("the result---",result)
+  //       setLoading(false);
+  //       setMessage("❌ " + result.message);
+  //     }
+      
+      
+  //     // else {
+  //     //   setLoading(false);
+  //     //   if (result.message.includes("verify") || result.message.includes("401")) {
+  //     //     try {
+  //     //       const verifyRes = await resendOTP(email);
+  //     //       if (verifyRes.success) {
+
+  //     //         setSignupEmail(email);
+  //     //         setShowOTPModal(true);
+  //     //         setIsAuthModalVisible(false);
+  //     //         setMessage("⚠️ Please verify your email with the OTP sent.");
+  //     //       } else {
+  //     //         setMessage("❌ Verification failed. Try again.");
+  //     //       }
+  //     //     } catch {
+  //     //       setMessage("❌ Error while verifying email.");
+  //     //     }
+  //     //   } else {
+  //     //     setMessage("❌ " + result.message);
+  //     //   }
+  //     // }
+  //   } catch (err) {
+  //     console.log("error",err)
+  //     setMessage("❌ " + err.message);
+  //   }
+  // };
+
   const handleLogin = async () => {
     try {
       setLoading(true);
       const result = await contextLogin(email, password);
-      if (result.success) {
-        setMessage("✅ Logged in successfully!");
-
-        // Check if user has already completed profile
-      const profileCompleted = localStorage.getItem("profileCompleted");
-      if (!profileCompleted) {
+      console.log("the result---", result);
+  
+      // If login succeeded and email is verified
+      if (result?.success && result.user?.isEmailVerified === true) {
+        console.log("Login success & email verified:", result);
         setLoading(false);
-        // Show Complete Profile modal — do NOT close AuthModal yet
-        setShowCompleteProfileModal(true);
-      } else {
-        // Close only if profile already done
-        setTimeout(() => {
-          setLoading(false);
-          onClose();
-          setEmail("");
-          setPassword("");
-          setMessage("");
-          setMessageExist("");
-        }, 1500);
-      }
-      } else {
-        setLoading(false);
-        if (result.message.includes("verify") || result.message.includes("401")) {
-          try {
-            const verifyRes = await resendOTP(email);
-            if (verifyRes.success) {
-
-              setSignupEmail(email);
-              setShowOTPModal(true);
-              setIsAuthModalVisible(false);
-              setMessage("⚠️ Please verify your email with the OTP sent.");
-            } else {
-              setMessage("❌ Verification failed. Try again.");
-            }
-          } catch {
-            setMessage("❌ Error while verifying email.");
-          }
+  
+        const profileCompleted = localStorage.getItem("profileCompleted");
+  
+        if (!profileCompleted) {
+          // Show profile modal (do not close auth modal yet)
+          setShowCompleteProfileModal(true);
         } else {
-          setMessage("❌ " + result.message);
+          // Close and clear the form after a short delay for UX
+          setTimeout(() => {
+            onClose();
+            setEmail("");
+            setPassword("");
+            setMessage("");
+            setMessageExist("");
+          }, 1500);
         }
+  
+        return { success: true }; // optional return for callers
+      }
+  
+      // If login succeeded but email is NOT verified -> trigger OTP flow
+      else if (result?.success && result.user?.isEmailVerified === false) {
+        console.log("Login success but email NOT verified, sending OTP...", result);
+        try {
+          const verifyRes = await resendOTP(email);
+          setLoading(false);
+  
+          if (verifyRes?.success) {
+            setSignupEmail(email);
+            setShowOTPModal(true);
+            setIsAuthModalVisible(false);
+            // setMessage("⚠️ Please verify your email with the OTP sent.");
+          } else {
+            // resendOTP returned a failure
+            setMessage("❌ Verification failed. Try again.");
+          }
+        } catch (err) {
+          console.error("resendOTP error:", err);
+          setLoading(false);
+          setMessage("❌ Error while verifying email. Try again.");
+        }
+  
+        return { success: false, message: "Email not verified" };
+      }
+  
+      // Any other failure (login unsuccessful or unexpected response)
+      else {
+        console.log("Login failed or unexpected response:", result);
+        setLoading(false);
+        setMessage("❌ " + (result?.message || "Login failed"));
+        return { success: false, message: result?.message || "Login failed" };
       }
     } catch (err) {
-      setMessage("❌ " + err.message);
+      console.log("error", err);
+      setLoading(false);
+      setMessage("❌ " + (err?.message || "Login failed"));
+      return { success: false, message: err?.message || "Login error" };
     }
   };
+  
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -318,7 +422,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                 )}
 
                 {/* Google Signin */}
-                <div className="text-center mt-3">
+                {/* <div className="text-center mt-3">
                   <button
                     type="button"
                     onClick={() => {
@@ -334,7 +438,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                     />
                     Continue with Google
                   </button>
-                </div>
+                </div> */}
               </form>
             </div>
           </div>
