@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { Send, CheckCircle } from "lucide-react";
 import { createLead } from "@/lib/authService"; // ✅ import your API function
 import Image from "next/image";
+import { useToast } from "./Toast";
 
 const LeadFormSection = () => {
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",

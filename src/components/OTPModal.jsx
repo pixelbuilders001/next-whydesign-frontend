@@ -3,10 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { X, Mail } from "lucide-react";
 import { resendOTP, verifyOTP } from "@/lib/authService";
 import useAuth from "@/lib/useAuth";
+import { useToast } from "./Toast";
 // import { useAuth } from "@/lib/AuthContext";
 // import { useAuth } from "@/lib/useAuth";
 
 const OTPModal = ({ open, onClose,closeAuthModal, email, onVerificationSuccess }) => {
+  const { addToast } = useToast();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +25,10 @@ const OTPModal = ({ open, onClose,closeAuthModal, email, onVerificationSuccess }
     }
     return () => clearTimeout(timer);
   }, [resendCooldown]);
+
+  const handleSuccess = () => {
+    addToast('Login successfully!', 'success');
+  };
 
   const handleChange = (value, index) => {
     if (!/^\d*$/.test(value)) return;
@@ -46,6 +52,7 @@ const OTPModal = ({ open, onClose,closeAuthModal, email, onVerificationSuccess }
     try {
       await verifyOTP(email, otp.join(""));
       setMessage("✅ Email verified successfully!");
+      handleSuccess();
       // customLogout();
       closeAuthModal()
       // window.location.reload();

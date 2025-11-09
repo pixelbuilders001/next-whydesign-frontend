@@ -9,8 +9,10 @@ import OTPModal from "./OTPModal";
 import CompleteProfileModal from "./CompleteProfileModal";
 import ForgetPasswordModal from "./ForgetPasswordModal";
 import PasswordResetModal from "./PasswordResetModal";
+import { useToast } from "./Toast";
 
 const AuthModal = ({ open, type, onClose, setAuthType }) => {
+  const { addToast } = useToast();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,6 +38,9 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
 
   // Use the authentication context
   const { register: contextRegister, login: contextLogin, isLoading: authLoading } = useAuth();
+  const handleSuccess = () => {
+    addToast('Login successfully!', 'success');
+  };
 
   const handleSignup = async () => {
     if (password !== confirmPassword) {
@@ -177,6 +182,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
       if (result?.success && result.user?.isEmailVerified === true) {
         console.log("Login success & email verified:", result);
         setLoading(false);
+        handleSuccess();
   
         const profileCompleted = localStorage.getItem("profileCompleted");
   

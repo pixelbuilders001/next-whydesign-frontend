@@ -393,6 +393,7 @@ export default function WebsiteDesignPage() {
               src="/services/01.png" // Replace with your actual website image
               alt="Website Design Preview"
               fill
+              loading="lazy"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               // onError={(e) => {
               //   e.currentTarget.onerror = null;
