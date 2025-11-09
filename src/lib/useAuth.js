@@ -18,6 +18,7 @@ export const useAuth = () => {
     // showProfileModal: auth.showProfileModal,
 
     // Authentication actions
+    register: auth.register,
     login: auth.login,
     logout: auth.logout,
     refreshAuth: auth.refreshAuth,

@@ -5,6 +5,10 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getTeams, createLead } from "@/lib/authService";
+import developer01 from "../../../../public/dev01.png"
+import developer02 from "../../../../public/dev02.png"  
+import developer03 from "../../../../public/dev03.png"
+
 import {
   Code,
   Palette,
@@ -26,29 +30,29 @@ const dummyTeamMembers = [
   {
     _id: "1",
     name: "Rajeev Sharma",
-    designation: "Lead Frontend Developer & Founder",
+    designation: "Founder & Lead Full Stack Developer",
     description:
-      "Expert in React, Next.js, and modern web technologies with 8+ years of experience.",
+      "Expert in React, Next.js,Node.js,MERN Stack and modern web technologies with 5+ years of experience.",
     image:
-      "https://ui-avatars.com/api/?name=Rajesh+Kumar&background=f59e0b&color=fff&size=200",
-  },
+      developer01,
+  },    
   {
     _id: "2",
     name: "Aman Kumar Sharma",
     designation: "Senior Software Engineer",
     description:
-      "Creative designer specializing in user-centered design and beautiful interfaces.",
+      "Specialized in React, Next.js,backend development,DevOps and modern web technologies with 3+ years of experience.",
     image:
-      "https://ui-avatars.com/api/?name=Priya+Sharma&background=ec4899&color=fff&size=200",
+      developer02,
   },
   {
     _id: "3",
     name: "Anuj Kumar Sharma",
     designation: "Senior Software Engineer",
     description:
-      "Full-stack developer with expertise in Node.js, databases, and API development.",
+      "Mobile Apps development with expertise in Node.js, databases, and API development with 3+ years of experience.",
     image:
-      "https://ui-avatars.com/api/?name=Amit+Patel&background=f59e0b&color=fff&size=200",
+      developer03,  
   },
 ];
 
@@ -199,7 +203,7 @@ export default function WebsiteDesignPage() {
     },
     {
       id: 2,
-      title: "Corporate Website",
+      title: "Daily Shops Website",
       category: "Web Design",
       image: "/services/laundry.png",
       description: "Professional corporate identity with engaging content",
@@ -207,8 +211,8 @@ export default function WebsiteDesignPage() {
     },
     {
       id: 3,
-      title: "SaaS Dashboard",
-      category: "UI/UX Design",
+      title: "Local Business Website",
+      category: "Web Development",
       image: "/services/spa.png",
       description: "Intuitive dashboard for complex data visualization",
       link: "https://salon-ashy.vercel.app/",
@@ -231,7 +235,7 @@ export default function WebsiteDesignPage() {
     },
     {
       id: 6,
-      title: "Booking System",
+      title: "Service Provider Website",
       category: "Web App",
       image: "/services/agency.png",
       description: "Streamlined booking experience for customers",
@@ -242,25 +246,18 @@ export default function WebsiteDesignPage() {
   const testimonials = [
     {
       id: 1,
-      name: "Sarah Johnson",
-      company: "TechInnovate",
+      name: "Brijesh Gupta",
+      company: "Business Owner",
       text: "The team delivered beyond our expectations. Our website traffic increased by 200% after the redesign.",
       rating: 5,
     },
     {
       id: 2,
-      name: "Michael Chen",
-      company: "Global Solutions",
+      name: "Piyush Katiyar",
+      company: "whydesigners.com",
       text: "Professional, creative, and extremely efficient. The entire process was smooth and transparent.",
       rating: 5,
-    },
-    {
-      id: 3,
-      name: "Emily Rodriguez",
-      company: "StartUp Ventures",
-      text: "They transformed our vision into reality. The website perfectly represents our brand identity.",
-      rating: 5,
-    },
+    }
   ];
 
   const stats = [

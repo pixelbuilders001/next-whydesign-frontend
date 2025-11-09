@@ -62,6 +62,143 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
+
+
+  // Register function
+  const register = useCallback(async (email, password) => {
+    try {
+      setIsLoading(true);
+
+      // Import here to avoid circular dependency
+      const { registerUser } = await import('./authService');
+
+      const result = await registerUser(email, password);
+      console.log("Register result:", result);
+
+      if (result.success && result.data) {
+        console.log("Registration successful, checking stored tokens...");
+        
+        // Debug: Log the actual response data structure
+        console.log("Registration response data keys:", Object.keys(result.data));
+        if (result.data.data) {
+          console.log("Registration response data.data keys:", Object.keys(result.data.data));
+        }
+
+        // Get stored authentication data (tokens are already stored by authService)
+        const storedToken = tokenStorage.getAccessToken();
+        const storedUser = tokenStorage.getUserData();
+        console.log("Registration successful, checking stored tokens...", storedUser);
+
+        if (storedToken && storedUser) {
+          console.log("Tokens and user data found in storage after registration");
+
+          // Update state with stored data
+          setAccessToken(storedToken);
+          setUser(storedUser);
+          setIsAuthenticated(true);
+
+          // Check if profile is completed, show modal if not
+          const profileCompleted = tokenStorage.getProfileCompleted();
+          const shouldShowProfileModal = !profileCompleted;
+
+          if (shouldShowProfileModal) {
+            // setShowProfileModal(true);
+          }
+
+          return {
+            success: true,
+            user: storedUser,
+            message: result.data.message || result.message || 'Registration successful',
+            showProfileModal: shouldShowProfileModal
+          };
+        } else {
+          console.warn("No authentication data found in storage after registration");
+          console.log("Registration debug info:", {
+            storedToken: storedToken ? "present" : "not found",
+            storedUser: storedUser ? "present" : "not found"
+          });
+
+          // Fallback: Try to store tokens manually if authService failed
+          console.log("Attempting manual token storage fallback for registration...");
+          if (result.data.token && result.data.refreshToken && result.data.user) {
+            const manualStorage = tokenStorage.setTokens(result.data.token, result.data.refreshToken, result.data.user);
+            if (manualStorage) {
+              console.log("Manual token storage successful after registration");
+              setAccessToken(result.data.token);
+              setUser(result.data.user);
+              setIsAuthenticated(true);
+
+              const profileCompleted = tokenStorage.getProfileCompleted();
+              const shouldShowProfileModal = !profileCompleted;
+
+              if (shouldShowProfileModal) {
+                // setShowProfileModal(true);
+              }
+
+              return {
+                success: true,
+                user: result.data.user,
+                message: result.data.message || result.message || 'Registration successful',
+                showProfileModal: shouldShowProfileModal
+              };
+            }
+          }
+
+          // Fallback 2: Try nested structure (result.data.data.token)
+          console.log("Attempting nested structure fallback for registration...");
+          if (result.data.data?.token && result.data.data?.refreshToken && result.data.data?.user) {
+            const manualStorage = tokenStorage.setTokens(result.data.data.token, result.data.data.refreshToken, result.data.data.user);
+            if (manualStorage) {
+              console.log("Nested structure manual token storage successful after registration");
+              setAccessToken(result.data.data.token);
+              setUser(result.data.data.user);
+              setIsAuthenticated(true);
+
+              const profileCompleted = tokenStorage.getProfileCompleted();
+              const shouldShowProfileModal = !profileCompleted;
+
+              if (shouldShowProfileModal) {
+                // setShowProfileModal(true);
+              }
+
+              return {
+                success: true,
+                user: result.data.data.user,
+                message: result.data.data.message || result.data.message || result.message || 'Registration successful',
+                showProfileModal: shouldShowProfileModal
+              };
+            }
+          }
+
+          // Registration successful but no tokens (might need OTP verification)
+          console.log("Registration successful but no tokens stored - likely requires OTP verification");
+          return {
+            success: true,
+            message: result.data?.message || result.message || 'Registration successful. Please verify your email.',
+            requiresVerification: true
+          };
+        }
+      } else {
+        console.error("Registration failed:", result);
+        return {
+          success: false,
+          message: result.data?.message || result.message || 'Registration failed'
+        };
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      return {
+        success: false,
+        message: error.message || 'Registration failed'
+      };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+
+
+
   // Login function
   const login = useCallback(async (email, password) => {
     try {
@@ -359,6 +496,7 @@ const getUserProfile = useCallback(async () => {
     accessToken,
 
     // Actions
+    register,
     login,
     logout,
     refreshAuth,

@@ -3,6 +3,28 @@ import { tokenStorage } from './tokenStorage';
 
 import axios from "axios";
 
+// export async function registerUser(email, password) {
+//   try {
+//     const response = await axios.post(API_ENDPOINTS.USER.REGISTER, {
+//       email,
+//       password,
+//     });
+
+//     return {
+//       success: true,
+//       statusCode: response.status,
+//       data: response.data,
+//     };
+//   } catch (error) {
+//     console.log("testtest--", error);
+
+//     return {
+//       success: false,
+//       statusCode: error.response?.status || null, // <-- here’s the code (e.g., 409)
+//       message: error.response?.data?.message || error.message,
+//     };
+//   }
+// }
 export async function registerUser(email, password) {
   try {
     const response = await axios.post(API_ENDPOINTS.USER.REGISTER, {
@@ -10,22 +32,43 @@ export async function registerUser(email, password) {
       password,
     });
 
+    // Store tokens if available in the response (similar to loginUser)
+    let tokenData = null;
+    
+    if (response.data?.data?.accessToken && response.data?.data?.refreshToken) {
+      // Structure: { data: { accessToken, refreshToken, user } }
+      tokenData = response.data.data;
+    } else if (response.data?.accessToken && response.data?.refreshToken) {
+      // Structure: { accessToken, refreshToken, user }
+      tokenData = response.data;
+    }
+
+    if (tokenData) {
+      const { accessToken, refreshToken, user } = tokenData;
+      console.log("Storing tokens after registration:", { 
+        accessToken: accessToken ? "present" : "missing", 
+        refreshToken: refreshToken ? "present" : "missing" 
+      });
+      tokenStorage.setTokens(accessToken, refreshToken, user);
+    } else {
+      console.warn("No tokens found in registration response:", response.data);
+    }
+
     return {
       success: true,
       statusCode: response.status,
       data: response.data,
     };
   } catch (error) {
-    console.log("testtest--", error);
+    console.log("Registration error:", error);
 
     return {
       success: false,
-      statusCode: error.response?.status || null, // <-- here’s the code (e.g., 409)
+      statusCode: error.response?.status || null,
       message: error.response?.data?.message || error.message,
     };
   }
 }
-
 
 export async function verifyOTP(email, otp) {
  try {

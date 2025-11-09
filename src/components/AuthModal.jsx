@@ -35,7 +35,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
   console.log("the message---",message)
 
   // Use the authentication context
-  const { login: contextLogin, isLoading: authLoading } = useAuth();
+  const { register: contextRegister, login: contextLogin, isLoading: authLoading } = useAuth();
 
   const handleSignup = async () => {
     if (password !== confirmPassword) {
@@ -44,7 +44,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
     }
     try {
       setLoading(true);
-      const result = await registerUser(email, password);
+      const result = await contextRegister(email, password);
       if (result.success) {
         setLoading(false);
         setSignupEmail(email);
@@ -246,7 +246,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
   };
 
   const handleOTPVerificationSuccess = () => {
-    setMessage("✅ Registration and email verification successful!");
+    // setMessage("✅ Registration and email verification successful!");
     setShowOTPModal(false);
     setName("");
     setEmail("");
@@ -471,6 +471,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
   <OTPModal
         open={showOTPModal}
         onClose={handleOTPModalClose}
+        closeAuthModal={onClose}
         email={signupEmail}
         onVerificationSuccess={handleOTPVerificationSuccess}
       />

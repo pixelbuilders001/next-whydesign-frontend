@@ -6,7 +6,7 @@ import useAuth from "@/lib/useAuth";
 // import { useAuth } from "@/lib/AuthContext";
 // import { useAuth } from "@/lib/useAuth";
 
-const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
+const OTPModal = ({ open, onClose,closeAuthModal, email, onVerificationSuccess }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +46,8 @@ const OTPModal = ({ open, onClose, email, onVerificationSuccess }) => {
     try {
       await verifyOTP(email, otp.join(""));
       setMessage("✅ Email verified successfully!");
-      customLogout();
+      // customLogout();
+      closeAuthModal()
       // window.location.reload();
       setTimeout(() => {
         onVerificationSuccess();
