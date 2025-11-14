@@ -599,7 +599,7 @@ const resetForm = () => {
         </section>
 
         {/* Team Section */}
-        <section className="py-20 bg-white">
+        {/* <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl lg:text-5xl font-serif font-light text-gray-900 mb-4">
@@ -646,7 +646,7 @@ const resetForm = () => {
               </div>
             )}
           </div>
-        </section>
+        </section> */}
 
         {/* CTA Section */}
         <section className="py-20 bg-gradient-to-br from-amber-50 via-rose-50 to-white">

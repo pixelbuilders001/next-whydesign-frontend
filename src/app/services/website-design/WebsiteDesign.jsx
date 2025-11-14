@@ -413,9 +413,9 @@ export default function WebsiteDesignPage() {
             />
             
             {/* Overlay with CTA */}
-            <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+            {/* <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
               <Link
-                href="https://bakery-sand.vercel.app/" // Replace with your actual website URL
+                href="https://bakery-sand.vercel.app/" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="opacity-0 hover:opacity-100 transform hover:scale-105 transition-all duration-300 bg-white text-gray-900 px-6 py-3 rounded-full font-medium flex items-center gap-2 shadow-lg"
@@ -423,7 +423,7 @@ export default function WebsiteDesignPage() {
                 <span>Visit Live Site</span>
                 <ExternalLink size={16} />
               </Link>
-            </div>
+            </div> */}
           </div>
 
           {/* Browser Bottom Bar */}
@@ -609,7 +609,7 @@ export default function WebsiteDesignPage() {
           {/* Portfolio Section */}
      {/* Portfolio Section */}
 {/* Portfolio Section */}
-<section id="portfolio" className="py-20 bg-gradient-to-br from-amber-50 via-rose-50 to-white">
+{/* <section id="portfolio" className="py-20 bg-gradient-to-br from-amber-50 via-rose-50 to-white">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div className="text-center mb-16">
       <h2 className="text-4xl lg:text-5xl font-serif font-light text-gray-900 mb-4">
@@ -627,7 +627,7 @@ export default function WebsiteDesignPage() {
           className="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
         >
           <div className="aspect-video bg-gradient-to-br from-amber-400 to-rose-500 relative overflow-hidden">
-            {/* Blurred Background */}
+        
             <div className="absolute inset-0">
               <Image
                 src={item.image}
@@ -642,7 +642,7 @@ export default function WebsiteDesignPage() {
               />
             </div>
             
-            {/* Main Image with Hover Effect */}
+        
             <div className="absolute inset-2 rounded-xl overflow-hidden">
               <Image
                 src={item.image}
@@ -656,18 +656,18 @@ export default function WebsiteDesignPage() {
                 }}
               />
               
-              {/* Overlay */}
+         
               <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all duration-300" />
             </div>
             
-            {/* Category Badge */}
+       
             <div className="absolute top-4 right-4 z-10">
               <span className="bg-white/90 backdrop-blur-sm text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
                 {item.category}
               </span>
             </div>
             
-            {/* View Project Button */}
+          
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
               <Link
                 href={item.link}
@@ -703,7 +703,7 @@ export default function WebsiteDesignPage() {
       ))}
     </div>
   </div>
-</section>
+</section> */}
 
           {/* Our Process Section */}
           <section id="our-process" className="py-20 bg-white">
@@ -771,7 +771,7 @@ export default function WebsiteDesignPage() {
           </section>
 
           {/* Team Section */}
-          <section className="py-20 bg-white">
+          {/* <section className="py-20 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
                 <h2 className="text-4xl lg:text-5xl font-serif font-light text-gray-900 mb-4">
@@ -826,7 +826,7 @@ export default function WebsiteDesignPage() {
                 </div>
               )}
             </div>
-          </section>
+          </section> */}
 
           {/* Testimonials Section */}
           <section className="py-20 bg-gradient-to-br from-amber-50 via-rose-50 to-white">

@@ -54,7 +54,7 @@ export default function Home() {
         <StudyAbroadSection />
    
        <ProgramBriefSection />
-       <WebsiteDesignCTA />
+       {/* <WebsiteDesignCTA /> */}
          <LeadFormSection />
         <BookingSection />
         <PDFDownloadSection />
@@ -63,7 +63,7 @@ export default function Home() {
         <TestimonialsSection />
         <MessageFromFounders />
         <ContactSection />
-        <WebsiteDesignCTA />
+        {/* <WebsiteDesignCTA /> */}
         <Footer /> 
       </main>
       
