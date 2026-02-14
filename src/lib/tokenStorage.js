@@ -164,8 +164,10 @@ class TokenStorage {
   // Clear all stored tokens and data
   clearTokens() {
     try {
-      Object.values(TOKEN_KEYS).forEach(key => {
-        this.storage.removeItem(key);
+      Object.entries(TOKEN_KEYS).forEach(([name, key]) => {
+        if (name !== 'PROFILE_COMPLETED') {
+          this.storage.removeItem(key);
+        }
       });
       return true;
     } catch (error) {

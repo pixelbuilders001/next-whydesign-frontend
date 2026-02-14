@@ -62,8 +62,8 @@ const ContactSection = () => {
   };
 
   return (
-    <section 
-      id="contact" 
+    <section
+      id="contact"
       className="py-24 bg-gradient-to-b from-white to-stone-50/50"
       aria-labelledby="contact-heading"
     >
@@ -83,7 +83,7 @@ const ContactSection = () => {
           <div className="space-y-10">
             <div className="bg-gradient-to-br from-stone-50 to-rose-50/50 rounded-3xl p-10 border border-white/50 shadow-lg">
               <h3 className="text-3xl font-bold text-gray-900 mb-8">Contact Information</h3>
-              
+
               <div className="space-y-8">
                 <div className="flex items-start space-x-5">
                   <div className="bg-amber-600 rounded-2xl p-4 shadow-lg" aria-hidden="true">
@@ -95,7 +95,7 @@ const ContactSection = () => {
                     <p className="text-gray-600 font-light">+91-7007894388</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-5">
                   <div className="bg-amber-600 rounded-2xl p-4 shadow-lg" aria-hidden="true">
                     <Mail className="text-white" size={24} />
@@ -105,7 +105,7 @@ const ContactSection = () => {
                     <p className="text-gray-600 font-light">info@whydesigners.com</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-5">
                   <div className="bg-amber-600 rounded-2xl p-4 shadow-lg" aria-hidden="true">
                     <MapPin className="text-white" size={24} />
@@ -115,7 +115,7 @@ const ContactSection = () => {
                     <p className="text-gray-600 font-light">coming soon.</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-5">
                   <div className="bg-amber-600 rounded-2xl p-4 shadow-lg" aria-hidden="true">
                     <Clock className="text-white" size={24} />
@@ -129,15 +129,7 @@ const ContactSection = () => {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-stone-100 to-stone-200 rounded-3xl h-72 flex items-center justify-center shadow-lg border border-stone-200">
-              <div className="text-center">
-                <div className="bg-amber-100 rounded-2xl p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center" aria-hidden="true">
-                  <MapPin className="text-amber-600" size={28} />
-                </div>
-                <p className="text-gray-700 font-medium text-lg">Interactive Map</p>
-                <p className="text-gray-500 text-sm font-light">Location: coming soon</p>
-              </div>
-            </div>
+
           </div>
 
           {/* RIGHT SIDE: CONTACT FORM */}

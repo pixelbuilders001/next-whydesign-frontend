@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { MapPin, Star } from "lucide-react";
 import Image from "next/image";
-import { universities } from "../../data/universities.js";
-import FormModal from "./FormModal.jsx";
+import { programmes } from "../../data/programmes.js";
 
 const ImageLoader = ({ src, alt, className }) => {
   const [loaded, setLoaded] = useState(false);
@@ -36,6 +36,7 @@ const ImageLoader = ({ src, alt, className }) => {
 };
 
 const StudyAbroadSection = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("fta");
   const [selectedCountry, setSelectedCountry] = useState("France");
   const [animate, setAnimate] = useState(true);
@@ -50,9 +51,9 @@ const StudyAbroadSection = () => {
 
   const countries = [
     { name: "France", flag: "🇫🇷" },
-    { name: "Italy", flag: "🇮🇹" },
-    { name: "UK", flag: "🇬🇧" },
-    { name: "USA", flag: "🇺🇸" },
+    // { name: "Italy", flag: "🇮🇹" },
+    // { name: "UK", flag: "🇬🇧" },
+    // { name: "USA", flag: "🇺🇸" },
   ];
 
   useEffect(() => {
@@ -61,54 +62,16 @@ const StudyAbroadSection = () => {
     return () => clearTimeout(t);
   }, [activeTab]);
 
-  const filteredUniversities = universities.filter(
-    (u) => u.country === selectedCountry
+  const filteredUniversities = programmes.filter(
+    (p) => p.type === 'university' && p.country === selectedCountry
   );
 
   // ✅ NIFT & Certification Data with Description
-  const niftPhotos = [
-    {
-      src: "https://images.pexels.com/photos/794064/pexels-photo-794064.jpeg",
-      title: "Mentorship Sessions",
-      desc: "Get one-on-one mentoring from top industry experts and NIFT alumni.",
-    },
-    {
-      src: "https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg",
-      title: "Hands-on Workshops",
-      desc: "Participate in hands-on fashion design and textile workshops.",
-    },
-    {
-      src: "https://images.pexels.com/photos/1126993/pexels-photo-1126993.jpeg",
-      title: "Student Projects",
-      desc: "Work on real-world projects that prepare you for fashion careers.",
-    },
-  ];
+  const niftProgrammes = programmes.filter(p => p.type === 'nift');
+  const certificationProgrammes = programmes.filter(p => p.type === 'certification');
 
-  const certificationPhotos = [
-    {
-      src: "https://images.pexels.com/photos/1126993/pexels-photo-1126993.jpeg",
-      title: "Fashion Styling",
-      desc: "Master styling techniques and develop your unique creative voice.",
-    },
-    {
-      src: "https://images.pexels.com/photos/794064/pexels-photo-794064.jpeg",
-      title: "Design Thinking",
-      desc: "Learn the essentials of fashion innovation and design process.",
-    },
-    {
-      src: "https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg",
-      title: "Fashion Business",
-      desc: "Understand branding, marketing, and the business side of fashion.",
-    },
-  ];
-
-  const openModal = (title, description) => {
-    setModalData({ title, description });
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const navigateToProgramme = (id) => {
+    router.push(`/programmes/${id}`);
   };
 
   return (
@@ -152,22 +115,22 @@ const StudyAbroadSection = () => {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {niftPhotos.map((photo, i) => (
+                {niftProgrammes.map((programme) => (
                   <div
-                    key={i}
+                    key={programme.id}
                     className="rounded-3xl bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 hover:-translate-y-2"
                   >
-                    <ImageLoader src={photo.src} alt={photo.title} className="h-52 sm:h-56" />
+                    <ImageLoader src={programme.image} alt={programme.name} className="h-52 sm:h-56" />
                     <div className="p-5">
                       <h3 className="text-gray-800 font-semibold text-lg sm:text-xl mb-2">
-                        {photo.title}
+                        {programme.name}
                       </h3>
                       <p className="text-gray-600 text-sm sm:text-base mb-3">
-                        {photo.desc}
+                        {programme.description}
                       </p>
-                      <button 
+                      <button
                         className="text-amber-600 font-medium text-sm hover:underline"
-                        onClick={() => openModal(photo.title, photo.desc)}
+                        onClick={() => router.push(`/programmes/${programme.id}`)}
                       >
                         Learn More →
                       </button>
@@ -238,9 +201,9 @@ const StudyAbroadSection = () => {
                           <Star size={16} className="text-amber-400 fill-current mr-1" />
                           <span className="text-gray-700 text-sm">{uni.rating}</span>
                         </div>
-                        <button 
+                        <button
                           className="text-amber-600 font-medium text-sm hover:underline"
-                          onClick={() => openModal(uni.name, uni.description)}
+                          onClick={() => router.push(`/programmes/${uni.id}`)}
                         >
                           Learn More →
                         </button>
@@ -263,22 +226,22 @@ const StudyAbroadSection = () => {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                {certificationPhotos.map((photo, i) => (
+                {certificationProgrammes.map((programme) => (
                   <div
-                    key={i}
+                    key={programme.id}
                     className="rounded-3xl bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 hover:-translate-y-2"
                   >
-                    <ImageLoader src={photo.src} alt={photo.title} className="h-52 sm:h-56" />
+                    <ImageLoader src={programme.image} alt={programme.name} className="h-52 sm:h-56" />
                     <div className="p-5">
                       <h3 className="text-gray-800 font-semibold text-lg sm:text-xl mb-2">
-                        {photo.title}
+                        {programme.name}
                       </h3>
                       <p className="text-gray-600 text-sm sm:text-base mb-3">
-                        {photo.desc}
+                        {programme.description}
                       </p>
-                      <button 
+                      <button
                         className="text-amber-600 font-medium text-sm hover:underline"
-                        onClick={() => openModal(photo.title, photo.desc)}
+                        onClick={() => router.push(`/programmes/${programme.id}`)}
                       >
                         Learn More →
                       </button>
@@ -291,13 +254,6 @@ const StudyAbroadSection = () => {
         </div>
       </div>
       
-      {/* Form Modal */}
-      <FormModal 
-        isOpen={isModalOpen} 
-        onClose={closeModal} 
-        title={modalData.title} 
-        description={modalData.description} 
-      />
     </section>
   );
 };

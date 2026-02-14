@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { registerUser, loginUser, resendOTP } from "@/lib/authService";
 import { useAuth } from "@/lib/useAuth";
+import { tokenStorage } from "@/lib/tokenStorage";
 import OTPModal from "./OTPModal";
 import CompleteProfileModal from "./CompleteProfileModal";
 import ForgetPasswordModal from "./ForgetPasswordModal";
@@ -21,7 +22,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [signupEmail, setSignupEmail] = useState("");
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(true);
-  const [loading,setLoading]=useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [showCompleteProfileModal, setShowCompleteProfileModal] = useState(false);
 
@@ -34,7 +35,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
   const [confirmResetPassword, setConfirmResetPassword] = useState("");
   const [forgetPasswordMessage, setForgetPasswordMessage] = useState("");
   const [messageExist, setMessageExist] = useState("");
-  console.log("the message---",message)
+  console.log("the message---", message)
 
   // Use the authentication context
   const { register: contextRegister, login: contextLogin, isLoading: authLoading } = useAuth();
@@ -60,25 +61,25 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
       } else {
         setLoading(false);
         if (result.statusCode === 409) {
-        //        setSignupEmail(email);
-        // setShowOTPModal(true);
-        //   try {
-        //     setLoading(true);
-        //     const verifyRes = await resendOTP(email);
-        //     if (verifyRes.success) {
-        //       setLoading(false);
-        //       setSignupEmail(email);
-        //       setShowOTPModal(true);
-        //       setIsAuthModalVisible(false);
-        //       setMessage("⚠️ Please verify your email with the OTP sent.");
-        //     } else {
-        //       setLoading(false);
-        //       setMessage("❌ Verification failed. Try again.");
-        //     }
-        //   } catch {
-        //     setLoading(false);
-        //     setMessage("❌ Error while verifying email.");
-        //   }
+          //        setSignupEmail(email);
+          // setShowOTPModal(true);
+          //   try {
+          //     setLoading(true);
+          //     const verifyRes = await resendOTP(email);
+          //     if (verifyRes.success) {
+          //       setLoading(false);
+          //       setSignupEmail(email);
+          //       setShowOTPModal(true);
+          //       setIsAuthModalVisible(false);
+          //       setMessage("⚠️ Please verify your email with the OTP sent.");
+          //     } else {
+          //       setLoading(false);
+          //       setMessage("❌ Verification failed. Try again.");
+          //     }
+          //   } catch {
+          //     setLoading(false);
+          //     setMessage("❌ Error while verifying email.");
+          //   }
           setMessageExist("❌ User already exists with this email. Please login.");
         } else {
           setLoading(false);
@@ -136,15 +137,15 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
 
   //       setMessage("❌ Error while verifying email.");
   //      }
-        
+
   //     }
   //     else if(!result.success){
   //       console.log("the result---",result)
   //       setLoading(false);
   //       setMessage("❌ " + result.message);
   //     }
-      
-      
+
+
   //     // else {
   //     //   setLoading(false);
   //     //   if (result.message.includes("verify") || result.message.includes("401")) {
@@ -177,15 +178,15 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
       setLoading(true);
       const result = await contextLogin(email, password);
       console.log("the result---", result);
-  
+
       // If login succeeded and email is verified
       if (result?.success && result.user?.isEmailVerified === true) {
         console.log("Login success & email verified:", result);
         setLoading(false);
         handleSuccess();
-  
-        const profileCompleted = localStorage.getItem("profileCompleted");
-  
+
+        const profileCompleted = tokenStorage.getProfileCompleted();
+
         if (!profileCompleted) {
           // Show profile modal (do not close auth modal yet)
           setShowCompleteProfileModal(true);
@@ -199,17 +200,17 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
             setMessageExist("");
           }, 1500);
         }
-  
+
         return { success: true }; // optional return for callers
       }
-  
+
       // If login succeeded but email is NOT verified -> trigger OTP flow
       else if (result?.success && result.user?.isEmailVerified === false) {
         console.log("Login success but email NOT verified, sending OTP...", result);
         try {
           const verifyRes = await resendOTP(email);
           setLoading(false);
-  
+
           if (verifyRes?.success) {
             setSignupEmail(email);
             setShowOTPModal(true);
@@ -224,10 +225,10 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
           setLoading(false);
           setMessage("❌ Error while verifying email. Try again.");
         }
-  
+
         return { success: false, message: "Email not verified" };
       }
-  
+
       // Any other failure (login unsuccessful or unexpected response)
       else {
         console.log("Login failed or unexpected response:", result);
@@ -242,8 +243,8 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
       return { success: false, message: err?.message || "Login error" };
     }
   };
-  
-  
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -288,13 +289,14 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
               {/* Close button */}
               <button
                 className="absolute top-3 right-3 text-stone-400 hover:text-amber-600 transition-colors"
-                onClick={()=>{onClose();
+                onClick={() => {
+                  onClose();
                   setMessageExist("");
                   setMessage("");
                   setEmail("");
                   setPassword("");
                   setConfirmPassword("");
-                  }}
+                }}
               >
                 <X size={24} />
               </button>
@@ -354,7 +356,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                     {messageExist}
                   </p>
                 )}
-{message && (
+                {message && (
                   <p className="text-center text-xs font-medium text-red-600">
                     {message}
                   </p>
@@ -374,7 +376,8 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                     <button
                       type="button"
                       className="cursor-pointer text-amber-700 font-semibold hover:underline"
-                      onClick={() => {setAuthType("signup");
+                      onClick={() => {
+                        setAuthType("signup");
                         setMessageExist("");
                         setMessage("");
                         setEmail("");
@@ -392,7 +395,8 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
                     <button
                       type="button"
                       className="cursor-pointer text-amber-700 font-semibold hover:underline"
-                      onClick={() => {setAuthType("login");
+                      onClick={() => {
+                        setAuthType("login");
 
                         setMessageExist("");
                         setMessage("");
@@ -452,7 +456,7 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
       )}
 
       {/* OTP Modal */}
-        {/* <CompleteProfileModal
+      {/* <CompleteProfileModal
         open={showOTPModal}
         onClose={handleOTPModalClose}
         onProfileComplete={handleOTPVerificationSuccess}
@@ -460,21 +464,24 @@ const AuthModal = ({ open, type, onClose, setAuthType }) => {
       
       /> */}
       <CompleteProfileModal
-  open={showCompleteProfileModal}
-  onClose={() => {setShowCompleteProfileModal(false);onClose();}}
-  onProfileComplete={() => {
-    setShowCompleteProfileModal(false);
-    localStorage.setItem("profileCompleted", "true");
-    onClose(); 
-
-  }}
-  onSkip={() => {
-    setShowCompleteProfileModal(false);
-    localStorage.setItem("profileCompleted", "true");
-    onClose(); 
-  }}
-/>
-  <OTPModal
+        open={showCompleteProfileModal}
+        onClose={() => {
+          setShowCompleteProfileModal(false);
+          tokenStorage.setProfileCompleted(true);
+          onClose();
+        }}
+        onProfileComplete={() => {
+          setShowCompleteProfileModal(false);
+          tokenStorage.setProfileCompleted(true);
+          onClose();
+        }}
+        onSkip={() => {
+          setShowCompleteProfileModal(false);
+          tokenStorage.setProfileCompleted(true);
+          onClose();
+        }}
+      />
+      <OTPModal
         open={showOTPModal}
         onClose={handleOTPModalClose}
         closeAuthModal={onClose}

@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
 
       if (result.success && result.data) {
         console.log("Registration successful, checking stored tokens...");
-        
+
         // Debug: Log the actual response data structure
         console.log("Registration response data keys:", Object.keys(result.data));
         if (result.data.data) {
@@ -212,7 +212,7 @@ export const AuthProvider = ({ children }) => {
 
       if (result.success && result.data) {
         console.log("Login successful, checking stored tokens...");
-        
+
         // Debug: Log the actual response data structure
         console.log("Response data keys:", Object.keys(result.data));
         if (result.data.data) {
@@ -222,7 +222,7 @@ export const AuthProvider = ({ children }) => {
         // Get stored authentication data (tokens are already stored by authService)
         const storedToken = tokenStorage.getAccessToken();
         const storedUser = tokenStorage.getUserData();
-        console.log("Login successful, checking stored tokens...",storedUser);
+        console.log("Login successful, checking stored tokens...", storedUser);
 
         if (storedToken && storedUser) {
           console.log("Tokens and user data found in storage");
@@ -239,7 +239,7 @@ export const AuthProvider = ({ children }) => {
           if (shouldShowProfileModal) {
             // setShowProfileModal(true);
           }
-// console.log("shouldShowProfileModal",storedUser)
+          // console.log("shouldShowProfileModal",storedUser)
           return {
             success: true,
             user: storedUser,
@@ -464,25 +464,25 @@ export const AuthProvider = ({ children }) => {
     return () => clearInterval(interval);
   }, [isAuthenticated, accessToken, shouldRefreshToken, refreshAuth]);
 
-// Get user profile data from API
-const getUserProfile = useCallback(async () => {
-  try {
-    const { getUserProfile } = await import('./authService');
-    const result = await getUserProfile();
-    console.log("getUserProfile result", result);
-    
-    if (result.success && result.data) {
-      // Update stored user data
-      setUser(result.data);
-      tokenStorage.setTokens(accessToken, tokenStorage.getRefreshToken(), result.data);
-      
-      return { success: true, user: result.data };
+  // Get user profile data from API
+  const getUserProfile = useCallback(async () => {
+    try {
+      const { getUserProfile } = await import('./authService');
+      const result = await getUserProfile();
+      console.log("getUserProfile result", result);
+
+      if (result.success && result.data) {
+        // Update stored user data
+        setUser(result.data);
+        tokenStorage.setTokens(accessToken, tokenStorage.getRefreshToken(), result.data);
+
+        return { success: true, user: result.data };
+      }
+      return { success: false, message: result.message };
+    } catch (error) {
+      return { success: false, message: error.message };
     }
-    return { success: false, message: result.message };
-  } catch (error) {
-    return { success: false, message: error.message };
-  }
-}, [accessToken]);
+  }, [accessToken]);
 
 
 
@@ -518,7 +518,10 @@ const getUserProfile = useCallback(async () => {
       {/* Profile Completion Modal */}
       <CompleteProfileModal
         open={showProfileModal}
-        onClose={() => setShowProfileModal(false)}
+        onClose={() => {
+          setShowProfileModal(false);
+          tokenStorage.setProfileCompleted(true);
+        }}
         // onProfileComplete={handleProfileComplete}
         onSkip={handleProfileSkip}
       />

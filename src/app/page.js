@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import StudyAbroadSection from "@/components/StudyAbroadSection";
 import ProgramBriefSection from "@/components/ProgramBriefSection";
+import AboutUsSection from "@/components/AboutUsSection";
 import LeadFormSection from "@/components/LeadFormSection";
 import BookingSection from "@/components/BookingSection";
 import PDFDownloadSection from "@/components/PDFDownloadSection";
@@ -16,14 +17,10 @@ import Footer from "@/components/Footer";
 import ModernLoader from "@/components/ModernLoader";
 import PWAInstall from "@/components/PWAInstall";
 import WebsiteDesignCTA from "@/components/WebsiteDesignServices";
-
-
-
+import MilestoneNumbers from "@/components/MilestoneNumbers";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
- 
-
 
   useEffect(() => {
     // Check if this is the first visit
@@ -52,19 +49,21 @@ export default function Home() {
       <main>
         <HeroSection />
         <StudyAbroadSection />
-   
-       <ProgramBriefSection />
-       {/* <WebsiteDesignCTA /> */}
-         <LeadFormSection />
+        <ProgramBriefSection />
+        <AboutUsSection />
+        {/* <WebsiteDesignCTA /> */}
+     
+        <LeadFormSection />
         <BookingSection />
         <PDFDownloadSection />
         <VideoSection />
         <RealsSection />
         <TestimonialsSection />
+        <MilestoneNumbers />
         <MessageFromFounders />
         <ContactSection />
         {/* <WebsiteDesignCTA /> */}
-        <Footer /> 
+        <Footer />
       </main>
       
       {/* PWA Install Prompt */}
