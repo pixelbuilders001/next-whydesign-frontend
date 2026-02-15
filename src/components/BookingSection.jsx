@@ -6,6 +6,7 @@ import { formatTime } from '@/lib/helper';
 import Image from "next/image";
 
 const BookingSection = () => {
+  const [step, setStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,12 +82,12 @@ const BookingSection = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!selectedCounselor || !selectedDate || !selectedTime) {
       alert("Please select a counselor, date, and time before booking.");
       return;
     }
-  
+
     const payload = {
       counselorId: selectedCounselor,
       guestName: formData.name,
@@ -97,19 +98,19 @@ const BookingSection = () => {
       duration: 60,
       discussionTopic: formData.topic,
     };
-  
+
     try {
       setIsSubmitting(true);
       const result = await bookCounselingSession(payload);
       setIsSubmitting(false);
       if (result.success) {
-        setIsSubmitting(false);
         setIsBooked(true);
         alert("🎉 Session booked successfully! Please check your email for meeting link");
         setFormData({ name: '', email: '', phone: '', topic: '' });
         setSelectedDate('');
         setSelectedTime('');
         setSelectedCounselor('');
+        setStep(1);
       } else {
         alert(result.message || "Booking failed. Please try again.");
       }
@@ -144,7 +145,6 @@ const BookingSection = () => {
           }));
           setCounselors(transformedCounselors);
         } else {
-          console.error('Failed to fetch counselors:', result.message);
           setCounselors([]);
         }
       } catch (error) {
@@ -154,321 +154,267 @@ const BookingSection = () => {
         setIsLoading(false);
       }
     };
-    
+
     fetchCounselors();
   }, []);
 
   const selectedCounselorData = counselors.find(c => c.id === selectedCounselor);
 
   return (
-    <section id="booking" className="py-12 md:py-24 bg-gradient-to-br from-stone-50 via-rose-50/30 to-amber-50/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12 md:mb-20">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif font-light text-gray-900 mb-4 md:mb-8 leading-tight">
-            Book Your Personal
-            <span className="text-amber-600 block font-normal mt-2">Video Counselling</span>
+    <section id="booking" className="py-12 md:py-16 bg-stone-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-serif font-light text-gray-900 mb-3">
+            Book a <span className="text-amber-600 font-normal">Video Counselling</span>
           </h2>
-          <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-light px-2">
-            Get personalized guidance from industry experts. Schedule a one-on-one video
-            consultation to discuss your fashion career goals and receive tailored advice.
+          <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base">
+            Get personalized guidance from industry experts in a 1-on-1 session.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16">
-          {/* Counselor Selection */}
-          <div className="space-y-6 md:space-y-10">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl md:rounded-3xl p-4 md:p-6 lg:p-10 shadow-xl border border-white/50">
-              <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 md:mb-8 flex items-center">
-                <User className="text-amber-600 mr-3" size={24} aria-hidden="true" />
+        {/* Stepper */}
+        <div className="flex items-center justify-center mb-8 max-w-md mx-auto">
+          {[1, 2, 3].map((s) => (
+            <React.Fragment key={s}>
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${step >= s ? 'bg-amber-600 text-white' : 'bg-stone-200 text-stone-500'
+                  }`}
+              >
+                {s}
+              </div>
+              {s < 3 && (
+                <div className={`flex-1 h-0.5 mx-2 transition-all duration-300 ${step > s ? 'bg-amber-600' : 'bg-stone-200'
+                  }`} />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+
+        <div className="bg-white rounded-3xl shadow-xl border border-stone-100 overflow-hidden">
+          {/* Step 1: Counselor Selection */}
+          {step === 1 && (
+            <div className="p-6 md:p-10 animate-fade-in text-black">
+              <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center justify-center lg:justify-start">
+                <User className="text-amber-600 mr-2" size={20} />
                 Choose Your Counselor
               </h3>
 
-              <div className="flex flex-row gap-3 md:gap-4 overflow-x-auto pb-4 lg:flex-col lg:gap-6 lg:overflow-visible lg:pb-0">
-                {counselors.map((counselor) => (
-                  <div
-                    key={counselor.id}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => setSelectedCounselor(counselor.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {isLoading ? (
+                  <div className="col-span-2 py-10 text-center text-stone-500">Loading experts...</div>
+                ) : (
+                  counselors.map((counselor) => (
+                    <div
+                      key={counselor.id}
+                      onClick={() => {
                         setSelectedCounselor(counselor.id);
-                      }
-                    }}
-                    aria-label={`Select counselor ${counselor.name}, ${counselor.title} with ${counselor.experience} experience`}
-                    aria-pressed={selectedCounselor === counselor.id}
-                    className={`p-4 md:p-6 rounded-xl md:rounded-2xl border-2 cursor-pointer transition-all duration-300 flex-shrink-0 lg:w-full w-[280px] focus:outline-none focus:ring-2 focus:ring-amber-300 ${
-                      selectedCounselor === counselor.id
-                        ? 'border-amber-500 bg-amber-50 shadow-lg'
-                        : 'border-stone-200 bg-white hover:border-amber-300 hover:shadow-md'
-                    }`}
-                  >
-                    <div className="flex flex-col items-center text-center lg:flex-row lg:items-center lg:space-x-4 lg:text-left">
-                      <Image
-                        width={64}
-                        height={64}
-                        src={counselor.image}
-                        alt={`Portrait of ${counselor.name}`}
-                        className="w-16 h-16 mb-3 lg:mb-0 rounded-full object-cover border-2 border-amber-200"
-                      />
-                      <div className="flex-1 text-center lg:text-left lg:flex-1">
-                        <h4 className="font-bold text-gray-900 text-base md:text-lg">{counselor.name}</h4>
-                        <p className="text-amber-600 font-medium text-sm md:text-base">{counselor.title}</p>
-                        <p className="text-gray-600 text-xs md:text-sm mb-1">{counselor.experience} experience</p>
-                        <div className="flex items-center justify-center lg:justify-start text-xs md:text-sm">
-                          <span className="text-amber-500 mr-1" aria-hidden="true">⭐</span>
-                          <span className="text-gray-800 font-medium">{counselor.rating.toFixed(1)}</span>
-                          <span className="text-gray-500 ml-1">/ 5</span>
+                        setStep(2);
+                      }}
+                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all hover:shadow-md text-black ${selectedCounselor === counselor.id ? 'border-amber-500 bg-amber-50' : 'border-stone-100 hover:border-amber-200'
+                        }`}
+                    >
+                      <div className="flex items-center space-x-4">
+                        <Image
+                          width={56}
+                          height={56}
+                          src={counselor.image}
+                          alt={counselor.name}
+                          className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-bold text-gray-900 truncate">{counselor.name}</h4>
+                          <p className="text-amber-600 text-xs font-medium">{counselor.title}</p>
+                          <div className="flex items-center text-xs mt-1">
+                            <span className="text-amber-500 mr-1">⭐</span>
+                            <span className="text-gray-700 font-medium">{counselor.rating.toFixed(1)}</span>
+                            <span className="text-gray-400 ml-1">({counselor.experience})</span>
+                          </div>
                         </div>
-                      </div>
-                      <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center mt-3 lg:mt-0 ${
-                        selectedCounselor === counselor.id
-                          ? 'border-amber-500 bg-amber-500'
-                          : 'border-stone-300'
-                      }`} aria-hidden="true">
-                        {selectedCounselor === counselor.id && (
-                          <div className="w-2 h-2 md:w-3 md:h-3 bg-white rounded-full" />
-                        )}
+                        <ChevronRight size={18} className="text-stone-300" />
                       </div>
                     </div>
-                    <div className="mt-3 flex flex-wrap gap-1 md:gap-2 justify-center lg:justify-start">
-                      {counselor.specialties.slice(0, 2).map((specialty, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-stone-100 text-stone-700 rounded-full text-xs font-medium"
-                        >
-                          {specialty.length > 15 ? `${specialty.substring(0, 15)}...` : specialty}
-                        </span>
-                      ))}
-                      {counselor.specialties.length > 2 && (
-                        <span className="px-2 py-1 bg-stone-100 text-stone-700 rounded-full text-xs font-medium">
-                          +{counselor.specialties.length - 2}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
+          )}
 
-            {/* Selected Counselor Details */}
-            {selectedCounselorData && (
-              <div className="bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-2xl md:rounded-3xl p-4 md:p-6 border border-amber-200">
-                <div className="flex items-center space-x-3 md:space-x-4 mb-4 md:mb-6">
-                  <Image
-                    width={48}
-                    height={48}
-                    src={selectedCounselorData.image}
-                    alt={`Selected counselor ${selectedCounselorData.name}`}
-                    className="rounded-full object-cover border-3 border-amber-300"
-                  />
-                  <div>
-                    <h4 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900">{selectedCounselorData.name}</h4>
-                    <p className="text-amber-700 font-medium text-base md:text-lg">{selectedCounselorData.title}</p>
-                  </div>
+          {/* Step 2: Date & Time */}
+          {step === 2 && (
+            <div className="p-6 md:p-10 animate-fade-in text-black">
+              <div className="flex items-center justify-between mb-6">
+                <button onClick={() => setStep(1)} className="flex items-center text-amber-600 text-sm font-medium hover:underline">
+                  <ChevronLeft size={16} className="mr-1" /> Change Counselor
+                </button>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs text-stone-500">Counselor:</span>
+                  <span className="text-xs font-bold text-stone-900">{selectedCounselorData?.name}</span>
                 </div>
-                <p className="text-gray-700 font-light text-sm md:text-base">
-                  Specializing in {selectedCounselorData.specialties.slice(0, 2).join(', ').toLowerCase()}
-                  {selectedCounselorData.specialties.length > 2 && ' and more'},{' '}
-                  {selectedCounselorData.name.split(' ')[0]} brings {selectedCounselorData.experience} of
-                  industry experience to help guide your fashion career journey.
-                </p>
               </div>
-            )}
-          </div>
 
-          {/* Booking Form */}
-          <div className="bg-white rounded-2xl md:rounded-3xl shadow-xl md:shadow-2xl p-4 md:p-6 lg:p-10 border border-stone-100">
-            <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 md:mb-8 flex items-center">
-              <Video className="text-amber-600 mr-3" size={24} aria-hidden="true" />
-              Schedule Your Session
-            </h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                <Calendar className="text-amber-600 mr-2" size={20} />
+                Select Date & Time
+              </h3>
 
-            <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-              {/* Personal Information */}
-              <div className="grid grid-cols-1 gap-4 md:gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 md:px-5 md:py-4 border border-stone-200 rounded-xl md:rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500 text-sm md:text-base"
-                    placeholder="Your name"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 md:px-5 md:py-4 border border-stone-200 rounded-xl md:rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500 text-sm md:text-base"
-                    placeholder="your@email.com"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 md:px-5 md:py-4 border border-stone-200 rounded-xl md:rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black placeholder-gray-500 text-sm md:text-base"
-                    placeholder="+1 (555) 123-4567"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="topic" className="block text-sm font-medium text-gray-700 mb-2">
-                    Discussion Topic
-                  </label>
-                  <select
-                    id="topic"
-                    name="topic"
-                    value={formData.topic}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 md:px-5 md:py-4 border border-stone-200 rounded-xl md:rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 bg-white text-black appearance-none text-sm md:text-base"
-                    required
-                  >
-                    <option value="">Select topic</option>
-                    {topics.map((topic, index) => (
-                      <option key={index} value={topic}>{topic}</option>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Mini Calendar */}
+                <div className="bg-stone-50 rounded-2xl p-4 border border-stone-100">
+                  <div className="flex items-center justify-between mb-4">
+                    <button type="button" onClick={() => navigateMonth(-1)} className="p-1 hover:bg-stone-200 rounded">
+                      <ChevronLeft size={16} />
+                    </button>
+                    <span className="text-sm font-bold text-stone-900">
+                      {currentMonth.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                    </span>
+                    <button type="button" onClick={() => navigateMonth(1)} className="p-1 hover:bg-stone-200 rounded">
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-7 gap-1 text-center mb-2">
+                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d) => (
+                      <div key={d} className="text-[10px] uppercase text-stone-400 font-bold">{d}</div>
                     ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Calendar Date Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                  <Calendar className="mr-2" size={16} aria-hidden="true" />
-                  Select Date
-                </label>
-                <div className="bg-stone-50 rounded-xl md:rounded-2xl p-3 md:p-6 border border-stone-200">
-                  {/* Calendar Header */}
-                  <div className="flex items-center justify-between mb-4 md:mb-6">
-                    <button
-                      type="button"
-                      onClick={() => navigateMonth(-1)}
-                      aria-label="Previous month"
-                      className="p-1 md:p-2 hover:bg-stone-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    >
-                      <ChevronLeft size={18} aria-hidden="true" />
-                    </button>
-                    <h4 className="text-base md:text-lg font-semibold text-gray-900" aria-live="polite">
-                      {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                    </h4>
-                    <button
-                      type="button"
-                      onClick={() => navigateMonth(1)}
-                      aria-label="Next month"
-                      className="p-1 md:p-2 hover:bg-stone-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    >
-                      <ChevronRight size={18} aria-hidden="true" />
-                    </button>
                   </div>
-
-                  {/* Days of Week */}
-                  <div className="grid grid-cols-7 gap-1 md:gap-2 mb-3 md:mb-4" aria-hidden="true">
-                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
-  <div key={`${day}-${index}`} className="text-center text-xs md:text-sm font-medium text-gray-500 py-1 md:py-2">
-    {day}
-  </div>
-))}
-                  </div>
-
-                  {/* Calendar Grid */}
-                  <div className="grid grid-cols-7 gap-1 md:gap-2">
-                    {generateCalendar().map((day, index) => (
+                  <div className="grid grid-cols-7 gap-1">
+                    {generateCalendar().map((day, idx) => (
                       <button
-                        key={index}
+                        key={idx}
                         type="button"
                         onClick={() => day.isAvailable && setSelectedDate(day.value)}
                         disabled={!day.isAvailable}
-                        aria-label={`${day.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}${!day.isAvailable ? ' - Not available' : ''}${day.isSelected ? ' - Selected' : ''}`}
-                        aria-pressed={day.isSelected}
-                        className={`aspect-square flex items-center justify-center text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
-                          day.isSelected
-                            ? 'bg-amber-500 text-white shadow-lg'
-                            : day.isAvailable
-                            ? 'hover:bg-amber-100 text-gray-900 hover:shadow-md'
-                            : 'text-gray-400 cursor-not-allowed'
-                        } ${!day.isCurrentMonth ? 'opacity-30' : ''}`}
+                        className={`aspect-square flex items-center justify-center text-xs font-medium rounded-lg transition-all ${day.isSelected ? 'bg-amber-600 text-white' : day.isAvailable ? 'hover:bg-amber-100 text-gray-900' : 'text-gray-300 cursor-not-allowed'
+                          } ${!day.isCurrentMonth ? 'opacity-20' : ''}`}
                       >
                         {day.day}
                       </button>
                     ))}
                   </div>
                 </div>
-              </div>
 
-              {/* Time Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                  <Clock className="mr-2" size={16} aria-hidden="true" />
-                  Select Time
-                </label>
-                <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
-                  {timeSlots.map((time) => (
-                    <button
-                      key={time}
-                      type="button"
-                      onClick={() => setSelectedTime(time)}
-                      aria-pressed={selectedTime === time}
-                      aria-label={`Select time ${time}`}
-                      className={`p-2 md:p-3 rounded-lg md:rounded-xl border-2 text-xs md:text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
-                        selectedTime === time
-                          ? 'border-amber-500 bg-amber-50 text-amber-700'
-                          : 'border-stone-200 hover:border-amber-300 hover:bg-amber-50 text-gray-700'
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
+                {/* Time Grid */}
+                <div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {timeSlots.map((time) => (
+                      <button
+                        key={time}
+                        type="button"
+                        onClick={() => {
+                          setSelectedTime(time);
+                          if (selectedDate) setStep(3);
+                        }}
+                        className={`p-3 rounded-xl border-2 text-xs font-medium transition-all ${selectedTime === time ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-stone-100 hover:border-amber-200 text-gray-600'
+                          }`}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
+                  {!selectedDate && (
+                    <p className="text-[10px] text-amber-600 mt-4 text-center italic">* Please select a date on the calendar first</p>
+                  )}
                 </div>
               </div>
+            </div>
+          )}
 
-              <button
-                type="submit"
-                disabled={!selectedCounselor || !selectedDate || !selectedTime || isSubmitting}
-                aria-label={isSubmitting ? "Booking session in progress" : "Book video counselling session"}
-                className="w-full bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-4 md:px-8 md:py-5 rounded-xl md:rounded-2xl font-medium text-base md:text-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? "Booking..." : "Book Video Counselling"}
+          {/* Step 3: Details */}
+          {step === 3 && (
+            <div className="p-6 md:p-10 animate-fade-in text-black">
+              <button onClick={() => setStep(2)} className="flex items-center text-amber-600 text-sm font-medium hover:underline mb-6">
+                <ChevronLeft size={16} className="mr-1" /> Back to Schedule
               </button>
 
-              {selectedDate && selectedTime && selectedCounselor && (
-                <div className="bg-stone-50 rounded-xl md:rounded-2xl p-4 md:p-6 border border-stone-200" aria-live="polite">
-                  <h4 className="font-bold text-gray-900 mb-2 md:mb-3 text-sm md:text-base">Booking Summary:</h4>
-                  <div className="space-y-1 md:space-y-2 text-xs md:text-sm text-gray-700">
-                    <p><span className="font-medium">Counselor:</span> {selectedCounselorData?.name}</p>
-                    <p><span className="font-medium">Date:</span> {new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</p>
-                    <p><span className="font-medium">Time:</span> {selectedTime}</p>
-                    <p><span className="font-medium">Duration:</span> 45 minutes</p>
-                    <p><span className="font-medium">Platform:</span> Zoom (link will be sent via email)</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="md:col-span-2">
+                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center justify-center lg:justify-start">
+                    <Video className="text-amber-600 mr-2" size={20} />
+                    Final Details
+                  </h3>
+
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Full Name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-sm transition-all"
+                        required
+                      />
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Email Address"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-sm transition-all"
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone Number"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-sm transition-all"
+                        required
+                      />
+                      <select
+                        name="topic"
+                        value={formData.topic}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-sm bg-white cursor-pointer"
+                        required
+                      >
+                        <option value="">Select Topic</option>
+                        {topics.map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 mt-2"
+                    >
+                      {isSubmitting ? "Confirming..." : "Confirm Booking"}
+                    </button>
+                  </form>
+                </div>
+
+                <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100 h-fit">
+                  <h4 className="font-bold text-stone-900 mb-4 text-sm uppercase tracking-wider">Summary</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden">
+                        <Image src={selectedCounselorData?.image} width={40} height={40} className="object-cover" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-stone-900">{selectedCounselorData?.name}</p>
+                        <p className="text-[10px] text-amber-600">{selectedCounselorData?.title}</p>
+                      </div>
+                    </div>
+                    <div className="pt-4 border-t border-stone-200 space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-stone-500">Date:</span>
+                        <span className="font-bold text-stone-900">{new Date(selectedDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-stone-500">Time:</span>
+                        <span className="font-bold text-stone-900">{selectedTime}</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-stone-500">Duration:</span>
+                        <span className="font-bold text-stone-900 text-black"> 45 Mins</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              )}
-            </form>
-          </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -2,7 +2,7 @@ import withPWA from 'next-pwa';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  
+
   images: {
     domains: [
       'images.pexels.com',
@@ -38,7 +38,7 @@ const nextConfig = {
   httpAgentOptions: {
     keepAlive: true,
   },
-  
+
   // Configure headers for better caching
   headers: async () => {
     return [

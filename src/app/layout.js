@@ -1,66 +1,67 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-// import "./critical.css";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ToastProvider } from "@/components/Toast";
 import NoInternetBanner from "@/components/NoInternetBanner";
 import ModernLoader from "@/components/ModernLoader";
 import { Suspense } from "react";
 import Providers from "@/components/Providers";
+import { Playfair_Display, Inter } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const playfair = Playfair_Display({
   subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-playfair",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-inter",
 });
 
-  export const metadata = {
+export const metadata = {
+  title: "Why Designers - Fashion Education & Study Abroad",
+  description:
+    "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance at Why Designers. Join our comprehensive fashion design programs and unlock your creative potential.",
+  keywords:
+    "fashion design, study abroad, fashion education, NIFT, fashion courses, design school, PWA, progressive web app, fashion career, design education",
+  authors: [{ name: "Why Designers" }],
+  manifest: "/manifest.json",
+  viewport: "width=device-width, initial-scale=1",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Why Designers",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
     title: "Why Designers - Fashion Education & Study Abroad",
     description:
-      "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance at Why Designers. Join our comprehensive fashion design programs and unlock your creative potential.",
-    keywords:
-      "fashion design, study abroad, fashion education, NIFT, fashion courses, design school, PWA, progressive web app, fashion career, design education",
-    authors: [{ name: "Why Designers" }],
-    manifest: "/manifest.json",
-     viewport: "width=device-width, initial-scale=1", 
-    appleWebApp: {
-      capable: true,
-      statusBarStyle: "default",
-      title: "Why Designers",
-    },
-    formatDetection: {
-      telephone: false,
-    },
-    openGraph: {
-      title: "Why Designers - Fashion Education & Study Abroad",
-      description:
-        "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
-      type: "website",
-      siteName: "Why Designers",
-      locale: "en_US",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Why Designers - Fashion Education & Study Abroad",
-      description:
-        "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
-    },
-    robots: {
+      "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
+    type: "website",
+    siteName: "Why Designers",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Why Designers - Fashion Education & Study Abroad",
+    description:
+      "Transform your passion into a profession with world-class fashion education, study abroad opportunities, and personalized career guidance.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
       index: true,
       follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
-  };
+  },
+};
 
 export default function RootLayout({ children }) {
   return (
@@ -114,9 +115,10 @@ export default function RootLayout({ children }) {
             }),
           }}
         />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined&display=block" rel="stylesheet" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-white text-gray-900`}
+        className={`${inter.variable} ${playfair.variable} antialiased min-h-screen bg-white text-gray-900`}
       >
         {/* <ErrorBoundary> */}
         <ToastProvider>

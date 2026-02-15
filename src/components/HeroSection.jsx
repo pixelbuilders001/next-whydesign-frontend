@@ -13,7 +13,7 @@ const HeroSection = () => {
   const [banners, setBanners] = useState({});
 
   console.log("banners", banners);
-  
+
   const getBannersData = async () => {
     const response = await getBanners();
     if (response.success) {
@@ -85,7 +85,7 @@ const HeroSection = () => {
   };
 
   const getImageAltText = () => {
-    return banners?.title 
+    return banners?.title
       ? `Hero banner: ${banners?.title}`
       : "Fashion design education and career guidance";
   };
@@ -117,9 +117,8 @@ const HeroSection = () => {
 
       {/* Content */}
       <div
-        className={`relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-1000 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
+        className={`relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
       >
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-light text-white mb-8 leading-tight drop-shadow-2xl">
           {getTitleLines().firstLine}
@@ -145,7 +144,7 @@ const HeroSection = () => {
           />
         </button>
       </div>
-      
+
       <FormModal
         isOpen={openModal}
         onClose={() => setOpenModal(false)}

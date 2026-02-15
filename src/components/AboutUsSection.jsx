@@ -5,21 +5,85 @@ import { ArrowRight } from "lucide-react";
 
 const AboutUsSection = () => {
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-stone-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+    <section id="about-us" className="relative py-24 md:py-32 bg-white overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-amber-50 rounded-full blur-3xl opacity-60" />
+      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[500px] h-[500px] bg-rose-50 rounded-full blur-3xl opacity-50" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+
+          {/* Visual Section - Overlapping Images */}
+          <div className="lg:col-span-6 relative order-2 lg:order-1">
+            <div className="relative w-full aspect-[4/5] sm:aspect-square lg:aspect-[4/5] max-w-lg mx-auto">
+              {/* Main Image */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+                className="relative z-20 w-[85%] h-[85%] rounded-3xl overflow-hidden shadow-2xl border-8 border-white"
+              >
+                <img
+                  src="https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=800&fit=crop"
+                  alt="Fashion Design Education"
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+
+              {/* Secondary Overlapping Image */}
+              <motion.div
+                initial={{ opacity: 0, x: 50, y: 50 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                viewport={{ once: true }}
+                className="absolute bottom-0 right-0 z-30 w-[60%] h-[60%] rounded-3xl overflow-hidden shadow-2xl border-8 border-white"
+              >
+                <img
+                  src="https://images.pexels.com/photos/3738088/pexels-photo-3738088.jpeg?auto=compress&cs=tinysrgb&w=600&fit=crop"
+                  alt="Creative Workspace"
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+
+              {/* Decorative Glass Card */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                viewport={{ once: true }}
+                className="absolute -left-6 top-1/4 z-40 bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/50 hidden md:block"
+              >
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold">WD</div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-900 uppercase tracking-wider">Est. 2020</p>
+                    <p className="text-xs text-amber-600 font-medium">Global Community</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-700 italic font-medium leading-tight">
+                  "Empowering the next generation<br />of creative leaders."
+                </p>
+              </motion.div>
+            </div>
+          </div>
+
           {/* Content Section */}
-          <div className="space-y-8">
+          <div className="lg:col-span-6 space-y-8 order-1 lg:order-2">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              viewport={{ once: true, margin: "-100px" }}
+              viewport={{ once: true }}
+              className="flex flex-col items-center lg:items-start text-center lg:text-left"
             >
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-light text-gray-900">
-                Discover
-                <span className="block bg-gradient-to-r from-amber-400 via-rose-400 to-purple-400 bg-clip-text text-transparent font-bold">
-                  Why Designers
+              <span className="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-[0.2em] text-amber-600 uppercase bg-amber-50 rounded-full border border-amber-100">
+                Our Story
+              </span>
+              <h2 className="text-4xl sm:text-5xl lg:text-7xl font-serif font-light text-gray-900 leading-[1.1]">
+                Democratizing
+                <span className="block italic text-amber-600 font-normal mt-2">
+                  Fashion Design
                 </span>
               </h2>
             </motion.div>
@@ -29,75 +93,50 @@ const AboutUsSection = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true, margin: "-100px" }}
-              className="space-y-4"
+              className="space-y-4 text-left"
             >
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Founded with a passion for democratizing fashion education, Why Designs emerged from the recognition that creative talent exists everywhere, but access to quality design education remains limited.
+              <p className="text-lg md:text-xl text-gray-700 font-light leading-relaxed">
+                Creative talent exists everywhere, but access shouldn't be a luxury. Why Designers was born from a simple belief: <span className="font-medium text-gray-900">Education should be accessible, modern, and limitless.</span>
               </p>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Our mission is to break down barriers and create opportunities for talented individuals worldwide through comprehensive programs that blend traditional design principles with modern digital tools and sustainable practices.
-              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 text-black">
+                <div className="space-y-2">
+                  <h4 className="font-bold text-gray-900 flex items-center">
+                    <span className="w-6 h-px bg-amber-500 mr-3" />
+                    Traditional Roots
+                  </h4>
+                  <p className="text-sm text-gray-600 leading-relaxed pl-9">Mastering the timeless principles of design and craftsmanship.</p>
+                </div>
+                <div className="space-y-2 text-black">
+                  <h4 className="font-bold text-gray-900 flex items-center">
+                    <span className="w-6 h-px bg-rose-500 mr-3" />
+                    Digital Future
+                  </h4>
+                  <p className="text-sm text-gray-600 leading-relaxed pl-9">Leveraging cutting-edge tools to redefine the industry landscape.</p>
+                </div>
+              </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true, margin: "-100px" }}
-              className="flex flex-col sm:flex-row gap-4"
+              viewport={{ once: true }}
+              className="flex items-center pt-6"
             >
               <Link
                 href="/about-us"
-                className="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full p-4 px-10 font-bold text-white transition-all duration-300 ease-out shadow-2xl"
               >
-                <span>Learn More About Us</span>
-                <ArrowRight
-                  className="group-hover:translate-x-1 transition-transform duration-200 ml-3"
-                  size={20}
-                  aria-hidden="true"
-                />
+                <span className="absolute inset-0 h-full w-full bg-gradient-to-br from-amber-500 via-rose-500 to-purple-600"></span>
+                <span className="absolute bottom-0 right-0 mb-32 mr-4 block h-64 w-64 origin-bottom-left translate-x-24 rotate-45 transform bg-white opacity-[.15] transition-all duration-700 ease-out group-hover:mb-0 group-hover:mr-0 group-hover:translate-x-0"></span>
+                <span className="relative flex items-center">
+                  Full Story
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
+                </span>
               </Link>
-              {/* <Link
-                href="/contact"
-                className="inline-flex items-center px-8 py-4 border-2 border-amber-500 text-amber-600 hover:bg-amber-50 font-semibold rounded-lg transition-all duration-300"
-              >
-                Contact Us
-              </Link> */}
             </motion.div>
           </div>
-
-          {/* Visual Section */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="relative"
-          >
-            <div className="bg-gradient-to-br from-amber-100 to-rose-100 rounded-3xl p-2 shadow-xl">
-              <div className="relative overflow-hidden rounded-3xl">
-                <img
-                  src="https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
-                  alt="Why Designers Fashion Education"
-                  className="w-full h-[500px] object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                      <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-rose-400 rounded-full flex items-center justify-center">
-                        <span className="text-white text-xl font-bold">WD</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold">Why Designers</h3>
-                      <p className="text-amber-100">Empowering Creative Minds</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>
