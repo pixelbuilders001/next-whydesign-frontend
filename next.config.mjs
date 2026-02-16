@@ -79,6 +79,14 @@ const nextConfig = {
       },
     ];
   },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api-proxy/:path*',
+  //       destination: 'https://api.whydesigners.com/api/:path*',
+  //     },
+  //   ];
+  // },
 };
 
 const pwaConfig = withPWA({

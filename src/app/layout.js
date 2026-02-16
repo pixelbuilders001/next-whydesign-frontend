@@ -26,6 +26,10 @@ export const metadata = {
   keywords:
     "fashion design, study abroad, fashion education, NIFT, fashion courses, design school, PWA, progressive web app, fashion career, design education",
   authors: [{ name: "Why Designers" }],
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/logo.png",
+  },
   manifest: "/manifest.json",
   viewport: "width=device-width, initial-scale=1",
   appleWebApp: {
@@ -67,11 +71,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/logo.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
         <link rel="mask-icon" href="/logo.png" color="#d97706" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />

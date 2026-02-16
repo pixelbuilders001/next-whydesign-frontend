@@ -32,7 +32,7 @@ export default function TermsOfServicePage() {
       <main className="pt-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Back Link */}
-          <div className="mb-8">
+          {/* <div className="mb-8">
             <Link
               href="/"
               className="inline-flex items-center text-amber-600 hover:text-amber-700 font-medium"
@@ -42,7 +42,7 @@ export default function TermsOfServicePage() {
               </svg>
               Back to Home
             </Link>
-          </div>
+          </div> */}
 
           {/* Page Header */}
           <div className="text-center mb-12">
@@ -92,7 +92,7 @@ export default function TermsOfServicePage() {
             <h2>Contact Information</h2>
             <p>If you have any questions about these Terms of Service, please contact us at:</p>
             <p>Email: info@whydesigners.com<br />
-    </p>
+            </p>
           </div>
         </div>
       </main>

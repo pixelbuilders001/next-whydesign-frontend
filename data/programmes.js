@@ -3,7 +3,7 @@ export const programmes = [
   {
     id: 1,
     type: 'university',
-    name: 'École de la Chambre Syndicale',
+    name: 'Institut Français de la Mode',
     country: 'France',
     location: 'Paris, France',
     image: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',

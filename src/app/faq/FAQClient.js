@@ -17,7 +17,7 @@ export default function FAQClient({ faqs }) {
       <main className="pt-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Back Link */}
-          <div className="mb-8">
+          {/* <div className="mb-8">
             <Link
               href="/"
               className="inline-flex items-center text-amber-600 hover:text-amber-700 font-medium"
@@ -27,7 +27,7 @@ export default function FAQClient({ faqs }) {
               </svg>
               Back to Home
             </Link>
-          </div>
+          </div> */}
 
           {/* Page Header */}
           <div className="text-center mb-12">
@@ -54,9 +54,8 @@ export default function FAQClient({ faqs }) {
                     {faq.question}
                   </h3>
                   <svg
-                    className={`w-5 h-5 text-amber-600 transform transition-transform duration-300 ease-in-out ${
-                      openFAQ === faq.id ? 'rotate-180' : ''
-                    }`}
+                    className={`w-5 h-5 text-amber-600 transform transition-transform duration-300 ease-in-out ${openFAQ === faq.id ? 'rotate-180' : ''
+                      }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -65,11 +64,10 @@ export default function FAQClient({ faqs }) {
                   </svg>
                 </button>
                 <div
-                  className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                    openFAQ === faq.id
+                  className={`overflow-hidden transition-all duration-500 ease-in-out ${openFAQ === faq.id
                       ? 'max-h-96 opacity-100'
                       : 'max-h-0 opacity-0'
-                  }`}
+                    }`}
                 >
                   <div className="px-6 pb-4">
                     <p className="text-gray-700 leading-relaxed">

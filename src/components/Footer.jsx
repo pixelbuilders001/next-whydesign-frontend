@@ -32,13 +32,13 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="space-y-8">
             <div>
-              <div className="mb-0">
+              <div className="mb-0 -ml-2">
                 <Image
                   src={logo}
                   alt="Why Designers - Fashion Education Platform"
-                  width={80}
-                  height={80}
-                  className="border rounded-lg"
+                  width={60}
+                  height={60}
+                  className="border rounded-full"
                 />
               </div>
               <p className="text-stone-300 leading-relaxed font-light text-lg">
@@ -46,7 +46,7 @@ const Footer = () => {
                 world-class education and personalized career guidance.
               </p>
             </div>
-            
+
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => {
                 const IconComponent = social.icon;
@@ -111,8 +111,8 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-4">
                 <Mail className="text-primary-400 flex-shrink-0" size={20} aria-hidden="true" />
-                <a 
-                  href="mailto:info@whydesigners.com" 
+                <a
+                  href="mailto:info@whydesigners.com"
                   className="text-stone-300 font-light hover:text-primary-400 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-300 focus:ring-opacity-50 rounded px-1"
                 >
                   info@whydesigners.com
@@ -131,7 +131,7 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className="border-t border-stone-700 mt-16 pt-10">
-          <div className="flex items-center justify-center">  
+          <div className="flex items-center justify-center">
             <p className="text-stone-400 text-sm font-light">
               © 2025 Why Designers. All rights reserved.
             </p>

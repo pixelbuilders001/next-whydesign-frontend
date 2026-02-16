@@ -134,15 +134,15 @@ const Header = () => {
   ];
 
   const servicesItems = [
-    { 
-      name: "Website Design", 
-      href: "/services/website-design", 
+    {
+      name: "Website Design",
+      href: "/services/website-design",
       icon: Layout,
       description: "Custom website design and development"
     },
-    { 
-      name: "Logo Design", 
-      href: "/services/logo-design", 
+    {
+      name: "Logo Design",
+      href: "/services/logo-design",
       icon: Palette,
       description: "Professional logo design services"
     },
@@ -207,11 +207,10 @@ const Header = () => {
     <>
       {/* Header */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? "bg-stone-50/95 backdrop-blur-md shadow-lg border-b border-stone-200/50"
-            : "bg-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+          ? "bg-stone-50/95 backdrop-blur-md shadow-lg border-b border-stone-200/50"
+          : "bg-transparent"
+          }`}
       >
         <div className="sm:px-6 lg:px-16 mx-auto">
           <div className="flex items-center justify-between h-16 lg:h-20">
@@ -219,11 +218,11 @@ const Header = () => {
             <div className="flex-shrink-0">
               <Link href="/" aria-label="Why Designers Home">
                 <Image
-                   src={isScrolled ? logo2 : logo}
-                  alt="Why Designers - Fashion Education Platform"
-                  width={50}
-                  height={50}
-                  className="ml-4 border rounded-lg lg:ml-0 cursor-pointer hover:opacity-80 transition-opacity"
+                  src={isScrolled ? logo2 : logo}
+                  alt="Why `Designers - Fashion Education Platform"
+                  width={45}
+                  height={45}
+                  className="ml-4 border rounded-full lg:ml-0 cursor-pointer hover:opacity-80 transition-opacity"
                 />
               </Link>
             </div>
@@ -235,39 +234,36 @@ const Header = () => {
                   key={item.name}
                   href={item.href}
                   aria-label={`Navigate to ${item.name}`}
-                  className={`font-medium text-sm transition-colors duration-200 ${
-                    isScrolled
-                      ? "text-gray-700 hover:text-primary-600"
-                      : "text-white/90 hover:text-primary-300"
-                  }`}
+                  className={`font-medium text-sm transition-colors duration-200 ${isScrolled
+                    ? "text-gray-700 hover:text-primary-600"
+                    : "text-white/90 hover:text-primary-300"
+                    }`}
                 >
                   {item.name}
                 </Link>
               ))}
-              
+
               {/* Services Dropdown */}
               <div className="relative services-dropdown-container">
                 <button
                   onClick={() => setIsServicesDropdownOpen(!isServicesDropdownOpen)}
                   onMouseEnter={() => setIsServicesDropdownOpen(true)}
-                  className={`flex items-center space-x-1 font-medium text-sm transition-colors duration-200 ${
-                    isScrolled
-                      ? "text-gray-700 hover:text-primary-600"
-                      : "text-white/90 hover:text-primary-300"
-                  }`}
+                  className={`flex items-center space-x-1 font-medium text-sm transition-colors duration-200 ${isScrolled
+                    ? "text-gray-700 hover:text-primary-600"
+                    : "text-white/90 hover:text-primary-300"
+                    }`}
                 >
                   <span>Services</span>
-                  <ChevronDown 
-                    size={16} 
-                    className={`transition-transform ${
-                      isServicesDropdownOpen ? "rotate-180" : ""
-                    }`} 
+                  <ChevronDown
+                    size={16}
+                    className={`transition-transform ${isServicesDropdownOpen ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
                 {/* Services Dropdown Menu */}
                 {isServicesDropdownOpen && (
-                  <div 
+                  <div
                     className="absolute top-full left-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100/50 backdrop-blur-xl z-50 overflow-hidden"
                     onMouseLeave={() => setIsServicesDropdownOpen(false)}
                   >
@@ -290,14 +286,14 @@ const Header = () => {
                               {service.description}
                             </p>
                           </div>
-                          <ChevronRight 
-                            size={16} 
-                            className="text-gray-400 group-hover:text-primary-600 transition-colors" 
+                          <ChevronRight
+                            size={16}
+                            className="text-gray-400 group-hover:text-primary-600 transition-colors"
                           />
                         </Link>
                       ))}
                     </div>
-                    
+
                     {/* View All Services Link */}
                     {/* <div className="border-t border-gray-100 p-3 bg-gray-50/50">
                       <Link
@@ -350,9 +346,8 @@ const Header = () => {
                     />
                     <ChevronDown
                       size={18}
-                      className={`transition-transform ${
-                        isDropdownOpen ? "rotate-180" : ""
-                      } ${isScrolled ? "text-gray-700" : "text-white"}`}
+                      className={`transition-transform ${isDropdownOpen ? "rotate-180" : ""
+                        } ${isScrolled ? "text-gray-700" : "text-white"}`}
                     />
                   </button>
                   {isDropdownOpen && (
@@ -457,11 +452,10 @@ const Header = () => {
                     setAuthOpen(true);
                   }}
                   aria-label="Login or sign up"
-                  className={`p-2.5 rounded-full transition-all duration-200 ${
-                    isScrolled
-                      ? "text-gray-700 hover:text-primary-600 hover:bg-primary-50"
-                      : "text-white hover:text-primary-300 hover:bg-white/20"
-                  }`}
+                  className={`p-2.5 rounded-full transition-all duration-200 ${isScrolled
+                    ? "text-gray-700 hover:text-primary-600 hover:bg-primary-50"
+                    : "text-white hover:text-primary-300 hover:bg-white/20"
+                    }`}
                 >
                   <User size={20} />
                 </button>
@@ -473,11 +467,10 @@ const Header = () => {
               <button
                 onClick={isMenuOpen ? closeMenu : openMenu}
                 aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-                className={`p-2 rounded-lg transition-all duration-200 ${
-                  isScrolled
-                    ? "text-gray-700 hover:text-primary-600 hover:bg-primary-50"
-                    : "text-white hover:text-primary-300 hover:bg-white/20"
-                }`}
+                className={`p-2 rounded-lg transition-all duration-200 ${isScrolled
+                  ? "text-gray-700 hover:text-primary-600 hover:bg-primary-50"
+                  : "text-white hover:text-primary-300 hover:bg-white/20"
+                  }`}
               >
                 {isMenuOpen ? null : <Menu size={34} />}
               </button>
@@ -489,18 +482,16 @@ const Header = () => {
       {/* Enhanced Mobile Menu - Left Side Slide In */}
       {isMenuOpen && (
         <div
-          className={`fixed inset-0 z-[9999] transition-all duration-300 ease-in-out ${
-            isMenuAnimating ? "opacity-100" : "opacity-0"
-          }`}
+          className={`fixed inset-0 z-[9999] transition-all duration-300 ease-in-out ${isMenuAnimating ? "opacity-100" : "opacity-0"
+            }`}
         >
           {/* Overlay */}
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeMenu}></div>
 
           {/* Drawer Panel */}
           <div
-            className={`absolute top-0 left-0 h-full w-[85%] max-w-sm bg-white/90 backdrop-blur-xl border-r border-gray-200/30 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${
-              isMenuAnimating ? "translate-x-0" : "-translate-x-full"
-            } rounded-tr-3xl rounded-br-3xl`}
+            className={`absolute top-0 left-0 h-full w-[85%] max-w-sm bg-white/90 backdrop-blur-xl border-r border-gray-200/30 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${isMenuAnimating ? "translate-x-0" : "-translate-x-full"
+              } rounded-tr-3xl rounded-br-3xl`}
           >
             {/* Header */}
             <div className="relative bg-gradient-to-r from-primary-600 to-secondary-500 text-white px-6 py-6 rounded-tr-3xl">
@@ -570,24 +561,24 @@ const Header = () => {
 
                   {/* Services */}
                   {/* <div className="px-5 mb-5"> */}
-                    {/* <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-2">Services</h3> */}
-                    <div className="space-y-1">
-                      {servicesItems.map((item, i) => (
-                        <Link
-                          key={i}
-                          href={item.href}
-                          onClick={closeMenu}
-                          className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all group"
-                        >
-                          <item.icon size={20} className="text-primary-600" />
-                          <span className="font-medium text-gray-700 flex-1">{item.name}</span>
-                          <ChevronRight
-                            size={16}
-                            className="text-gray-400 group-hover:text-primary-600"
-                          />
-                        </Link>
-                      ))}
-                    </div>
+                  {/* <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-2">Services</h3> */}
+                  <div className="space-y-1">
+                    {servicesItems.map((item, i) => (
+                      <Link
+                        key={i}
+                        href={item.href}
+                        onClick={closeMenu}
+                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all group"
+                      >
+                        <item.icon size={20} className="text-primary-600" />
+                        <span className="font-medium text-gray-700 flex-1">{item.name}</span>
+                        <ChevronRight
+                          size={16}
+                          className="text-gray-400 group-hover:text-primary-600"
+                        />
+                      </Link>
+                    ))}
+                  </div>
                   {/* </div> */}
                 </div>
               </div>

@@ -22,26 +22,26 @@ import MilestoneNumbers from "@/components/MilestoneNumbers";
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if this is the first visit
-    const hasVisited = localStorage.getItem('hasVisited');
+  // useEffect(() => {
+  //   // Check if this is the first visit
+  //   const hasVisited = localStorage.getItem('hasVisited');
 
-    if (!hasVisited) {
-      // First visit - show loader
-      localStorage.setItem('hasVisited', 'true');
-    } else {
-      // Returning visitor - skip loader
-      setIsLoading(false);
-    }
-  }, []);
+  //   if (!hasVisited) {
+  //     // First visit - show loader
+  //     localStorage.setItem('hasVisited', 'true');
+  //   } else {
+  //     // Returning visitor - skip loader
+  //     setIsLoading(false);
+  //   }
+  // }, []);
 
   const handleLoaderFinish = () => {
     setIsLoading(false);
   };
 
-  if (isLoading) {
-    return <ModernLoader onFinish={handleLoaderFinish} />;
-  }
+  // if (isLoading) {
+  //   return <ModernLoader onFinish={handleLoaderFinish} />;
+  // }
 
   return (
     <div className="min-h-screen from-stone-50">
@@ -52,7 +52,7 @@ export default function Home() {
         <ProgramBriefSection />
         <AboutUsSection />
         {/* <WebsiteDesignCTA /> */}
-     
+
         <LeadFormSection />
         <BookingSection />
         <PDFDownloadSection />
@@ -65,7 +65,7 @@ export default function Home() {
         {/* <WebsiteDesignCTA /> */}
         <Footer />
       </main>
-      
+
       {/* PWA Install Prompt */}
       <PWAInstall />
     </div>

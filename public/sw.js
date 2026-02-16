@@ -1,7 +1,7 @@
 // Service Worker for PWA functionality
-const CACHE_NAME = 'why-designers-v1';
-const STATIC_CACHE = 'why-designers-static-v1';
-const DYNAMIC_CACHE = 'why-designers-dynamic-v1';
+const CACHE_NAME = 'why-designers-v2';
+const STATIC_CACHE = 'why-designers-static-v2';
+const DYNAMIC_CACHE = 'why-designers-dynamic-v2';
 
 // Files to cache immediately
 const STATIC_ASSETS = [

@@ -4,6 +4,7 @@ import { Calendar, Clock, Video, CheckCircle, User, ChevronLeft, ChevronRight } 
 import { bookCounselingSession, getCounselorList } from '@/lib/authService';
 import { formatTime } from '@/lib/helper';
 import Image from "next/image";
+import SuccessModal from './SuccessModal';
 
 const BookingSection = () => {
   const [step, setStep] = useState(1);
@@ -21,6 +22,7 @@ const BookingSection = () => {
     topic: ''
   });
   const [isBooked, setIsBooked] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const timeSlots = [
     '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
@@ -105,7 +107,7 @@ const BookingSection = () => {
       setIsSubmitting(false);
       if (result.success) {
         setIsBooked(true);
-        alert("🎉 Session booked successfully! Please check your email for meeting link");
+        setShowSuccessModal(true);
         setFormData({ name: '', email: '', phone: '', topic: '' });
         setSelectedDate('');
         setSelectedTime('');
@@ -417,6 +419,12 @@ const BookingSection = () => {
           )}
         </div>
       </div>
+
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        message="Session booked successfully! We will send you the meeting link very soon in your email"
+      />
     </section>
   );
 };
