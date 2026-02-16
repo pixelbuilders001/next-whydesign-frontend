@@ -31,7 +31,7 @@ export const metadata = {
     apple: "/logo.png",
   },
   manifest: "/manifest.json",
-  viewport: "width=device-width, initial-scale=1",
+  // viewport: "width=device-width, initial-scale=1",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -65,6 +65,10 @@ export const metadata = {
       "max-snippet": -1,
     },
   },
+};
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {
