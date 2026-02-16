@@ -30,6 +30,7 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/useAuth";
+import { motion, AnimatePresence } from "framer-motion";
 
 import logo from "../../public/logo3c.png";
 import logo2 from "../../public/logo3.png";
@@ -72,12 +73,11 @@ const Header = () => {
   // Menu open animation
   const openMenu = () => {
     setIsMenuOpen(true);
-    setTimeout(() => setIsMenuAnimating(true), 10);
   };
 
   const closeMenu = () => {
     setIsMenuAnimating(false);
-    setTimeout(() => setIsMenuOpen(false), 300);
+    setIsMenuOpen(false);
   };
 
   // Prevent body scroll when menu is open
@@ -480,140 +480,201 @@ const Header = () => {
       </header>
 
       {/* Enhanced Mobile Menu - Left Side Slide In */}
-      {isMenuOpen && (
-        <div
-          className={`fixed inset-0 z-[9999] transition-all duration-300 ease-in-out ${isMenuAnimating ? "opacity-100" : "opacity-0"
-            }`}
-        >
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeMenu}></div>
+      <AnimatePresence>
+        {isMenuOpen && (
+          <div className="fixed inset-0 z-[9999] flex">
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={closeMenu}
+              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            />
 
-          {/* Drawer Panel */}
-          <div
-            className={`absolute top-0 left-0 h-full w-[85%] max-w-sm bg-white/90 backdrop-blur-xl border-r border-gray-200/30 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${isMenuAnimating ? "translate-x-0" : "-translate-x-full"
-              } rounded-tr-3xl rounded-br-3xl`}
-          >
-            {/* Header */}
-            <div className="relative bg-gradient-to-r from-primary-600 to-secondary-500 text-white px-6 py-6 rounded-tr-3xl">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-xl tracking-wide">Menu</h2>
-                <button
-                  onClick={closeMenu}
-                  className="p-2 bg-white/20 rounded-full hover:bg-white/30 transition"
-                >
-                  <X size={20} />
-                </button>
-              </div>
+            {/* Drawer Panel */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+              className="relative h-full w-[85%] max-w-[300px] bg-white/95 backdrop-blur-2xl shadow-2xl flex flex-col border-r border-white/20 overflow-hidden rounded-r-3xl"
+            >
+              {/* Top Banner / Header */}
+              <div className="relative overflow-hidden pt-6 pb-4 px-6">
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary-600 via-primary-500 to-secondary-500 -z-10" />
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+                <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-white/5 rounded-full blur-xl" />
 
-              {/* User Info */}
-              {(status === "authenticated" && session) || customAuthenticated ? (
-                <div className="flex items-center space-x-4 bg-white/10 p-3 rounded-2xl shadow-inner border border-white/20">
-                  <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/30 shadow-lg">
-                    <Image
-                      src={getUserImage()}
-                      alt={getUserAltText()}
-                      fill
-                      className="object-cover rounded-full"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-white truncate">{getUserName()}</h3>
-                    <p className="text-white/80 text-sm truncate">{getUserEmail()}</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-3">
+                <div className="flex items-center justify-end mb-4">
                   <button
-                    onClick={() => {
-                      setAuthType("login");
-                      setAuthOpen(true);
-                      closeMenu();
-                    }}
-                    className="bg-white text-primary-600 px-6 py-2 rounded-full font-semibold text-sm hover:bg-gray-50 shadow-lg transition"
+                    onClick={closeMenu}
+                    className="p-2 bg-white/20 rounded-full text-white hover:bg-white/30 transition-colors backdrop-blur-md border border-white/10"
                   >
-                    Login / Sign Up
+                    <X size={18} />
                   </button>
                 </div>
-              )}
-            </div>
 
-            {/* Scrollable Menu */}
-            <div className="flex-1 overflow-y-auto py-5">
-              {/* Navigation */}
-              <div className="px-5 mb-5">
-                <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-2">Navigation</h3>
-                <div className="space-y-1">
-                  {navItems.map((item, i) => (
-                    <Link
-                      key={i}
-                      href={item.href}
-                      onClick={closeMenu}
-                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all group"
-                    >
-                      <item.icon size={20} className="text-primary-600" />
-                      <span className="font-medium text-gray-700 flex-1">{item.name}</span>
-                      <ChevronRight
-                        size={16}
-                        className="text-gray-400 group-hover:text-primary-600"
-                      />
-                    </Link>
-                  ))}
-
-                  {/* Services */}
-                  {/* <div className="px-5 mb-5"> */}
-                  {/* <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-2">Services</h3> */}
-                  <div className="space-y-1">
-                    {servicesItems.map((item, i) => (
-                      <Link
-                        key={i}
-                        href={item.href}
-                        onClick={closeMenu}
-                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all group"
-                      >
-                        <item.icon size={20} className="text-primary-600" />
-                        <span className="font-medium text-gray-700 flex-1">{item.name}</span>
-                        <ChevronRight
-                          size={16}
-                          className="text-gray-400 group-hover:text-primary-600"
+                {/* User Status */}
+                {(status === "authenticated" && session) || customAuthenticated ? (
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-white/30 shadow-xl">
+                        <Image
+                          src={getUserImage()}
+                          alt={getUserAltText()}
+                          fill
+                          className="object-cover rounded-full"
                         />
-                      </Link>
-                    ))}
+                      </div>
+                      <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 border-2 border-white rounded-full shadow-lg" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-white font-bold text-base leading-tight truncate">
+                        {getUserName()}
+                      </h3>
+                      <p className="text-white/80 text-[10px] font-medium truncate mt-0.5">
+                        {getUserEmail()}
+                      </p>
+                    </div>
                   </div>
-                  {/* </div> */}
-                </div>
+                ) : (
+                  <div className="space-y-3">
+                    <h3 className="text-white font-bold text-lg leading-tight">
+                      Explore Premium<br />Design Education
+                    </h3>
+                    <button
+                      onClick={() => {
+                        setAuthType("login");
+                        setAuthOpen(true);
+                        closeMenu();
+                      }}
+                      className="bg-white text-primary-600 px-5 py-2 rounded-xl font-bold text-xs shadow-xl active:scale-95 transition-all w-fit hover:bg-primary-50"
+                    >
+                      Sign In to Begin
+                    </button>
+                  </div>
+                )}
               </div>
 
-              {/* Support Section */}
-              {/* <div className="px-5 border-t border-gray-100 pt-4">
-                <h3 className="text-gray-500 text-xs uppercase tracking-wider mb-2">Support</h3>
-                <div className="space-y-1">
-                  {supportItems.map((item, i) => (
-                    <Link
-                      key={i}
-                      href={item.href}
-                      onClick={closeMenu}
-                      className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-all"
-                    >
-                      <item.icon size={18} className="text-gray-500" />
-                      <span className="font-medium text-gray-700 flex-1">{item.name}</span>
-                      <ChevronRight size={16} className="text-gray-400" />
-                    </Link>
-                  ))}
+              {/* Scrollable Navigation */}
+              <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-4 space-y-8 custom-scrollbar">
+                {/* Main Navigation */}
+                <div className="space-y-4">
+                  <h4 className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-[0.2em]">
+                    Main Menu
+                  </h4>
+                  <div className="space-y-1">
+                    {navItems.map((item, i) => (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 + i * 0.05 }}
+                      >
+                        <Link
+                          href={item.href}
+                          onClick={closeMenu}
+                          className="group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 hover:bg-primary-50"
+                        >
+                          <div className="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-xl group-hover:bg-white group-hover:shadow-md transition-all">
+                            <item.icon size={20} className="text-gray-500 group-hover:text-primary-600" />
+                          </div>
+                          <span className="font-semibold text-gray-700 group-hover:text-primary-700">
+                            {item.name}
+                          </span>
+                          <ChevronRight
+                            size={16}
+                            className="ml-auto text-gray-300 group-hover:text-primary-400 transform group-hover:translate-x-1 transition-all"
+                          />
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </div> */}
 
-              {/* Actions - Fixed to ensure visibility */}
-              <div className="mt-6 px-5 pb-6">
-                <div className="flex flex-col gap-3">
+                {/* Services Section */}
+                <div className="space-y-4">
+                  <h4 className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-[0.2em]">
+                    Professional Services
+                  </h4>
+                  <div className="space-y-1">
+                    {servicesItems.map((service, i) => (
+                      <motion.div
+                        key={service.name}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.3 + i * 0.05 }}
+                      >
+                        <Link
+                          href={service.href}
+                          onClick={closeMenu}
+                          className="group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 hover:bg-secondary-50"
+                        >
+                          <div className="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-xl group-hover:bg-white group-hover:shadow-md transition-all">
+                            <service.icon size={20} className="text-gray-500 group-hover:text-secondary-600" />
+                          </div>
+                          <div className="flex-1 text-left">
+                            <p className="font-semibold text-gray-700 group-hover:text-secondary-700">
+                              {service.name}
+                            </p>
+                            <p className="text-[11px] text-gray-500 truncate group-hover:text-gray-600">
+                              {service.description}
+                            </p>
+                          </div>
+                          <ChevronRight
+                            size={16}
+                            className="text-gray-300 group-hover:text-secondary-400 transform group-hover:translate-x-1 transition-all"
+                          />
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sign Out Item (Inside List) */}
+                {((status === "authenticated" && session) || customAuthenticated) && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <button
+                      onClick={() => {
+                        if (status === "authenticated" && session) signOut({ callbackUrl: "/" });
+                        else customLogout();
+                        closeMenu();
+                      }}
+                      className="group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 hover:bg-red-50 w-full"
+                    >
+                      <div className="w-10 h-10 flex items-center justify-center bg-red-50 rounded-xl group-hover:bg-white group-hover:shadow-md transition-all">
+                        <LogOut size={20} className="text-red-500" />
+                      </div>
+                      <span className="font-semibold text-red-600 text-left">Sign Out</span>
+                      <ChevronRight
+                        size={16}
+                        className="ml-auto text-red-200 group-hover:text-red-400 transform group-hover:translate-x-1 transition-all"
+                      />
+                    </button>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Bottom Actions Footer */}
+              <div className="mt-auto p-4 bg-gray-50 border-t border-gray-100">
+                <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => {
                       handleCall();
                       closeMenu();
                     }}
-                    className="flex items-center justify-center gap-2 py-3 rounded-xl border border-amber-500 text-amber-600 font-medium hover:bg-amber-50 hover:scale-105 transition-all shadow-sm"
+                    className="flex flex-col items-center justify-center gap-2 h-16 px-3 rounded-2xl bg-white border border-gray-100 shadow-sm active:scale-95 transition-all hover:bg-amber-50 group"
                   >
-                    <Phone size={18} />
-                    <span>Call Us</span>
+                    <div className="w-7 h-7 flex items-center justify-center bg-amber-100/50 rounded-full group-hover:bg-amber-100 transition-colors">
+                      <Phone size={14} className="text-amber-600" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wider">Call Us</span>
                   </button>
 
                   <button
@@ -621,34 +682,19 @@ const Header = () => {
                       handleWhatsApp();
                       closeMenu();
                     }}
-                    className="flex items-center justify-center gap-2 py-3 rounded-xl border border-green-500 text-green-600 font-medium hover:bg-green-50 hover:scale-105 transition-all shadow-sm"
+                    className="flex flex-col items-center justify-center gap-2 h-16 px-3 rounded-2xl bg-white border border-gray-100 shadow-sm active:scale-95 transition-all hover:bg-green-50 group"
                   >
-                    <MessageCircle size={18} />
-                    <span>WhatsApp</span>
+                    <div className="w-7 h-7 flex items-center justify-center bg-green-100/50 rounded-full group-hover:bg-green-100 transition-colors">
+                      <MessageCircle size={14} className="text-green-600" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wider">WhatsApp</span>
                   </button>
                 </div>
               </div>
-
-              {/* Logout */}
-              {((status === "authenticated" && session) || customAuthenticated) && (
-                <div className="px-5 pb-6 border-t border-gray-100 pt-4">
-                  <button
-                    onClick={() => {
-                      if (status === "authenticated" && session) signOut({ callbackUrl: "/" });
-                      else customLogout();
-                      closeMenu();
-                    }}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-red-500 text-red-600 font-semibold hover:bg-red-50 hover:scale-105 transition-all shadow-sm"
-                  >
-                    <LogOut size={18} />
-                    <span>Logout</span>
-                  </button>
-                </div>
-              )}
-            </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
       {/* Auth Modal */}
       <AuthModal
