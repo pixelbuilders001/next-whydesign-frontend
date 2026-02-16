@@ -30,6 +30,15 @@ const programs = [
 ];
 
 const ProgramBriefSection = () => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <section className="relative py-12 md:py-20 bg-gradient-to-b from-white via-rose-50 to-stone-50 overflow-hidden">
       {/* floating blur shapes for background aesthetic */}
@@ -56,8 +65,8 @@ const ProgramBriefSection = () => {
             >
               {/* Floating Icon */}
               <div className="absolute -top-6 md:-top-8 left-1/2 -translate-x-1/2 bg-white rounded-full shadow-md p-3 md:p-4 ring-1 ring-rose-100 group-hover:ring-rose-200 transition-all">
-                {React.cloneElement(prog.icon, { 
-                  size: window.innerWidth < 768 ? 24 : 36 
+                {React.cloneElement(prog.icon, {
+                  size: isMobile ? 24 : 36
                 })}
               </div>
 

@@ -92,7 +92,9 @@ export class APIInterceptor {
       if (error.message.includes('Session expired') || error.message.includes('refresh')) {
         // Force logout on refresh failure
         tokenStorage.clearTokens();
-        window.location.href = '/login'; // Redirect to login page
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login'; // Redirect to login page
+        }
       }
       throw error;
     }
